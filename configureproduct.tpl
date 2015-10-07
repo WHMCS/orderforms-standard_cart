@@ -244,7 +244,7 @@
                                 <span>{$LANG.cartavailableaddons}</span>
                             </div>
 
-                            <div class="row">
+                            <div class="row addon-products">
                                 {foreach $addons as $addon}
                                     <div class="col-sm-{if count($addons) > 1}6{else}12{/if}">
                                         <div class="panel panel-default panel-addon{if $addon.status} panel-addon-selected{/if}">
@@ -275,21 +275,22 @@
                         </div>
 
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="scrollingPanelContainer">
 
-                        <div class="order-summary" id="orderSummary">
-                            <div class="loader" id="orderSummaryLoader">
-                                <i class="fa fa-fw fa-refresh fa-spin"></i>
+                        <div id="orderSummary">
+                            <div class="order-summary">
+                                <div class="loader" id="orderSummaryLoader">
+                                    <i class="fa fa-fw fa-refresh fa-spin"></i>
+                                </div>
+                                <h2>{$LANG.ordersummary}</h2>
+                                <div class="summary-container" id="producttotal"></div>
                             </div>
-                            <h2>{$LANG.ordersummary}</h2>
-                            <div class="summary-container" id="producttotal"></div>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="button" id="btnCompleteProductConfig" class="btn btn-primary btn-lg" onclick="addtocart()">
-                                {$LANG.continue}
-                                <i class="fa fa-arrow-circle-right"></i>
-                            </button>
+                            <div class="text-center">
+                                <button type="button" id="btnCompleteProductConfig" class="btn btn-primary btn-lg" onclick="addtocart()">
+                                    {$LANG.continue}
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </button>
+                            </div>
                         </div>
 
                     </div>

@@ -230,7 +230,7 @@
                                                         </button>
                                                     </span>
                                                 </span>
-                                                {if $product.domain}
+                                                {if $domain.domain}
                                                     <span class="item-domain">
                                                         {$domain.domain}
                                                     </span>
@@ -372,7 +372,7 @@
                         </div>
 
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="scrollingPanelContainer">
 
                         <div class="order-summary" id="orderSummary">
                             <h2>{$LANG.ordersummary}</h2>

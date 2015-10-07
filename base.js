@@ -14,21 +14,41 @@ jQuery(document).ready(function(){
         jQuery('#inputCardExpiry').payment('formatCardExpiry');
     }
 
-    var $orderSummaryEl = $("#orderSummary"),
-        offset     = $orderSummaryEl.offset(),
-        topPadding = 15;
+    var $orderSummaryEl = jQuery("#orderSummary");
     if ($orderSummaryEl.length) {
-        jQuery(window).scroll(function() {
-            if (jQuery(window).scrollTop() > offset.top) {
-                $orderSummaryEl.stop().animate({
-                    marginTop: jQuery(window).scrollTop() - offset.top + topPadding
-                });
-            } else {
-                $orderSummaryEl.stop().animate({
-                    marginTop: 0
-                });
-            }
+        var offset = jQuery("#scrollingPanelContainer").parent('.row').offset();
+        var maxTopOffset = jQuery("#scrollingPanelContainer").parent('.row').outerHeight() - 35;
+        var topPadding = 15;
+        jQuery(window).resize(function() {
+            offset = jQuery("#scrollingPanelContainer").parent('.row').offset();
+            maxTopOffset = jQuery("#scrollingPanelContainer").parent('.row').outerHeight() - 35;
+            repositionScrollingSidebar();
         });
+        jQuery(window).scroll(function() {
+            repositionScrollingSidebar();
+        });
+        repositionScrollingSidebar();
+    }
+
+    function repositionScrollingSidebar() {
+        if (jQuery("#scrollingPanelContainer").css('float') != 'left') {
+            $orderSummaryEl.stop().css('margin-top', '0');
+            return false;
+        }
+        var heightOfOrderSummary =  $orderSummaryEl.outerHeight();
+        var newTopOffset = jQuery(window).scrollTop() - offset.top + topPadding;
+        if (newTopOffset > maxTopOffset - heightOfOrderSummary) {
+            newTopOffset = maxTopOffset - heightOfOrderSummary;
+        }
+        if (jQuery(window).scrollTop() > offset.top) {
+            $orderSummaryEl.stop().animate({
+                marginTop: newTopOffset
+            });
+        } else {
+            $orderSummaryEl.stop().animate({
+                marginTop: 0
+            });
+        }
     }
 
     jQuery("#btnCompleteProductConfig").click(function() {
@@ -61,7 +81,7 @@ jQuery(document).ready(function(){
         recalctotals();
     });
 
-    jQuery(".panel-addon").click(function(e) {
+    jQuery(".addon-products").on('click', '.panel-addon', function(e) {
         e.preventDefault();
         var $activeAddon = jQuery(this);
         if ($activeAddon.hasClass('panel-addon-selected')) {
@@ -70,14 +90,14 @@ jQuery(document).ready(function(){
             $activeAddon.find('input[type="checkbox"]').iCheck('check');
         }
     });
-    jQuery(".panel-addon input").on('ifChecked', function(event) {
+    jQuery(".addon-products").on('ifChecked', '.panel-addon input', function(event) {
         var $activeAddon = jQuery(this).parents('.panel-addon');
         $activeAddon.addClass('panel-addon-selected');
         $activeAddon.find('input[type="checkbox"]').iCheck('check');
         $activeAddon.find('.panel-add').html('<i class="fa fa-shopping-cart"></i> Added to Cart (Remove)');
         recalctotals();
     });
-    jQuery(".panel-addon input").on('ifUnchecked', function(event) {
+    jQuery(".addon-products").on('ifUnchecked', '.panel-addon input', function(event) {
         var $activeAddon = jQuery(this).parents('.panel-addon');
         $activeAddon.removeClass('panel-addon-selected');
         $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
@@ -258,10 +278,7 @@ function updateConfigurableOptions(i, billingCycle) {
 
 }
 
-function recalctotals(hideLoading) {
-    if (typeof hideLoading === 'undefined') {
-        hideLoading = true;
-    }
+function recalctotals() {
     if (!jQuery("#orderSummaryLoader").is(":visible")) {
         jQuery("#orderSummaryLoader").fadeIn('fast');
     }
@@ -271,13 +288,11 @@ function recalctotals(hideLoading) {
             jQuery("#producttotal").html(data);
         }
     );
-    if (hideLoading) {
-        post.always(
-            function() {
-                jQuery("#orderSummaryLoader").delay(500).fadeOut('slow');
-            }
-        );
-    }
+    post.always(
+        function() {
+            jQuery("#orderSummaryLoader").delay(500).fadeOut('slow');
+        }
+    );
 }
 
 function selectDomainPricing(domainName, price, period, yearsString, suggestionNumber) {

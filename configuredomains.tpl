@@ -73,7 +73,7 @@
                     </div>
 
                     {if $domain.dnsmanagement || $domain.emailforwarding || $domain.idprotection}
-                        <div class="row">
+                        <div class="row addon-products">
 
                             {if $domain.dnsmanagement}
                                 <div class="col-sm-{math equation="12 / numAddons" numAddons=$domain.addonsCount}">
