@@ -260,7 +260,7 @@
                                             </div>
                                             <div class="panel-add">
                                                 <i class="fa fa-plus"></i>
-                                                Add to Cart
+                                                {$LANG.orderForm.addToCart}
                                             </div>
                                         </div>
                                     </div>
