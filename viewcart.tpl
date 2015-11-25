@@ -120,11 +120,6 @@
                                                     {/foreach}
                                                     </small>
                                                 {/if}
-                                                {if $product.pricing.productonlysetup}
-                                                    <span class="item-setup">
-                                                        {$product.pricing.productonlysetup} {$LANG.ordersetupfee}
-                                                    </span>
-                                                {/if}
                                             </div>
                                             {if $showqtyoptions}
                                                 <div class="col-sm-2 item-qty">
@@ -137,8 +132,11 @@
                                                 </div>
                                             {/if}
                                             <div class="col-sm-4 item-price">
-                                                <span>{$product.pricing.totaltodayexcltax}</span>
+                                                <span>{$product.pricing.totalTodayExcludingTaxSetup}</span>
                                                 <span class="cycle">{$product.billingcyclefriendly}</span>
+                                                {if $product.pricing.productonlysetup}
+                                                    {$product.pricing.productonlysetup} {$LANG.ordersetupfee}
+                                                {/if}
                                                 {if $product.proratadate}<br />({$LANG.orderprorata} {$product.proratadate}){/if}
                                             </div>
                                             <div class="col-sm-1 hidden-xs">
@@ -342,13 +340,13 @@
                                     <form method="post" action="cart.php?a=setstateandcountry">
                                         <div class="form-horizontal">
                                             <div class="form-group">
-                                                <label for="inputState" class="col-sm-4 control-label">State</label>
+                                                <label for="inputState" class="col-sm-4 control-label">{$LANG.orderForm.state}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" name="state" id="inputState" value="{$clientsdetails.state}" class="form-control"{if $loggedin} disabled="disabled"{/if} />
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="inputCountry" class="col-sm-4 control-label">Country</label>
+                                                <label for="inputCountry" class="col-sm-4 control-label">{$LANG.orderForm.country}</label>
                                                 <div class="col-sm-7">
                                                     <select name="country" id="inputCountry" class="form-control">
                                                         {foreach $countries as $countrycode => $countrylabel}

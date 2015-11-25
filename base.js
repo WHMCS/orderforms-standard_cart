@@ -1,3 +1,18 @@
+if (typeof localTrans === 'undefined') {
+    localTrans = function (phraseId, fallback)
+    {
+        if (typeof _localLang !== 'undefined') {
+            if (typeof _localLang[phraseId] !== 'undefined') {
+                if (_localLang[phraseId].length > 0) {
+                    return _localLang[phraseId];
+                }
+            }
+        }
+
+        return fallback;
+    }
+}
+
 jQuery(document).ready(function(){
 
     jQuery('input').iCheck({
@@ -94,14 +109,14 @@ jQuery(document).ready(function(){
         var $activeAddon = jQuery(this).parents('.panel-addon');
         $activeAddon.addClass('panel-addon-selected');
         $activeAddon.find('input[type="checkbox"]').iCheck('check');
-        $activeAddon.find('.panel-add').html('<i class="fa fa-shopping-cart"></i> Added to Cart (Remove)');
+        $activeAddon.find('.panel-add').html('<i class="fa fa-shopping-cart"></i> '+localTrans('addedToCartRemove', 'Added to Cart (Remove)'));
         recalctotals();
     });
     jQuery(".addon-products").on('ifUnchecked', '.panel-addon input', function(event) {
         var $activeAddon = jQuery(this).parents('.panel-addon');
         $activeAddon.removeClass('panel-addon-selected');
         $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
-        $activeAddon.find('.panel-add').html('<i class="fa fa-plus"></i> Add to Cart');
+        $activeAddon.find('.panel-add').html('<i class="fa fa-plus"></i> '+localTrans('addToCart', 'Add to Cart'));
         recalctotals();
     });
 

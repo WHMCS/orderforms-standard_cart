@@ -1,5 +1,12 @@
 {include file="orderforms/standard_cart/common.tpl"}
 
+<script>
+var _localLang = {
+    'addToCart': '{$LANG.orderForm.addToCart|escape}',
+    'addedToCartRemove': '{$LANG.orderForm.addedToCartRemove|escape}'
+}
+</script>
+
 <div id="order-standard_cart">
 
     <div class="row">
@@ -190,7 +197,7 @@
                                                                 min: {$configoption.qtyminimum},
                                                                 max: {$configoption.qtymaximum},
                                                                 grid: true,
-                                                                onChange: function() {
+                                                                onFinish: function() {
                                                                     recalctotals();
                                                                 }
                                                             });
@@ -260,7 +267,7 @@
                                             </div>
                                             <div class="panel-add">
                                                 <i class="fa fa-plus"></i>
-                                                Add to Cart
+                                                {$LANG.addtocart}
                                             </div>
                                         </div>
                                     </div>
@@ -271,7 +278,7 @@
 
                         <div class="alert alert-warning info-text-sm">
                             <i class="fa fa-question-circle"></i>
-                            {$LANG.orderForm.haveQuestionsContact} <a href="contact.php" target="_blank" class="alert-link">Click here...</a>
+                            {$LANG.orderForm.haveQuestionsContact} <a href="contact.php" target="_blank" class="alert-link">{$LANG.orderForm.haveQuestionsClickHere}</a>
                         </div>
 
                     </div>

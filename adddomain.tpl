@@ -59,7 +59,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 col-xs-12">
                         <button type="submit" class="btn btn-primary btn-block" id="btnCheckAvailability">
                             {if $domain eq "register"}
                                 {$LANG.orderForm.check}

@@ -33,13 +33,15 @@
                             <div class="domain-input-group clearfix" id="domainincart">
                                 <div class="row">
                                     <div class="col-sm-8 col-sm-offset-1 col-md-6 col-md-offset-2">
-                                        <select id="incartsld" name="incartdomain" class="form-control">
-                                            {foreach key=num item=incartdomain from=$incartdomains}
-                                                <option value="{$incartdomain}">{$incartdomain}</option>
-                                            {/foreach}
-                                        </select>
+                                        <div class="domains-row">
+                                            <select id="incartsld" name="incartdomain" class="form-control">
+                                                {foreach key=num item=incartdomain from=$incartdomains}
+                                                    <option value="{$incartdomain}">{$incartdomain}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-2 col-md-2">
+                                    <div class="col-sm-2">
                                         <button type="submit" class="btn btn-primary btn-block">
                                             {$LANG.orderForm.use}
                                         </button>
@@ -55,7 +57,7 @@
                             </label>
                             <div class="domain-input-group clearfix" id="domainregister">
                                 <div class="row">
-                                    <div class="col-sm-8 col-xs-12 col-sm-offset-1">
+                                    <div class="col-sm-8 col-sm-offset-1">
                                         <div class="row domains-row">
                                             <div class="col-xs-9">
                                                 <div class="input-group">
@@ -127,14 +129,14 @@
                                                 <p class="form-control-static">www.</p>
                                             </div>
                                             <div class="col-xs-7">
-                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="yourdomain" class="form-control" />
+                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" />
                                             </div>
                                             <div class="col-xs-3">
-                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="com" class="form-control" />
+                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 col-xs-12">
+                                    <div class="col-sm-2">
                                         <button type="submit" class="btn btn-primary btn-block" id="useOwnDomain">
                                             {$LANG.orderForm.use}
                                         </button>
@@ -167,7 +169,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 col-xs-12">
+                                    <div class="col-sm-2">
                                         <button type="submit" class="btn btn-primary btn-block">
                                             {$LANG.orderForm.check}
                                         </button>

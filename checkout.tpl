@@ -91,7 +91,7 @@
                                 <label for="inputLoginEmail" class="field-icon">
                                     <i class="fa fa-envelope"></i>
                                 </label>
-                                <input type="email" name="loginemail" id="inputLoginEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}">
+                                <input type="text" name="loginemail" id="inputLoginEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}">
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -556,7 +556,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <textarea class="field" rows="4" placeholder="{$LANG.ordernotesdescription}">{$notes}</textarea>
+                                <textarea name="notes" class="field" rows="4" placeholder="{$LANG.ordernotesdescription}">{$orderNotes}</textarea>
                             </div>
                         </div>
                     </div>
