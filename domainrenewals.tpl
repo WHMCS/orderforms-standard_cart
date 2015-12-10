@@ -40,7 +40,7 @@
                         {foreach from=$renewals item=renewal}
                             <tr>
                                 <td>
-                                    {if !$renewal.pastgraceperiod}
+                                    {if !$renewal.pastgraceperiod && !$renewal.beforerenewlimit}
                                         <input type="checkbox" name="renewalids[]" value="{$renewal.id}" />
                                     {/if}
                                 </td>

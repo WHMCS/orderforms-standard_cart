@@ -83,3 +83,15 @@
         </div>
     </div>
 </div>
+
+{*
+ * If we have availability results, then the form was submitted w/a domain.
+ * Thus we want to do a search and show the results.
+ *}
+{if $availabilityresults}
+    <script>
+        jQuery(document).ready(function() {
+            jQuery('#btnCheckAvailability').click();
+        });
+    </script>
+{/if}
