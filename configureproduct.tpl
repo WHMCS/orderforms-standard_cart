@@ -193,12 +193,22 @@ var _localLang = {
                                                         {/if}
                                                         <input type="text" name="configoption[{$configoption.id}]" value="{if $configoption.selectedqty}{$configoption.selectedqty}{else}{$configoption.qtyminimum}{/if}" id="inputConfigOption{$configoption.id}" class="form-control" />
                                                         <script>
+                                                            var sliderTimeoutId = null;
+
                                                             jQuery("#inputConfigOption{$configoption.id}").ionRangeSlider({
                                                                 min: {$configoption.qtyminimum},
                                                                 max: {$configoption.qtymaximum},
                                                                 grid: true,
-                                                                onFinish: function() {
-                                                                    recalctotals();
+                                                                grid_snap: true,
+                                                                onChange: function() {
+                                                                    if (sliderTimeoutId) {
+                                                                        clearTimeout(sliderTimeoutId);
+                                                                    }
+
+                                                                    sliderTimeoutId = setTimeout(function() {
+                                                                        sliderTimeoutId = null;
+                                                                        recalctotals();
+                                                                    }, 250);
                                                                 }
                                                             });
                                                         </script>

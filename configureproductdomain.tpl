@@ -62,7 +62,7 @@
                                             <div class="col-xs-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">{$LANG.orderForm.www}</span>
-                                                    <input type="text" id="registersld" value="{$sld}" class="form-control" />
+                                                    <input type="text" id="registersld" value="{$sld}" class="form-control" autocapitalize="none" />
                                                 </div>
                                             </div>
                                             <div class="col-xs-3">
@@ -95,7 +95,7 @@
                                             <div class="col-xs-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">www.</span>
-                                                    <input type="text" id="transfersld" value="{$sld}" class="form-control" />
+                                                    <input type="text" id="transfersld" value="{$sld}" class="form-control" autocapitalize="none" />
                                                 </div>
                                             </div>
                                             <div class="col-xs-3">
@@ -129,10 +129,10 @@
                                                 <p class="form-control-static">www.</p>
                                             </div>
                                             <div class="col-xs-7">
-                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" />
+                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" autocapitalize="none" />
                                             </div>
                                             <div class="col-xs-3">
-                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" />
+                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" autocapitalize="none" />
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +158,7 @@
                                                 <p class="form-control-static">http://</p>
                                             </div>
                                             <div class="col-xs-5">
-                                                <input type="text" id="subdomainsld" value="{$sld}" placeholder="yourname" class="form-control" />
+                                                <input type="text" id="subdomainsld" value="{$sld}" placeholder="yourname" class="form-control" autocapitalize="none" />
                                             </div>
                                             <div class="col-xs-5">
                                                 <select id="subdomaintld" class="form-control">

@@ -15,7 +15,7 @@ if (typeof localTrans === 'undefined') {
 
 jQuery(document).ready(function(){
 
-    jQuery('input').iCheck({
+    jQuery('#order-standard_cart').find('input').iCheck({
         inheritID: true,
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
@@ -297,10 +297,16 @@ function recalctotals() {
     if (!jQuery("#orderSummaryLoader").is(":visible")) {
         jQuery("#orderSummaryLoader").fadeIn('fast');
     }
+
+    thisRequestId = Math.floor((Math.random() * 1000000) + 1);
+    window.lastSliderUpdateRequestId = thisRequestId;
+
     var post = jQuery.post("cart.php", 'ajax=1&a=confproduct&calctotal=true&'+jQuery("#frmConfigureProduct").serialize());
     post.done(
         function(data) {
-            jQuery("#producttotal").html(data);
+            if (thisRequestId == window.lastSliderUpdateRequestId) {
+                jQuery("#producttotal").html(data);
+            }
         }
     );
     post.always(
