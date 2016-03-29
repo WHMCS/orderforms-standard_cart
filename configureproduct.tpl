@@ -214,7 +214,7 @@ var _localLang = {
                                                         </script>
                                                     {else}
                                                         <div>
-                                                            <input type="number" name="configoption[{$configoption.id}]" value="{if $configoption.selectedqty}{$configoption.selectedqty}{else}{$configoption.qtyminimum}{/if}" id="inputConfigOption{$configoption.id}" onkeyup="recalctotals()" class="form-control form-control-qty" />
+                                                            <input type="number" name="configoption[{$configoption.id}]" value="{if $configoption.selectedqty}{$configoption.selectedqty}{else}{$configoption.qtyminimum}{/if}" id="inputConfigOption{$configoption.id}" min="{$configoption.qtyminimum}" onchange="recalctotals()" onkeyup="recalctotals()" class="form-control form-control-qty" />
                                                             <span class="form-control-static form-control-static-inline">
                                                                 x {$configoption.options.0.name}
                                                             </span>
@@ -242,7 +242,7 @@ var _localLang = {
                             <div class="field-container">
                                 {foreach $customfields as $customfield}
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">{$customfield.name}</label>
+                                        <label for="customfield{$customfield.id}">{$customfield.name}</label>
                                         {$customfield.input}
                                         {if $customfield.description}
                                             <span class="field-help-text">

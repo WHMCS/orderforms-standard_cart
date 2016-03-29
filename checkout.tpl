@@ -222,7 +222,7 @@
                                 {foreach $customfields as $customfield}
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">{$customfield.name}</label>
+                                            <label for="customfield{$customfield.id}">{$customfield.name}</label>
                                             {$customfield.input}
                                             {if $customfield.description}
                                                 <span class="field-help-text">
