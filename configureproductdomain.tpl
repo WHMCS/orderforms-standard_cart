@@ -34,7 +34,7 @@
                                 <div class="row">
                                     <div class="col-sm-8 col-sm-offset-1 col-md-6 col-md-offset-2">
                                         <div class="domains-row">
-                                            <select id="incartsld" name="incartdomain" class="form-control">
+                                            <select id="incartsld" name="incartdomain" class="form-control" title="In Cart Domain">
                                                 {foreach key=num item=incartdomain from=$incartdomains}
                                                     <option value="{$incartdomain}">{$incartdomain}</option>
                                                 {/foreach}
@@ -61,12 +61,12 @@
                                         <div class="row domains-row">
                                             <div class="col-xs-9">
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">{$LANG.orderForm.www}</span>
+                                                    <label class="input-group-addon" for="registersld">{$LANG.orderForm.www}</label>
                                                     <input type="text" id="registersld" value="{$sld}" class="form-control" autocapitalize="none" />
                                                 </div>
                                             </div>
                                             <div class="col-xs-3">
-                                                <select id="registertld" class="form-control">
+                                                <select id="registertld" class="form-control" title="TLD">
                                                     {foreach from=$registertlds item=listtld}
                                                         <option value="{$listtld}"{if $listtld eq $tld} selected="selected"{/if}>{$listtld}</option>
                                                     {/foreach}
