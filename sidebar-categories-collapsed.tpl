@@ -3,12 +3,12 @@
     <div class="pull-left form-inline">
         <form method="get" action="{$smarty.server.PHP_SELF}">
             <select name="gid" onchange="submit()" class="form-control">
-                <optgroup label="Product Categories">
+                <optgroup title="Product Categories">
                     {foreach key=num item=productgroup from=$productgroups}
                         <option value="{$productgroup.gid}"{if $gid eq $productgroup.gid} selected="selected"{/if}>{$productgroup.name}</option>
                     {/foreach}
                 </optgroup>
-                <optgroup label="Actions">
+                <optgroup title="Actions">
                     {if $loggedin}
                         <option value="addons"{if $gid eq "addons"} selected{/if}>{$LANG.cartproductaddons}</option>
                         {if $renewalsenabled}
@@ -30,7 +30,7 @@
     {if !$loggedin && $currencies}
         <div class="pull-right form-inline">
             <form method="post" action="cart.php{if $action}?a={$action}{elseif $gid}?gid={$gid}{/if}">
-                <select name="currency" onchange="submit()" class="form-control">
+                <select name="currency" onchange="submit()" class="form-control" title="choose currency">
                     <option value="">{$LANG.choosecurrency}</option>
                     {foreach from=$currencies item=curr}
                         <option value="{$curr.id}">{$curr.code}</option>
