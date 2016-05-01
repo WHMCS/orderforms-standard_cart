@@ -94,12 +94,12 @@
                                         <div class="row domains-row">
                                             <div class="col-xs-9">
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">www.</span>
+                                                    <label class="input-group-addon" for="transfersld">www.</label>
                                                     <input type="text" id="transfersld" value="{$sld}" class="form-control" autocapitalize="none" />
                                                 </div>
                                             </div>
                                             <div class="col-xs-3">
-                                                <select id="transfertld" class="form-control">
+                                                <select id="transfertld" class="form-control" title="TLD">
                                                     {foreach from=$transfertlds item=listtld}
                                                         <option value="{$listtld}"{if $listtld eq $tld} selected="selected"{/if}>{$listtld}</option>
                                                     {/foreach}
@@ -129,10 +129,10 @@
                                                 <p class="form-control-static">www.</p>
                                             </div>
                                             <div class="col-xs-7">
-                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" autocapitalize="none" />
+                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" title="your domain place holder" class="form-control" autocapitalize="none" />
                                             </div>
                                             <div class="col-xs-3">
-                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" autocapitalize="none" />
+                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" title="your tld place holder" class="form-control" autocapitalize="none" />
                                             </div>
                                         </div>
                                     </div>
