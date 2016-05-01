@@ -23,7 +23,8 @@
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
             <form id="frmProductDomain" onsubmit="checkdomain();return false">
-
+            <fieldset>
+            <legend>Which domain?</legend>
                 <div class="domain-selection-options">
                     {if $incartdomains}
                         <div class="option">
@@ -179,6 +180,8 @@
                         </div>
                     {/if}
                 </div>
+
+                </fieldset>
 
                 {if $freedomaintlds}
                     <p>* <em>{$LANG.orderfreedomainregistration} {$LANG.orderfreedomainappliesto}: {$freedomaintlds}</em></p>
