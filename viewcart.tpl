@@ -124,7 +124,7 @@
                                             {if $showqtyoptions}
                                                 <div class="col-sm-2 item-qty">
                                                     {if $product.allowqty}
-                                                        <input type="number" name="qty[{$num}]" value="{$product.qty}" class="form-control text-center" />
+                                                        <input type="number" title="qty[{$num}]" name="qty[{$num}]" value="{$product.qty}" class="form-control text-center" />
                                                         <button type="submit" class="btn btn-xs">
                                                             {$LANG.orderForm.update}
                                                         </button>

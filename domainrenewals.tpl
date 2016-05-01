@@ -41,7 +41,7 @@
                             <tr>
                                 <td>
                                     {if !$renewal.pastgraceperiod && !$renewal.beforerenewlimit}
-                                        <input type="checkbox" name="renewalids[]" value="{$renewal.id}" />
+                                        <input type="checkbox" name="renewalids[]" title="renewalids[]" value="{$renewal.id}" />
                                     {/if}
                                 </td>
                                 <td>

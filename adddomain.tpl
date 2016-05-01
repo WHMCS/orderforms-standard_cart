@@ -44,7 +44,7 @@
                         <div class="row domains-row">
                             <div class="col-xs-9">
                                 <div class="input-group">
-                                    <span class="input-group-addon">{lang key='orderForm.www'}</span>
+                                    <label class="input-group-addon" for="inputDomain">{lang key='orderForm.www'}</label>
                                     <input type="text" name="sld" value="{$sld}" id="inputDomain" class="form-control" autocapitalize="none" />
                                 </div>
                             </div>
