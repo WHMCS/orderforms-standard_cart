@@ -238,8 +238,27 @@
                                                 {if $domain.idprotection}&nbsp;&raquo; {$LANG.domainidprotection}<br />{/if}
                                             </div>
                                             <div class="col-sm-4 item-price">
-                                                <span>{$domain.price}</span>
-                                                <span class="cycle">{$domain.regperiod} {$LANG.orderyears}</span>
+                                                {if count($domain.pricing) == 1 || $domain.type == 'transfer'}
+                                                    <span name="{$domain.domain}Price">{$domain.price}</span>
+                                                    <span class="cycle">{$domain.regperiod} {$domain.yearsLanguage}</span>
+                                                {else}
+                                                    <span name="{$domain.domain}Price">{$domain.price}</span>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="{$domain.domain}Pricing" name="{$domain.domain}Pricing" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                            {$domain.regperiod} {$domain.yearsLanguage}
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="{$domain.domain}Pricing">
+                                                            {foreach $domain.pricing as $years => $price}
+                                                                <li>
+                                                                    <a href="#" onclick="selectDomainPeriodInCart('{$domain.domain}', '{$price.register}', {$years}, '{if $years == 1}{lang key='orderForm.year'}{else}{lang key='orderForm.years'}{/if}');return false;">
+                                                                        {$years} {if $years == 1}{lang key='orderForm.year'}{else}{lang key='orderForm.years'}{/if} @ {$price.register}
+                                                                    </a>
+                                                                </li>
+                                                            {/foreach}
+                                                        </ul>
+                                                    </div>
+                                                {/if}
                                             </div>
                                             <div class="col-sm-1 hidden-xs">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('d','{$num}')">
@@ -373,51 +392,64 @@
                     <div class="col-md-4" id="scrollingPanelContainer">
 
                         <div class="order-summary" id="orderSummary">
+                            <div class="loader" id="orderSummaryLoader" style="display: none;">
+                                <i class="fa fa-fw fa-refresh fa-spin"></i>
+                            </div>
                             <h2>{$LANG.ordersummary}</h2>
                             <div class="summary-container">
 
                                 <div class="subtotal clearfix">
                                     <span class="pull-left">{$LANG.ordersubtotal}</span>
-                                    <span class="pull-right">{$subtotal}</span>
+                                    <span id="subtotal" class="pull-right">{$subtotal}</span>
                                 </div>
                                 {if $promotioncode || $taxrate || $taxrate2}
                                     <div class="bordered-totals">
                                         {if $promotioncode}
                                             <div class="clearfix">
                                                 <span class="pull-left">{$promotiondescription}</span>
-                                                <span class="pull-right">{$discount}</span>
+                                                <span id="discount" class="pull-right">{$discount}</span>
                                             </div>
                                         {/if}
                                         {if $taxrate}
                                             <div class="clearfix">
                                                 <span class="pull-left">{$taxname} @ {$taxrate}%</span>
-                                                <span class="pull-right">{$taxtotal}</span>
+                                                <span id="taxTotal1" class="pull-right">{$taxtotal}</span>
                                             </div>
                                         {/if}
                                         {if $taxrate2}
                                             <div class="clearfix">
                                                 <span class="pull-left">{$taxname2} @ {$taxrate2}%</span>
-                                                <span class="pull-right">{$taxtotal2}</span>
+                                                <span id="taxTotal2" class="pull-right">{$taxtotal2}</span>
                                             </div>
                                         {/if}
                                     </div>
                                 {/if}
-                                {if $totalrecurringmonthly || $totalrecurringquarterly || $totalrecurringsemiannually || $totalrecurringannually || $totalrecurringbiennially || $totalrecurringtriennially}
-                                    <div class="recurring-totals clearfix">
-                                        <span class="pull-left">{$LANG.orderForm.totals}</span>
-                                        <span class="pull-right recurring-charges">
-            {if $totalrecurringmonthly}{$totalrecurringmonthly} {$LANG.orderpaymenttermmonthly}<br />{/if}
-            {if $totalrecurringquarterly}{$totalrecurringquarterly} {$LANG.orderpaymenttermquarterly}<br />{/if}
-            {if $totalrecurringsemiannually}{$totalrecurringsemiannually} {$LANG.orderpaymenttermsemiannually}<br />{/if}
-            {if $totalrecurringannually}{$totalrecurringannually} {$LANG.orderpaymenttermannually}<br />{/if}
-            {if $totalrecurringbiennially}{$totalrecurringbiennially} {$LANG.orderpaymenttermbiennially}<br />{/if}
-            {if $totalrecurringtriennially}{$totalrecurringtriennially} {$LANG.orderpaymenttermtriennially}<br />{/if}
+                                <div class="recurring-totals clearfix">
+                                    <span class="pull-left">{$LANG.orderForm.totals}</span>
+                                    <span id="recurring" class="pull-right recurring-charges">
+                                        <span id="recurringMonthly" {if !$totalrecurringmonthly}style="display:none;"{/if}>
+                                            <span class="cost">{$totalrecurringmonthly}</span> {$LANG.orderpaymenttermmonthly}<br />
                                         </span>
-                                    </div>
-                                {/if}
+                                        <span id="recurringQuarterly" {if !$totalrecurringquarterly}style="display:none;"{/if}>
+                                            <span class="cost">{$totalrecurringquarterly}</span> {$LANG.orderpaymenttermquarterly}<br />
+                                        </span>
+                                        <span id="recurringSemiAnnually" {if !$totalrecurringsemiannually}style="display:none;"{/if}>
+                                            <span class="cost">{$totalrecurringsemiannually}</span> {$LANG.orderpaymenttermsemiannually}<br />
+                                        </span>
+                                        <span id="recurringAnnually" {if !$totalrecurringannually}style="display:none;"{/if}>
+                                            <span class="cost">{$totalrecurringannually}</span> {$LANG.orderpaymenttermannually}<br />
+                                        </span>
+                                        <span id="recurringBiennially" {if !$totalrecurringbiennially}style="display:none;"{/if}>
+                                            <span class="cost">{$totalrecurringbiennially}</span> {$LANG.orderpaymenttermbiennially}<br />
+                                        </span>
+                                        <span id="recurringTriennially" {if !$totalrecurringtriennially}style="display:none;"{/if}>
+                                            <span class="cost">{$totalrecurringtriennially}</span> {$LANG.orderpaymenttermtriennially}<br />
+                                        </span>
+                                    </span>
+                                </div>
 
                                 <div class="total-due-today total-due-today-padded">
-                                    <span class="amt">{$total}</span>
+                                    <span id="totalDueToday" class="amt">{$total}</span>
                                     <span>{$LANG.ordertotalduetoday}</span>
                                 </div>
 

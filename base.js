@@ -13,6 +13,9 @@ if (typeof localTrans === 'undefined') {
     }
 }
 
+var domainLookupCallCount,
+    furtherSuggestions;
+
 jQuery(document).ready(function(){
 
     jQuery('#order-standard_cart').find('input').iCheck({
@@ -238,19 +241,264 @@ jQuery(document).ready(function(){
         jQuery("#passwordStrengthMeterBar").removeClass('progress-bar-success progress-bar-warning progress-bar-danger').addClass('progress-bar-' + cssClass);
     });
 
-    jQuery("#btnCheckAvailability").click(function(e) {
+    jQuery('#inputDomain').on('shown.bs.tooltip', function () {
+        setTimeout(function(input) {
+            input.tooltip('hide');
+        },
+            5000,
+            jQuery(this)
+        );
+    });
+
+    jQuery('#frmDomainChecker').submit(function (e) {
         e.preventDefault();
-        var buttonContent = jQuery(this).html();
-        jQuery(this).html('<i class="fa fa-spinner fa-spin"></i> ' + buttonContent);
-        jQuery("#domainSearchResults").hide();
-        jQuery("#domainLoadingSpinner").show();
-        jQuery.post("cart.php", jQuery("#frmDomainSearch").serialize(),
-                function(data) {
-                    jQuery("#domainLoadingSpinner").hide();
-                    jQuery("#domainSearchResults").html(data).show();
-                    jQuery("#btnCheckAvailability").html(buttonContent);
-                }
+
+        var frmDomain = jQuery('#frmDomainChecker'),
+            inputDomain = jQuery('#inputDomain'),
+            suggestions = jQuery('#domainSuggestions');
+
+        domainLookupCallCount = 0;
+
+        // check a domain has been entered
+        if (!inputDomain.val()) {
+            inputDomain.tooltip('show');
+            inputDomain.focus();
+            return;
+        }
+
+        // disable repeat submit and show loader
+        jQuery('#btnCheckAvailability').attr('disabled', 'disabled').addClass('disabled');
+        jQuery('.domain-lookup-result').addClass('hidden');
+        jQuery('.domain-lookup-loader').show();
+
+        // reset elements
+        suggestions.find('li').addClass('hidden').end();
+        suggestions.find('.clone').remove().end();
+        jQuery('div.panel-footer.more-suggestions').addClass('hidden')
+            .find('a').removeClass('hidden').end()
+            .find('span.no-more').addClass('hidden');
+        jQuery('.btn-add-to-cart').removeAttr('disabled')
+            .find('span').hide().end()
+            .find('span.to-add').show();
+        jQuery('.suggested-domains').hide().removeClass('hidden').fadeIn('fast');
+
+        // fade in results
+        if (!jQuery('#DomainSearchResults').is(":visible")) {
+            jQuery('#DomainSearchResults').hide().removeClass('hidden').fadeIn();
+        }
+
+        var lookup = jQuery.post(
+                frmDomain.attr('action'),
+                frmDomain.serialize() + '&type=domain',
+                'json'
+            ),
+            spotlight = jQuery.post(
+                frmDomain.attr('action'),
+                frmDomain.serialize() + '&type=spotlight',
+                'json'
+            ),
+            suggestion = jQuery.post(
+                frmDomain.attr('action'),
+                frmDomain.serialize() + '&type=suggestions',
+                'json'
             );
+
+        // primary lookup handler
+        lookup.done(function (data) {
+            if (typeof data != 'object' || data.result.length == 0) {
+                jQuery('.domain-lookup-primary-loader').hide();
+                return;
+            }
+            jQuery.each(data.result, function(index, domain) {
+                var pricing = domain.pricing,
+                    result = jQuery('#primaryLookupResult'),
+                    available = result.find('.domain-available'),
+                    availableprice = result.find('.domain-price'),
+                    unavailable = result.find('.domain-unavailable');
+                jQuery('.domain-lookup-primary-loader').hide();
+                result.removeClass('hidden').show();
+                if (domain.isAvailable) {
+                    unavailable.hide();
+                    available.show().find('strong').html(domain.domainName);
+                    availableprice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
+                        .find('button').attr('data-domain', domain.idnDomainName);
+                } else {
+                    available.hide();
+                    availableprice.hide();
+                    unavailable.show().find('strong').html(domain.domainName);
+                }
+            });
+        }).always(function() {
+            hasDomainLookupEnded();
+        });
+
+        // spotlight lookup handler
+        spotlight.done(function(data) {
+            if (typeof data != 'object' || data.result.length == 0) {
+                jQuery('.domain-lookup-spotlight-loader').hide();
+                return;
+            }
+            jQuery.each(data.result, function(index, domain) {
+                var tld = domain.tld,
+                    pricing = domain.pricing,
+                    result = jQuery('#spotlight' + tld + ' .domain-lookup-result');
+                jQuery('.domain-lookup-spotlight-loader').hide();
+                if (domain.isAvailable) {
+                    result.find('button.unavailable').addClass('hidden').end()
+                        .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
+                        .find('button').not('button.unavailable')
+                        .attr('data-domain', domain.idnDomainName)
+                        .removeClass('hidden');
+                } else {
+                    result.find('button.unavailable.hidden').removeClass('hidden').end()
+                        .find('span.available').addClass('hidden').end()
+                        .find('button').not('button.unavailable').addClass('hidden');
+                }
+                result.removeClass('hidden');
+            });
+        }).always(function() {
+            hasDomainLookupEnded();
+        });
+
+        // suggestions lookup handler
+        suggestion.done(function (data) {
+            if (typeof data != 'object' || data.result.length == 0) {
+                jQuery('.suggested-domains').fadeOut('fast', function() {
+                    jQuery(this).addClass('hidden');
+                });
+                return;
+            } else {
+                jQuery('.suggested-domains').removeClass('hidden');
+            }
+            var suggestionCount = 1;
+            jQuery.each(data.result, function(index, domain) {
+                var tld = domain.tld,
+                    pricing = domain.pricing;
+                suggestions.find('li:first').clone(true, true).appendTo(suggestions);
+                var newSuggestion = suggestions.find('li.domain-suggestion').last();
+                newSuggestion.addClass('clone')
+                    .find('span.domain').html(domain.sld).end()
+                    .find('span.extension').html('.' + tld).end()
+                    .find('button').attr('data-domain', domain.idnDomainName).end()
+                    .find('span.price').html(pricing[Object.keys(pricing)[0]].register).end();
+                if (suggestionCount <= 10) {
+                    newSuggestion.removeClass('hidden');
+                }
+                suggestionCount++;
+                if (domain.group) {
+                    newSuggestion.find('span.promo')
+                        .addClass(domain.group)
+                        .html(domain.group.toUpperCase())
+                        .removeClass('hidden')
+                        .end();
+                }
+                furtherSuggestions = suggestions.find('li.domain-suggestion.clone.hidden').length;
+                if (furtherSuggestions > 0) {
+                    jQuery('div.more-suggestions').removeClass('hidden');
+                }
+            });
+            jQuery('.domain-lookup-suggestions-loader').hide();
+            jQuery('#domainSuggestions').removeClass('hidden');
+        }).always(function() {
+            hasDomainLookupEnded();
+        });
+    });
+
+    jQuery('.btn-add-to-cart').on('click', function() {
+        if (jQuery(this).hasClass('checkout')) {
+            window.location = 'cart.php?a=confdomains';
+            return;
+        }
+        var domain = jQuery(this).attr('data-domain'),
+            buttons = jQuery('button[data-domain="' + domain + '"]'),
+            whois = jQuery(this).attr('data-whois');
+
+        buttons.attr('disabled', 'disabled');
+
+        var addToCart = jQuery.post(
+            window.location.pathname,
+            {
+                a: 'addToCart',
+                domain: domain,
+                token: csrfToken,
+                whois: whois
+            },
+            'json'
+        ).done(function (data) {
+            buttons.find('span.to-add').hide();
+            if (data.result == 'added') {
+                buttons.find('span.added').show().end().removeAttr('disabled').addClass('checkout');
+                jQuery('#cartItemCount').html(data.cartCount);
+            } else {
+                buttons.find('span.unavailable').show();
+            }
+        });
+    });
+
+    jQuery('#frmDomainTransfer').submit(function (e) {
+        e.preventDefault();
+
+        var frmDomain = jQuery('#frmDomainTransfer'),
+        transferButton = jQuery('#btnTransferDomain'),
+            inputDomain = jQuery('#inputTransferDomain'),
+            authField = jQuery('#inputAuthCode'),
+            domain = inputDomain.val(),
+            authCode = authField.val(),
+            redirect = false;
+
+        if (!domain) {
+            inputDomain.tooltip('show');
+            inputDomain.focus();
+            return false;
+        }
+
+        transferButton.attr('disabled', 'disabled').addClass('disabled')
+            .find('span').hide().removeClass('hidden').end()
+            .find('.loader').show();
+
+        var lookup = jQuery.post(
+            frmDomain.attr('action'),
+            frmDomain.serialize(),
+            'json'
+        ).done(function (data) {
+            if (typeof data != 'object') {
+                transferButton.find('span').hide().end()
+                    .find('#addToCart').show().end()
+                    .removeAttr('disabled').removeClass('disabled');
+                return false;
+            }
+            var result = data.result;
+
+            if (result == 'added') {
+                window.location = 'cart.php?a=confdomains';
+                redirect = true;
+            } else {
+                if (result.isRegistered == true) {
+                    if (result.epp == true && !authCode) {
+                        authField.tooltip('show');
+                        authField.focus();
+                    }
+                } else {
+                    jQuery('#transferUnavailable').html(result.unavailable)
+                        .hide().removeClass('hidden').fadeIn('fast', function() {
+                            setTimeout(function(input) {
+                                    input.fadeOut('fast');
+                                },
+                                3000,
+                                jQuery(this)
+                            );
+                        }
+                    );
+                }
+            }
+        }).always(function () {
+            if (redirect == false) {
+                transferButton.find('span').hide().end()
+                    .find('#addToCart').show().end()
+                    .removeAttr('disabled').removeClass('disabled');
+            }
+        });
+
     });
 
     jQuery("#btnEmptyCart").click(function() {
@@ -262,8 +510,14 @@ jQuery(document).ready(function(){
         jQuery("#selectedCardType").html(jQuery(this).html());
         jQuery("#cctype").val(jQuery('span.type', this).html());
     });
-
 });
+
+function hasDomainLookupEnded() {
+    domainLookupCallCount++;
+    if (domainLookupCallCount == 3) {
+        jQuery('#btnCheckAvailability').removeAttr('disabled').removeClass('disabled');
+    }
+}
 
 function domainGotoNextStep() {
     jQuery("#domainLoadingSpinner").show();
@@ -321,6 +575,89 @@ function selectDomainPricing(domainName, price, period, yearsString, suggestionN
     jQuery("[name='domainsregperiod[" + domainName + "]']").val(period);
     jQuery("[name='" + domainName + "-selected-price']").html('<b class="glyphicon glyphicon-shopping-cart"></b>'
         + ' ' + period + ' ' + yearsString + ' @ ' + price);
+}
+
+function selectDomainPeriodInCart(domainName, price, period, yearsString) {
+    var loader = jQuery("#orderSummaryLoader");
+    if (loader.hasClass('hidden')) {
+        loader.hide().removeClass('hidden').fadeIn('fast');
+    }
+    jQuery("[name='" + domainName + "Pricing']").html(period + ' ' + yearsString + ' <span class="caret"></span>');
+    jQuery("[name='" + domainName + "Price']").html(price);
+    var update = jQuery.post(
+        window.location.pathname,
+        {
+            domain: domainName,
+            period: period,
+            a: 'updateDomainPeriod',
+            token: csrfToken
+        }
+    );
+    update.done(
+        function(data) {
+            jQuery('#subtotal').html(data.subtotal);
+            if (data.promotype) {
+                jQuery('#discount').html(data.discount);
+            }
+            if (data.taxrate) {
+                jQuery('#taxTotal1').html(data.taxtotal);
+            }
+            if (data.taxrate2) {
+                jQuery('#taxTotal2').html(data.taxtotal2);
+            }
+
+            var recurringSpan = jQuery('#recurring');
+
+            recurringSpan.find('span:visible').not('span.cost').fadeOut('fast').end();
+
+            if (data.totalrecurringannually) {
+                jQuery('#recurringAnnually').fadeIn('fast').find('.cost').html(data.totalrecurringannually);
+            }
+
+            if (data.totalrecurringbiennially) {
+                jQuery('#recurringBiennially').fadeIn('fast').find('.cost').html(data.totalrecurringbiennially);
+            }
+
+            if (data.totalrecurringmonthly) {
+                jQuery('#recurringMonthly').fadeIn('fast').find('.cost').html(data.totalrecurringmonthly);
+            }
+
+            if (data.totalrecurringquarterly) {
+                jQuery('#recurringQuarterly').fadeIn('fast').find('.cost').html(data.totalrecurringquarterly);
+            }
+
+            if (data.totalrecurringsemiannually) {
+                jQuery('#recurringSemiAnnually').fadeIn('fast').find('.cost').html(data.totalrecurringsemiannually);
+            }
+
+            if (data.totalrecurringtriennially) {
+                jQuery('#recurringTriennially').fadeIn('fast').find('.cost').html(data.totalrecurringtriennially);
+            }
+
+            jQuery('#totalDueToday').html(data.total);
+        }
+    );
+    update.always(
+        function() {
+            loader.delay(500).fadeOut('slow').addClass('hidden').show();
+        }
+    );
+}
+
+function loadMoreSuggestions()
+{
+    var suggestions = jQuery('#domainSuggestions'),
+        suggestionCount;
+
+    for (suggestionCount = 1; suggestionCount <= 10; suggestionCount++) {
+        if (furtherSuggestions > 0) {
+            suggestions.find('li.domain-suggestion.hidden.clone:first').not().hide().removeClass('hidden').slideDown();
+            furtherSuggestions = suggestions.find('li.domain-suggestion.clone.hidden').length;
+        } else {
+            jQuery('div.more-suggestions').find('a').addClass('hidden').end().find('span.no-more').removeClass('hidden');
+            return;
+        }
+    }
 }
 
 function catchEnter(e) {

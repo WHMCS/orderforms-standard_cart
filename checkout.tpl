@@ -582,10 +582,12 @@
                 </div>
             </form>
 
-            <div class="alert alert-warning checkout-security-msg">
-                <i class="fa fa-lock"></i>
-                {$LANG.ordersecure} (<strong>{$ipaddress}</strong>) {$LANG.ordersecure2}
-            </div>
+            {if $servedOverSsl}
+                <div class="alert alert-warning checkout-security-msg">
+                    <i class="fa fa-lock"></i>
+                    {$LANG.ordersecure} (<strong>{$ipaddress}</strong>) {$LANG.ordersecure2}
+                </div>
+            {/if}
 
         </div>
     </div>
