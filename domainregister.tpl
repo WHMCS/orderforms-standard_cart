@@ -56,8 +56,8 @@
                 <div id="searchDomainInfo" class="domain-checker-result-headline">
                     <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching"><i class="fa fa-spinner fa-spin"></i> {lang key='orderForm.searching'}...</p>
                     <div id="primaryLookupResult" class="domain-lookup-result hidden">
-                        <p class="domain-available domain-checker-available">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</p>
                         <p class="domain-unavailable domain-checker-unavailable">{lang key='orderForm.domainIsUnavailable'}</p>
+                        <p class="domain-available domain-checker-available">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</p>
                         <p class="domain-price">
                             <span class="price"></span>
                             <button class="btn btn-primary btn-add-to-cart" data-whois="0" data-domain="">
@@ -74,7 +74,7 @@
                         <div class="spotlight-tlds-container">
                             {foreach $spotlightTlds as $key => $data}
                                 <div class="spotlight-tld-container spotlight-tld-container-{$spotlightTlds|count}">
-                                    <div id="spotlight{$data.tldNoDot}" class="spotlight-tld{if $data.group} spotlight-tld-{$data.group}{/if}">
+                                    <div id="spotlight{$data.tldNoDots}" class="spotlight-tld{if $data.group} spotlight-tld-{$data.group}{/if}">
                                         {$data.tld}
                                         <span class="domain-lookup-loader domain-lookup-spotlight-loader">
                                             <i class="fa fa-spinner fa-spin"></i>

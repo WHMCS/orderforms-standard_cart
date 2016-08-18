@@ -319,6 +319,9 @@ jQuery(document).ready(function(){
                 result.removeClass('hidden').show();
                 if (domain.isAvailable) {
                     unavailable.hide();
+                    if (domain.preferredTLDNotAvailable) {
+                        unavailable.show().find('strong').html(domain.domainName);
+                    }
                     available.show().find('strong').html(domain.domainName);
                     availableprice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
                         .find('button').attr('data-domain', domain.idnDomainName);
@@ -339,7 +342,7 @@ jQuery(document).ready(function(){
                 return;
             }
             jQuery.each(data.result, function(index, domain) {
-                var tld = domain.tld,
+                var tld = domain.tldNoDots,
                     pricing = domain.pricing,
                     result = jQuery('#spotlight' + tld + ' .domain-lookup-result');
                 jQuery('.domain-lookup-spotlight-loader').hide();
