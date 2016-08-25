@@ -42,7 +42,7 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label for="inputTransferDomain">{lang key='domainname'}</label>
-                                    <input type="text" class="form-control" name="domain" id="inputTransferDomain" placeholder="{lang key='yourdomainplaceholder'}.{lang key='yourtldplaceholder'}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
+                                    <input type="text" class="form-control" name="domain" id="inputTransferDomain" value="{$lookupTerm}" placeholder="{lang key='yourdomainplaceholder'}.{lang key='yourtldplaceholder'}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
                                 </div>
                                 <div class="form-group">
                                     <label for="inputAuthCode" style="width:100%;">
@@ -52,6 +52,22 @@
                                     <input type="text" class="form-control" name="epp" id="inputAuthCode" placeholder="{lang key='orderForm.authCodePlaceholder'}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                 </div>
                                 <div id="transferUnavailable" class="alert alert-warning slim-alert text-center hidden"></div>
+                                {if $captcha}
+                                    <div class="captcha-container" id="captchaContainer">
+                                        {if $captcha eq "recaptcha"}
+                                            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                            <div id="google-recaptcha" class="g-recaptcha recaptcha-transfer center-block" data-sitekey="{$reCaptchaPublicKey}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.required'}" ></div>
+                                        {else}
+                                            <div class="default-captcha">
+                                                <p>{lang key="cartSimpleCaptcha"}</p>
+                                                <div>
+                                                    <img id="inputCaptchaImage" src="includes/verifyimage.php" />
+                                                    <input id="inputCaptcha" type="text" name="code" maxlength="5" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
+                                                </div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                {/if}
                             </div>
                             <div class="panel-footer text-right">
                                 <button type="submit" id="btnTransferDomain" class="btn btn-primary btn-transfer">

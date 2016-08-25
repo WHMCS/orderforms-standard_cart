@@ -232,16 +232,34 @@
     text-align: center;
 }
 
-#order-standard_cart .domain-checker-result-headline {
-    margin: 20px;
-    font-size: 1.6em;
+#order-standard_cart .domain-lookup-primary-loader,
+#order-standard_cart .domain-lookup-primary-results {
+    margin: 20px 0;
     text-align: center;
+}
+#order-standard_cart .domain-checker-result-headline,
+#order-standard_cart .domain-lookup-primary-results .headline {
+    font-size: 1.6em;
 }
 #order-standard_cart .domain-checker-available {
     color: #5cb85c;
 }
 #order-standard_cart .domain-checker-unavailable {
     color: #d9534f;
+}
+#order-standard_cart .transfer-eligible,
+#order-standard_cart .transfer-not-eligible {
+    margin: 30px 0 15px;
+    padding: 20px;
+}
+#order-standard_cart .transfer-eligible {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+#order-standard_cart .transfer-not-eligible {
+    color: #666;
+    background-color: #f6f6f6;
 }
 
 #order-standard_cart .domain-suggestions {
@@ -904,4 +922,90 @@
 .domain-suggestions-warning {
     padding: 10px 0;
     font-size: 0.7em;
+}
+
+/**
+ * -------------------------
+ * Domain Checker Captchas
+ * -------------------------
+ */
+
+#order-standard_cart .default-captcha {
+    margin: 0 auto 6px auto;
+    padding: 10px;
+    max-width: 340px;
+    background-color: #F9F9F9;
+    border: 1px solid #d3d3d3;
+    color: #888;
+    border-radius: 3px;
+    box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.08);
+    -webkit-box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.08);
+    -moz-box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.08);
+    text-align: center;
+    font-size: 0.9em;
+}
+#order-standard_cart .default-captcha-register-margin {
+    margin: 18px auto -25px auto;
+}
+
+#order-standard_cart .captcha-container p {
+    margin-bottom: 5px;
+}
+#order-standard_cart .captcha-container img {
+    margin-top: 3px;
+}
+#order-standard_cart .captcha-container .form-control {
+    height: inherit;
+    max-width: 90px;
+    text-align: center;
+}
+
+#order-standard_cart .captcha-container #google-recaptcha {
+    width: 304px;
+    height: 100px;
+    margin-top: 15px;
+    margin-bottom: -50px;
+}
+#order-standard_cart .captcha-container #google-recaptcha.recaptcha-transfer {
+    margin-bottom: -20px;
+}
+
+@media (max-width: 991px) {
+    #order-standard_cart .captcha-container #google-recaptcha {
+        padding-left: 2.5%;
+        margin-bottom: -25px;
+    }
+}
+@media (max-width: 736px) {
+    #order-standard_cart .captcha-container #google-recaptcha {
+        margin-bottom: -35px;
+        transform: scale(0.935);
+        transform-origin: 0 0;
+        -webkit-transform: scale(0.935);
+        -webkit-transform-origin: 0 0;
+    }
+}
+@media (max-width: 384px) {
+    #order-standard_cart .captcha-container #google-recaptcha {
+        margin-bottom: -30px;
+        transform: scale(0.96);
+        transform-origin: 0 0;
+    }
+}
+@media (max-width: 360px) {
+    #order-standard_cart .captcha-container #google-recaptcha {
+        margin-bottom: -35px;
+        transform: scale(0.89);
+        transform-origin: 0 0;
+    }
+}
+@media (max-width: 320px) {
+    #order-standard_cart .captcha-container #google-recaptcha {
+        padding-left: 13.5%;
+        margin-bottom: -45px;
+        transform: scale(0.83);
+        transform-origin: 0 0;
+        -webkit-transform: scale(0.785);
+        -webkit-transform-origin: 0 0;
+    }
 }

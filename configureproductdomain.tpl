@@ -23,7 +23,7 @@
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
             <form id="frmProductDomain" onsubmit="checkdomain();return false">
-
+                <input type="hidden" id="frmProductDomainPid" value="{$pid}" />
                 <div class="domain-selection-options">
                     {if $incartdomains}
                         <div class="option">
@@ -62,7 +62,7 @@
                                             <div class="col-xs-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">{$LANG.orderForm.www}</span>
-                                                    <input type="text" id="registersld" value="{$sld}" class="form-control" autocapitalize="none" />
+                                                    <input type="text" id="registersld" value="{$sld}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
                                                 </div>
                                             </div>
                                             <div class="col-xs-3">
@@ -95,7 +95,7 @@
                                             <div class="col-xs-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">www.</span>
-                                                    <input type="text" id="transfersld" value="{$sld}" class="form-control" autocapitalize="none" />
+                                                    <input type="text" id="transfersld" value="{$sld}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.enterDomain'}"/>
                                                 </div>
                                             </div>
                                             <div class="col-xs-3">
@@ -129,10 +129,10 @@
                                                 <p class="form-control-static">www.</p>
                                             </div>
                                             <div class="col-xs-7">
-                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" autocapitalize="none" />
+                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
                                             </div>
                                             <div class="col-xs-3">
-                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" autocapitalize="none" />
+                                                <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +158,7 @@
                                                 <p class="form-control-static">http://</p>
                                             </div>
                                             <div class="col-xs-5">
-                                                <input type="text" id="subdomainsld" value="{$sld}" placeholder="yourname" class="form-control" autocapitalize="none" />
+                                                <input type="text" id="subdomainsld" value="{$sld}" placeholder="yourname" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
                                             </div>
                                             <div class="col-xs-5">
                                                 <select id="subdomaintld" class="form-control">
@@ -187,13 +187,110 @@
             </form>
 
             <div class="clearfix"></div>
-
-            <div class="domain-loading-spinner" id="domainLoadingSpinner">
-                <i class="fa fa-3x fa-spinner fa-spin"></i>
-            </div>
-
             <form method="post" action="cart.php?a=add&pid={$pid}&domainselect=1" id="frmProductDomainSelections">
-                <div class="domain-search-results" id="domainSearchResults"></div>
+
+                <div id="DomainSearchResults" class="hidden">
+
+                    <div id="searchDomainInfo">
+                        <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching domain-checker-result-headline">
+                            <i class="fa fa-spinner fa-spin"></i>
+                            <span class="domain-lookup-register-loader">{lang key='orderForm.checkingAvailability'}...</span>
+                            <span class="domain-lookup-transfer-loader">{lang key='orderForm.verifyingTransferEligibility'}...</span>
+                            <span class="domain-lookup-other-loader">{lang key='orderForm.verifyingDomain'}...</span>
+                        </p>
+                        <div id="primaryLookupResult" class="domain-lookup-result domain-lookup-primary-results hidden">
+                            <div class="domain-unavailable domain-checker-unavailable headline">{lang key='orderForm.domainIsUnavailable'}</div>
+                            <div class="domain-available domain-checker-available headline">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</div>
+                            <div class="transfer-eligible">
+                                <p class="domain-checker-available headline">{lang key='orderForm.transferEligible'}</p>
+                                <p>{lang key='orderForm.transferUnlockBeforeContinuing'}</p>
+                            </div>
+                            <div class="transfer-not-eligible">
+                                <p class="domain-checker-unavailable headline">{lang key='orderForm.transferNotEligible'}</p>
+                                <p>{lang key='orderForm.transferNotRegistered'}</p>
+                                <p>{lang key='orderForm.trasnferRecentlyRegistered'}</p>
+                                <p>{lang key='orderForm.transferAlternativelyRegister'}</p>
+                            </div>
+                            <div class="domain-invalid">
+                                <p class="domain-checker-unavailable headline">{lang key='orderForm.domainInvalid'}</p>
+                                <p>{lang key='orderForm.domainInvalidCheckEntry'}</p>
+                            </div>
+                            <div class="domain-price">
+                                <span class="register-price-label">{lang key='orderForm.domainPriceRegisterLabel'}</span>
+                                <span class="transfer-price-label hidden">{lang key='orderForm.domainPriceTransferLabel'}</span>
+                                <span class="price"></span>
+                            </div>
+                            <input type="hidden" id="resultDomainOption" name="domainoption" />
+                            <input type="hidden" id="resultDomain" name="domains[]" />
+                            <input type="hidden" id="resultDomainPricingTerm" />
+                        </div>
+                    </div>
+
+                    {if $registerdomainenabled}
+                        {if $spotlightTlds}
+                            <div id="spotlightTlds" class="spotlight-tlds clearfix hidden">
+                                <div class="spotlight-tlds-container">
+                                    {foreach $spotlightTlds as $key => $data}
+                                        <div class="spotlight-tld-container spotlight-tld-container-{$spotlightTlds|count}">
+                                            <div id="spotlight{$data.tldNoDots}" class="spotlight-tld{if $data.group} spotlight-tld-{$data.group}{/if}">
+                                                {$data.tld}
+                                                <span class="domain-lookup-loader domain-lookup-spotlight-loader">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </span>
+                                                <div class="domain-lookup-result">
+                                                    <button type="button" class="btn unavailable hidden" disabled="disabled">
+                                                        {lang key='domainunavailable'}
+                                                    </button>
+                                                    <span class="available price hidden">{$data.register}</span>
+                                                    <button type="button" class="btn hidden btn-add-to-cart product-domain" data-whois="0" data-domain="">
+                                                        <span class="to-add">{lang key='orderForm.add'}</span>
+                                                        <span class="added">{lang key='domaincheckeradded'}</span>
+                                                        <span class="unavailable">{$LANG.domaincheckertaken}</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        {/if}
+
+                        <div class="suggested-domains hidden">
+                            <div class="panel-heading">
+                                {lang key='orderForm.suggestedDomains'}
+                            </div>
+                            <div id="suggestionsLoader" class="panel-body domain-lookup-loader domain-lookup-suggestions-loader">
+                                <i class="fa fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
+                            </div>
+                            <ul id="domainSuggestions" class="domain-lookup-result list-group hidden">
+                                <li class="domain-suggestion list-group-item hidden">
+                                    <span class="domain"></span><span class="extension"></span>
+                                    <button type="button" class="btn btn-add-to-cart product-domain" data-whois="1" data-domain="">
+                                        <span class="to-add">{$LANG.addtocart}</span>
+                                        <span class="added">{lang key='domaincheckeradded'}</span>
+                                        <span class="unavailable">{$LANG.domaincheckertaken}</span>
+                                    </button>
+                                    <span class="price"></span>
+                                    <span class="promo hidden"></span>
+                                </li>
+                            </ul>
+                            <div class="panel-footer more-suggestions hidden text-center">
+                                <a id="moreSuggestions" href="#" onclick="loadMoreSuggestions();return false;">{lang key='domainsmoresuggestions'}</a>
+                                <span id="noMoreSuggestions" class="no-more small hidden">{lang key='domaincheckernomoresuggestions'}</span>
+                            </div>
+                            <div class="text-center text-muted domain-suggestions-warning">
+                                <p>{lang key='domainssuggestionswarnings'}</p>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+
+                <div class="text-center">
+                    <button id="btnDomainContinue" type="submit" class="btn btn-primary btn-lg hidden" disabled="disabled">
+                        {$LANG.continue}
+                        &nbsp;<i class="fa fa-arrow-circle-right"></i>
+                    </button>
+                </div>
             </form>
 
         </div>
