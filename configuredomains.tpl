@@ -1,5 +1,12 @@
 {include file="orderforms/standard_cart/common.tpl"}
 
+<script>
+var _localLang = {
+    'addToCart': '{$LANG.orderForm.addToCart|escape}',
+    'addedToCartRemove': '{$LANG.orderForm.addedToCartRemove|escape}'
+}
+</script>
+
 <div id="order-standard_cart">
 
     <div class="row">

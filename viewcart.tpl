@@ -219,7 +219,7 @@
                                                     {if $domain.type eq "register"}{$LANG.orderdomainregistration}{else}{$LANG.orderdomaintransfer}{/if}
                                                     <a href="{$smarty.server.PHP_SELF}?a=confdomains" class="btn btn-link btn-xs">
                                                         <i class="fa fa-pencil"></i>
-                                                        Edit
+                                                        {$LANG.orderForm.edit}
                                                     </a>
                                                     <span class="visible-xs-inline">
                                                         <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('d','{$num}')">

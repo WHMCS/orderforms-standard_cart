@@ -910,7 +910,7 @@
 }
 
 .btn-transfer {
-    width: 100px;
+    min-width: 100px;
 }
 
 .slim-alert {
