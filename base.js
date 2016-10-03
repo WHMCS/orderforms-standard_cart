@@ -260,23 +260,38 @@ jQuery(document).ready(function(){
                         available = result.find('.domain-available'),
                         availablePrice = result.find('.domain-price'),
                         unavailable = result.find('.domain-unavailable'),
+                        invalid= result.find('.domain-invalid'),
                         resultDomain = jQuery('#resultDomain'),
                         resultDomainPricing = jQuery('#resultDomainPricingTerm');
                     result.removeClass('hidden').show();
                     jQuery('.domain-lookup-primary-loader').hide();
-                    if (domain.isAvailable) {
-                        if (domain.preferredTLDNotAvailable) {
+                    if (domain.isValidDomain) {
+                        unavailable.hide();
+                        invalid.hide();
+                        if (domain.isAvailable) {
+                            if (domain.preferredTLDNotAvailable) {
+                                unavailable.show().find('strong').html(domain.originalUnavailableDomain);
+                            }
+                            available.show().find('strong').html(domain.domainName);
+                            availablePrice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
+                                .find('button').attr('data-domain', domain.idnDomainName);
+                            resultDomain.val(domain.domainName);
+                            resultDomainPricing.val(Object.keys(pricing)[0]).attr('name', 'domainsregperiod[' + domain.domainName +']');
+                            btnDomainContinue.removeAttr('disabled');
+                        } else {
                             unavailable.show().find('strong').html(domain.domainName);
                         }
-                        available.show().find('strong').html(domain.domainName);
-                        availablePrice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
-                            .find('button').attr('data-domain', domain.idnDomainName);
-                        resultDomain.val(domain.domainName);
-                        resultDomainPricing.val(Object.keys(pricing)[0]).attr('name', 'domainsregperiod[' + domain.domainName +']');
-                        btnDomainContinue.removeAttr('disabled');
                     } else {
-                        unavailable.show().find('strong').html(domain.domainName);
+                        var invalidLength = invalid.find('span.domain-length-restrictions');
+                        invalidLength.hide();
+                        if (domain.minLength > 0 && domain.maxLength > 0) {
+                            invalidLength.find('.min-length').html(domain.minLength).end()
+                                .find('.max-length').html(domain.maxLength).end();
+                            invalidLength.show();
+                        }
+                        invalid.show();
                     }
+
                 });
             }).always(function() {
                 hasProductDomainLookupEnded(3, btnSearchObj);
@@ -293,17 +308,24 @@ jQuery(document).ready(function(){
                         pricing = domain.pricing,
                         result = jQuery('#spotlight' + tld + ' .domain-lookup-result');
                     jQuery('.domain-lookup-spotlight-loader').hide();
-                    if (domain.isAvailable) {
-                        result.find('button.unavailable').addClass('hidden').end()
-                            .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
-                            .find('button').not('button.unavailable')
-                            .attr('data-domain', domain.idnDomainName)
-                            .removeClass('hidden');
+                    if (domain.isValidDomain) {
+                        if (domain.isAvailable) {
+                            result.find('button.unavailable').addClass('hidden').end()
+                                .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
+                                .find('button').not('button.unavailable')
+                                .attr('data-domain', domain.idnDomainName)
+                                .removeClass('hidden');
+                        } else {
+                            result.find('button.unavailable.hidden').removeClass('hidden').end()
+                                .find('span.available').addClass('hidden').end()
+                                .find('button').not('button.unavailable').addClass('hidden');
+                        }
                     } else {
-                        result.find('button.unavailable.hidden').removeClass('hidden').end()
+                        result.find('button.invalid.hidden').removeClass('hidden').end()
                             .find('span.available').addClass('hidden').end()
-                            .find('button').not('button.unavailable').addClass('hidden');
+                            .find('button').not('button.invalid').addClass('hidden');
                     }
+
                     result.removeClass('hidden');
                 });
             }).always(function() {
@@ -594,21 +616,37 @@ jQuery(document).ready(function(){
                     result = jQuery('#primaryLookupResult'),
                     available = result.find('.domain-available'),
                     availableprice = result.find('.domain-price'),
-                    unavailable = result.find('.domain-unavailable');
+                    unavailable = result.find('.domain-unavailable'),
+                    invalid = result.find('.domain-invalid');
                 jQuery('.domain-lookup-primary-loader').hide();
                 result.removeClass('hidden').show();
-                if (domain.isAvailable) {
+                if (domain.isValidDomain) {
                     unavailable.hide();
-                    if (domain.preferredTLDNotAvailable) {
+                    invalid.hide();
+                    if (domain.isAvailable) {
+                        if (domain.preferredTLDNotAvailable) {
+                            unavailable.show().find('strong').html(domain.originalUnavailableDomain);
+                        }
+                        available.show().find('strong').html(domain.domainName);
+                        availableprice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
+                            .find('button').attr('data-domain', domain.idnDomainName);
+                    } else {
+                        available.hide();
+                        availableprice.hide();
                         unavailable.show().find('strong').html(domain.domainName);
                     }
-                    available.show().find('strong').html(domain.domainName);
-                    availableprice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
-                        .find('button').attr('data-domain', domain.idnDomainName);
                 } else {
                     available.hide();
                     availableprice.hide();
-                    unavailable.show().find('strong').html(domain.domainName);
+                    unavailable.hide();
+                    var invalidLength = invalid.find('span.domain-length-restrictions');
+                    invalidLength.hide();
+                    if (domain.minLength > 0 && domain.maxLength > 0) {
+                        invalidLength.find('.min-length').html(domain.minLength).end()
+                            .find('.max-length').html(domain.maxLength).end();
+                        invalidLength.show();
+                    }
+                    invalid.show();
                 }
             });
         }).always(function() {
@@ -626,16 +664,23 @@ jQuery(document).ready(function(){
                     pricing = domain.pricing,
                     result = jQuery('#spotlight' + tld + ' .domain-lookup-result');
                 jQuery('.domain-lookup-spotlight-loader').hide();
-                if (domain.isAvailable) {
-                    result.find('button.unavailable').addClass('hidden').end()
-                        .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
-                        .find('button').not('button.unavailable')
-                        .attr('data-domain', domain.idnDomainName)
-                        .removeClass('hidden');
+                if (domain.isValidDomain) {
+                    if (domain.isAvailable) {
+                        result.find('button.unavailable').addClass('hidden').end()
+                            .find('button.invalid').addClass('hidden').end()
+                            .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
+                            .find('button').not('button.unavailable').not('button.invalid')
+                            .attr('data-domain', domain.idnDomainName)
+                            .removeClass('hidden');
+                    } else {
+                        result.find('button.unavailable.hidden').removeClass('hidden').end()
+                            .find('span.available').addClass('hidden').end()
+                            .find('button').not('button.unavailable').addClass('hidden');
+                    }
                 } else {
-                    result.find('button.unavailable.hidden').removeClass('hidden').end()
+                    result.find('button.invalid.hidden').removeClass('hidden').end()
                         .find('span.available').addClass('hidden').end()
-                        .find('button').not('button.unavailable').addClass('hidden');
+                        .find('button').not('button.invalid').addClass('hidden');
                 }
                 result.removeClass('hidden');
             });

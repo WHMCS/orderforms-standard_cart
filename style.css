@@ -244,7 +244,8 @@
 #order-standard_cart .domain-checker-available {
     color: #5cb85c;
 }
-#order-standard_cart .domain-checker-unavailable {
+#order-standard_cart .domain-checker-unavailable,
+#order-standard_cart .domain-checker-invalid {
     color: #d9534f;
 }
 #order-standard_cart .transfer-eligible,
@@ -776,7 +777,8 @@
 .spotlight-tld .btn span {
     padding: 0;
 }
-.spotlight-tld .unavailable {
+.spotlight-tld .unavailable,
+.spotlight-tld .invalid {
     margin: 19px 0;
     background-color: #eee;
     border-color: #ddd;

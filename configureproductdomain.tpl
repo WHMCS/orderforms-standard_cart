@@ -213,7 +213,10 @@
                             </div>
                             <div class="domain-invalid">
                                 <p class="domain-checker-unavailable headline">{lang key='orderForm.domainInvalid'}</p>
-                                <p>{lang key='orderForm.domainInvalidCheckEntry'}</p>
+                                <p>
+                                    {lang key='orderForm.domainLetterOrNumber'}<span class="domain-length-restrictions">{lang key='orderForm.domainLengthRequirements'}</span><br />
+                                    {lang key='orderForm.domainInvalidCheckEntry'}
+                                </p>
                             </div>
                             <div class="domain-price">
                                 <span class="register-price-label">{lang key='orderForm.domainPriceRegisterLabel'}</span>
@@ -239,6 +242,9 @@
                                                 </span>
                                                 <div class="domain-lookup-result">
                                                     <button type="button" class="btn unavailable hidden" disabled="disabled">
+                                                        {lang key='domainunavailable'}
+                                                    </button>
+                                                    <button type="button" class="btn invalid hidden" disabled="disabled">
                                                         {lang key='domainunavailable'}
                                                     </button>
                                                     <span class="available price hidden">{$data.register}</span>

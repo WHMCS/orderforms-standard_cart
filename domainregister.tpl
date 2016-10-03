@@ -71,6 +71,7 @@
                 <div id="searchDomainInfo" class="domain-checker-result-headline">
                     <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching"><i class="fa fa-spinner fa-spin"></i> {lang key='orderForm.searching'}...</p>
                     <div id="primaryLookupResult" class="domain-lookup-result hidden">
+                        <p class="domain-invalid domain-checker-invalid">{lang key='orderForm.domainLetterOrNumber'}<span class="domain-length-restrictions">{lang key='orderForm.domainLengthRequirements'}</span></p>
                         <p class="domain-unavailable domain-checker-unavailable">{lang key='orderForm.domainIsUnavailable'}</p>
                         <p class="domain-available domain-checker-available">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</p>
                         <p class="domain-price">
@@ -96,6 +97,9 @@
                                         </span>
                                         <div class="domain-lookup-result">
                                             <button type="button" class="btn unavailable hidden" disabled="disabled">
+                                                {lang key='domainunavailable'}
+                                            </button>
+                                            <button type="button" class="btn invalid hidden" disabled="disabled">
                                                 {lang key='domainunavailable'}
                                             </button>
                                             <span class="available price hidden">{$data.register}</span>

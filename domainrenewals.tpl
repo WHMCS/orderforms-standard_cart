@@ -26,13 +26,13 @@
 
             <form method="post" action="cart.php?a=add&renewals=true">
 
-                <table class="table table-hover renewals">
+                <table class="table table-hover table-striped renewals">
                     <thead>
                         <tr>
                             <th width="20"></th>
                             <th>{$LANG.orderdomain}</th>
-                            <th>{$LANG.domainstatus}</th>
-                            <th>{$LANG.domaindaysuntilexpiry}</th>
+                            <th class="text-center">{$LANG.domainstatus}</th>
+                            <th class="text-center">{$LANG.domaindaysuntilexpiry}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -47,41 +47,41 @@
                                 <td>
                                     {$renewal.domain}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {$renewal.status}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {if $renewal.daysuntilexpiry > 30}
-                                        <span class="textgreen">
+                                        <span class="text-success">
                                             {$renewal.daysuntilexpiry} {$LANG.domainrenewalsdays}
                                         </span>
                                     {elseif $renewal.daysuntilexpiry > 0}
-                                        <span class="textred">
+                                        <span class="text-danger">
                                             {$renewal.daysuntilexpiry} {$LANG.domainrenewalsdays}
                                         </span>
                                     {else}
-                                        <span class="textblack">
+                                        <span>
                                             {$renewal.daysuntilexpiry*-1} {$LANG.domainrenewalsdaysago}
                                         </span>
                                     {/if}
                                     {if $renewal.ingraceperiod}
                                         <br />
-                                        <span class="textred">
+                                        <span class="text-danger">
                                             {$LANG.domainrenewalsingraceperiod}
                                         </span>
                                     {/if}
                                 </td>
                                 <td>
                                     {if $renewal.beforerenewlimit}
-                                        <span class="textred">
+                                        <span class="text-danger">
                                             {$LANG.domainrenewalsbeforerenewlimit|sprintf2:$renewal.beforerenewlimitdays}
                                         </span>
                                     {elseif $renewal.pastgraceperiod}
-                                        <span class="textred">
+                                        <span class="text-danger">
                                             {$LANG.domainrenewalspastgraceperiod}
                                         </span>
                                     {else}
-                                        <select name="renewalperiod[{$renewal.id}]">
+                                        <select class="form-control" name="renewalperiod[{$renewal.id}]">
                                             {foreach from=$renewal.renewaloptions item=renewaloption}
                                                 <option value="{$renewaloption.period}">
                                                     {$renewaloption.period} {$LANG.orderyears} @ {$renewaloption.price}
