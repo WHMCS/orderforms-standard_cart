@@ -75,7 +75,7 @@
                 <div class="clearfix"></div>
             {/if}
 
-            <form method="post" action="{$smarty.server.PHP_SELF}?a=checkout" name="orderfrm">
+            <form method="post" action="{$smarty.server.PHP_SELF}?a=checkout" name="orderfrm" id="frmCheckout">
                 <input type="hidden" name="submit" value="true" />
                 <input type="hidden" name="custtype" id="inputCustType" value="{$custtype}" />
 
@@ -441,6 +441,8 @@
                     </div>
                 </div>
 
+                <div class="alert alert-danger text-center gateway-errors hidden"></div>
+
                 <div class="clearfix"></div>
 
                 <div id="creditCardInputFields"{if $selectedgatewaytype neq "CC"} class="hidden"{/if}>
@@ -538,10 +540,10 @@
                     <div id="existingCardInfo" class="row{if !$clientsdetails.cclastfour || $ccinfo eq "new"} hidden{/if}">
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
-                                <label for="inputCardCVV" class="field-icon">
+                                <label for="inputCardCvvExisting" class="field-icon">
                                     <i class="fa fa-barcode"></i>
                                 </label>
-                                <input type="tel" name="cccvvexisting" id="inputCardCVV" class="field" placeholder="{$LANG.orderForm.cvv}" autocomplete="cc-cvc">
+                                <input type="tel" name="cccvvexisting" id="inputCardCvvExisting" class="field" placeholder="{$LANG.orderForm.cvv}" autocomplete="cc-cvc">
                             </div>
                         </div>
                     </div>

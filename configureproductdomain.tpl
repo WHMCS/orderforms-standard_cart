@@ -22,7 +22,7 @@
 
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
-            <form id="frmProductDomain" onsubmit="checkdomain();return false">
+            <form id="frmProductDomain">
                 <input type="hidden" id="frmProductDomainPid" value="{$pid}" />
                 <div class="domain-selection-options">
                     {if $incartdomains}
@@ -53,7 +53,7 @@
                     {if $registerdomainenabled}
                         <div class="option">
                             <label>
-                                <input type="radio" name="domainoption" value="register" id="selregister" />{$LANG.cartregisterdomainchoice|sprintf2:$companyname}
+                                <input type="radio" name="domainoption" value="register" id="selregister"{if $domainoption eq "register"} checked{/if} />{$LANG.cartregisterdomainchoice|sprintf2:$companyname}
                             </label>
                             <div class="domain-input-group clearfix" id="domainregister">
                                 <div class="row">
@@ -86,7 +86,7 @@
                     {if $transferdomainenabled}
                         <div class="option">
                             <label>
-                                <input type="radio" name="domainoption" value="transfer" id="seltransfer" />{$LANG.carttransferdomainchoice|sprintf2:$companyname}
+                                <input type="radio" name="domainoption" value="transfer" id="seltransfer"{if $domainoption eq "transfer"} checked{/if} />{$LANG.carttransferdomainchoice|sprintf2:$companyname}
                             </label>
                             <div class="domain-input-group clearfix" id="domaintransfer">
                                 <div class="row">
@@ -119,7 +119,7 @@
                     {if $owndomainenabled}
                         <div class="option">
                             <label>
-                                <input type="radio" name="domainoption" value="owndomain" id="selowndomain" />{$LANG.cartexistingdomainchoice|sprintf2:$companyname}
+                                <input type="radio" name="domainoption" value="owndomain" id="selowndomain"{if $domainoption eq "owndomain"} checked{/if} />{$LANG.cartexistingdomainchoice|sprintf2:$companyname}
                             </label>
                             <div class="domain-input-group clearfix" id="domainowndomain">
                                 <div class="row">
@@ -148,7 +148,7 @@
                     {if $subdomains}
                         <div class="option">
                             <label>
-                                <input type="radio" name="domainoption" value="subdomain" id="selsubdomain" />{$LANG.cartsubdomainchoice|sprintf2:$companyname}
+                                <input type="radio" name="domainoption" value="subdomain" id="selsubdomain"{if $domainoption eq "subdomain"} checked{/if} />{$LANG.cartsubdomainchoice|sprintf2:$companyname}
                             </label>
                             <div class="domain-input-group clearfix" id="domainsubdomain">
                                 <div class="row">
@@ -201,6 +201,7 @@
                         <div id="primaryLookupResult" class="domain-lookup-result domain-lookup-primary-results hidden">
                             <div class="domain-unavailable domain-checker-unavailable headline">{lang key='orderForm.domainIsUnavailable'}</div>
                             <div class="domain-available domain-checker-available headline">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</div>
+                            <div class="btn btn-primary domain-contact-support headline">{$LANG.domainContactUs}</div>
                             <div class="transfer-eligible">
                                 <p class="domain-checker-available headline">{lang key='orderForm.transferEligible'}</p>
                                 <p>{lang key='orderForm.transferUnlockBeforeContinuing'}</p>
@@ -253,6 +254,7 @@
                                                         <span class="added">{lang key='domaincheckeradded'}</span>
                                                         <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                                     </button>
+                                                    <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -276,6 +278,7 @@
                                         <span class="added">{lang key='domaincheckeradded'}</span>
                                         <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                     </button>
+                                    <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
                                     <span class="price"></span>
                                     <span class="promo hidden"></span>
                                 </li>

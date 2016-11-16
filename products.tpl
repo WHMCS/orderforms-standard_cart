@@ -88,6 +88,10 @@
                                             {elseif $product.pricing.minprice.cycle eq "triennially"}
                                                 {$LANG.orderpaymenttermtriennially}
                                             {/if}
+                                            <br>
+                                            {if $product.pricing.minprice.setupFee}
+                                                <small>{$product.pricing.minprice.setupFee->toPrefixed()} {$LANG.ordersetupfee}</small>
+                                            {/if}
                                         {/if}
                                     </div>
                                     <a href="cart.php?a=add&{if $product.bid}bid={$product.bid}{else}pid={$product.pid}{/if}" class="btn btn-success btn-sm" id="product{$product@iteration}-order-button">

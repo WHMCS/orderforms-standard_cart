@@ -32,11 +32,6 @@
                         <input type="hidden" name="a" value="checkDomain">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
-                                {if $bulkdomainsearchenabled}
-                                    <div class="domain-bulk-options-box hidden-xs">
-                                        <a href="domainchecker.php?search=bulk" id="btnBulkOptions" class="btn btn-warning btn-sm">{$LANG.bulkoptions}</a>
-                                    </div>
-                                {/if}
                                 <div class="input-group input-group-lg input-group-box">
                                     <input type="text" name="domain" class="form-control" placeholder="{$LANG.findyourdomain}" value="{$lookupTerm}" id="inputDomain" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.domainOrKeyword'}" />
                                     <span class="input-group-btn">
@@ -74,6 +69,7 @@
                         <p class="domain-invalid domain-checker-invalid">{lang key='orderForm.domainLetterOrNumber'}<span class="domain-length-restrictions">{lang key='orderForm.domainLengthRequirements'}</span></p>
                         <p class="domain-unavailable domain-checker-unavailable">{lang key='orderForm.domainIsUnavailable'}</p>
                         <p class="domain-available domain-checker-available">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</p>
+                        <a class="domain-contact-support btn btn-primary">{$LANG.domainContactUs}</a>
                         <p class="domain-price">
                             <span class="price"></span>
                             <button class="btn btn-primary btn-add-to-cart" data-whois="0" data-domain="">
@@ -108,6 +104,7 @@
                                                 <span class="added"><i class="glyphicon glyphicon-shopping-cart"></i> {lang key='checkout'}</span>
                                                 <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                             </button>
+                                            <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
                                         </div>
                                     </div>
                                 </div>
@@ -131,6 +128,7 @@
                                 <span class="added"><i class="glyphicon glyphicon-shopping-cart"></i> {lang key='checkout'}</span>
                                 <span class="unavailable">{$LANG.domaincheckertaken}</span>
                             </button>
+                            <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
                             <span class="price"></span>
                             <span class="promo hidden"></span>
                         </li>

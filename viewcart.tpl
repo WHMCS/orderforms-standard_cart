@@ -135,7 +135,7 @@
                                                 <span>{$product.pricing.totalTodayExcludingTaxSetup}</span>
                                                 <span class="cycle">{$product.billingcyclefriendly}</span>
                                                 {if $product.pricing.productonlysetup}
-                                                    {$product.pricing.productonlysetup} {$LANG.ordersetupfee}
+                                                    {$product.pricing.productonlysetup->toPrefixed()} {$LANG.ordersetupfee}
                                                 {/if}
                                                 {if $product.proratadate}<br />({$LANG.orderprorata} {$product.proratadate}){/if}
                                             </div>
@@ -241,6 +241,9 @@
                                                 {if count($domain.pricing) == 1 || $domain.type == 'transfer'}
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
                                                     <span class="cycle">{$domain.regperiod} {$domain.yearsLanguage}</span>
+                                                    <span class="renewal cycle">
+                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}</span>
+                                                    </span>
                                                 {else}
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
                                                     <div class="dropdown">
@@ -258,6 +261,9 @@
                                                             {/foreach}
                                                         </ul>
                                                     </div>
+                                                    <span class="renewal cycle">
+                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}</span>
+                                                    </span>
                                                 {/if}
                                             </div>
                                             <div class="col-sm-1 hidden-xs">
