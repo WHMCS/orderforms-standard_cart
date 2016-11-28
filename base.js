@@ -312,7 +312,7 @@ jQuery(document).ready(function(){
                         if (domain.isAvailable) {
                             result.find('button.unavailable').addClass('hidden').end()
                                 .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
-                                .find('button').not('button.unavailable')
+                                .find('button.btn-add-to-cart')
                                 .attr('data-domain', domain.idnDomainName)
                                 .removeClass('hidden');
                         } else {
