@@ -780,7 +780,9 @@ jQuery(document).ready(function(){
                 if (domain.group) {
                     newSuggestion.find('span.promo')
                         .addClass(domain.group)
-                        .html(domain.group.toUpperCase())
+                        .removeClass('hidden')
+                        .end();
+                    newSuggestion.find('span.sales-group-' + domain.group)
                         .removeClass('hidden')
                         .end();
                 }

@@ -86,7 +86,10 @@
                         <div class="spotlight-tlds-container">
                             {foreach $spotlightTlds as $key => $data}
                                 <div class="spotlight-tld-container spotlight-tld-container-{$spotlightTlds|count}">
-                                    <div id="spotlight{$data.tldNoDots}" class="spotlight-tld{if $data.group} spotlight-tld-{$data.group}{/if}">
+                                    <div id="spotlight{$data.tldNoDots}" class="spotlight-tld">
+                                        {if $data.group}
+                                            <div class="spotlight-tld-{$data.group}">{$data.groupDisplayName}</div>
+                                        {/if}
                                         {$data.tld}
                                         <span class="domain-lookup-loader domain-lookup-spotlight-loader">
                                             <i class="fa fa-spinner fa-spin"></i>
@@ -130,7 +133,11 @@
                             </button>
                             <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
                             <span class="price"></span>
-                            <span class="promo hidden"></span>
+                            <span class="promo hidden">
+                                <span class="sales-group-hot hidden">{lang key='domainCheckerSalesGroup.hot'}</span>
+                                <span class="sales-group-new hidden">{lang key='domainCheckerSalesGroup.new'}</span>
+                                <span class="sales-group-sale hidden">{lang key='domainCheckerSalesGroup.sale'}</span>
+                            </span>
                         </li>
                     </ul>
                     <div class="panel-footer more-suggestions hidden text-center">

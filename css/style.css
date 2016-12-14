@@ -802,14 +802,14 @@
 .spotlight-tld .results {
     display: none;
 }
-.spotlight-tld-new:before {
-    content: 'NEW';
+.spotlight-tld-new {
     width: 60px;
     position: absolute;
     letter-spacing: 1px;
     padding: 3px;
     font-size: x-small;
     font-weight: bold;
+    text-transform: uppercase;
     color: #fff;
     top: 3px;
     right: -18px;
@@ -817,14 +817,14 @@
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
-.spotlight-tld-sale:before {
-    content: 'SALE';
+.spotlight-tld-sale {
     width: 60px;
     position: absolute;
     letter-spacing: 0;
     padding: 3px;
     font-size: x-small;
     font-weight: bold;
+    text-transform: uppercase;
     color: #fff;
     top: 3px;
     right: -18px;
@@ -832,14 +832,14 @@
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
-.spotlight-tld-hot:before {
-    content: 'HOT';
+.spotlight-tld-hot {
     width: 60px;
     position: absolute;
     letter-spacing: 0;
     padding: 3px;
     font-size: x-small;
     font-weight: bold;
+    text-transform: uppercase;
     color: #fff;
     top: 3px;
     right: -18px;
@@ -869,16 +869,19 @@
     padding: 2px 8px;
     background-color: #f9615a;
     color: #fff;
+    text-transform: uppercase;
 }
 .suggested-domains .promo.sale {
     padding: 2px 8px;
     background-color: #f7d458;
     color: #fff;
+    text-transform: uppercase;
 }
 .suggested-domains .promo.new {
     padding: 2px 8px;
     background-color: #2ad588;
     color: #fff;
+    text-transform: uppercase;
 }
 .suggested-domains .price {
     float: right;
