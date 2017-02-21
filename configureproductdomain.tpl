@@ -236,7 +236,10 @@
                                 <div class="spotlight-tlds-container">
                                     {foreach $spotlightTlds as $key => $data}
                                         <div class="spotlight-tld-container spotlight-tld-container-{$spotlightTlds|count}">
-                                            <div id="spotlight{$data.tldNoDots}" class="spotlight-tld{if $data.group} spotlight-tld-{$data.group}{/if}">
+                                            <div id="spotlight{$data.tldNoDots}" class="spotlight-tld">
+                                                {if $data.group}
+                                                    <div class="spotlight-tld-{$data.group}">{$data.groupDisplayName}</div>
+                                                {/if}
                                                 {$data.tld}
                                                 <span class="domain-lookup-loader domain-lookup-spotlight-loader">
                                                     <i class="fa fa-spinner fa-spin"></i>
