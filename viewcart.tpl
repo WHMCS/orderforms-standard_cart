@@ -322,6 +322,12 @@
 
                         </form>
 
+                        {foreach $hookOutput as $output}
+                            <div>
+                                {$output}
+                            </div>
+                        {/foreach}
+
                         {foreach $gatewaysoutput as $gatewayoutput}
                             <div class="view-cart-gateway-checkout">
                                 {$gatewayoutput}

@@ -151,6 +151,106 @@
 
             </div>
 
+            <div class="domain-pricing">
+
+                {if $featuredTlds}
+                    <div class="featured-tlds-container">
+                        <div class="row">
+                            {foreach $featuredTlds as $num => $tldinfo}
+                                {if $num % 3 == 0 && (count($featuredTlds) - $num < 3)}
+                                    {if count($featuredTlds) - $num == 2}
+                                        <div class="col-sm-2"></div>
+                                    {else}
+                                        <div class="col-sm-4"></div>
+                                    {/if}
+                                {/if}
+                                <div class="col-sm-4 col-xs-6">
+                                    <div class="featured-tld">
+                                        <div class="img-container">
+                                            <img src="{$BASE_PATH_IMG}/tld_logos/{$tldinfo.tldNoDots}.png">
+                                        </div>
+                                        <div class="price {$tldinfo.tldNoDots}">
+                                            {if is_object($tldinfo.register)}
+                                                {$tldinfo.register->toPrefixed()}/{if $tldinfo.period > 1}{$tldinfo.period}yrs{else}yr{/if}
+                                            {else}
+                                                N/A
+                                            {/if}</div>
+                                    </div>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                {/if}
+
+                <h4>{lang key='pricing.browseExtByCategory'}</h4>
+
+                <div class="tld-filters">
+                    {foreach $categoriesWithCounts as $category => $count}
+                        <a href="#" data-category="{$category}" class="label label-default">{$category} ({$count})</a>
+                    {/foreach}
+                </div>
+
+                <div class="row tld-pricing-header text-center">
+                    <div class="col-sm-4 no-bg">{lang key='orderdomain'}</div>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-4">{lang key='pricing.register'}</div>
+                            <div class="col-xs-4">{lang key='pricing.transfer'}</div>
+                            <div class="col-xs-4">{lang key='pricing.renewal'}</div>
+                        </div>
+                    </div>
+                </div>
+                {foreach $pricing['pricing'] as $tld => $price}
+                    <div class="row tld-row" data-category="{foreach $price.categories as $category}|{$category}|{/foreach}">
+                        <div class="col-sm-4 two-row-center">
+                            <strong>.{$tld}</strong>
+                            {if $price.group}
+                                <span class="tld-sale-group tld-sale-group-{$price.group}">{$price.group}!</span>
+                            {/if}
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                    {if current($price.register) >= 0}
+                                        {$pricing.currency.prefix}
+                                        {current($price.register)}<br>
+                                        <small>{key($price.register)} Year{if key($price.register) > 1}s{/if}</small>
+                                    {else}
+                                        <small>N/A</small>
+                                    {/if}
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    {if current($price.transfer) > 0}
+                                        {$pricing.currency.prefix}
+                                        {current($price.transfer)}<br>
+                                        <small>{key($price.transfer)} Year{if key($price.register) > 1}s{/if}</small>
+                                    {else}
+                                        <small>N/A</small>
+                                    {/if}
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    {if current($price.renew) > 0}
+                                        {$pricing.currency.prefix}
+                                        {current($price.renew)}<br>
+                                        <small>{key($price.renew)} Year{if key($price.register) > 1}s{/if}</small>
+                                    {else}
+                                        <small>N/A</small>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {/foreach}
+                <div class="row tld-row no-tlds">
+                    <div class="col-xs-12 text-center">
+                        <br>
+                        Please choose a category from above.
+                        <br><br>
+                    </div>
+                </div>
+
+            </div>
+
             <div class="row">
                 <div class="{if $domainTransferEnabled}col-md-6{else}col-md-8 col-md-offset-2{/if}">
                     <div class="domain-promo-box">
@@ -192,10 +292,11 @@
     </div>
 </div>
 
+<script>
+jQuery(document).ready(function() {
+    jQuery('.tld-filters a:first-child').click();
 {if $lookupTerm && !$captchaError}
-    <script>
-        jQuery(document).ready(function() {
-            jQuery('#btnCheckAvailability').click();
-        });
-    </script>
+    jQuery('#btnCheckAvailability').click();
 {/if}
+});
+</script>

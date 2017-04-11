@@ -33,9 +33,15 @@
 
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
+            {foreach $hookAboveProductsOutput as $output}
+                <div>
+                    {$output}
+                </div>
+            {/foreach}
+
             <div class="products" id="products">
                 <div class="row row-eq-height">
-                    {foreach $products as $product}
+                    {foreach $products as $key => $product}
                         <div class="col-md-6">
                             <div class="product clearfix" id="product{$product@iteration}">
                                 <header>
@@ -108,6 +114,13 @@
                     {/foreach}
                 </div>
             </div>
+
+            {foreach $hookBelowProductsOutput as $output}
+                <div>
+                    {$output}
+                </div>
+            {/foreach}
+
         </div>
     </div>
 </div>

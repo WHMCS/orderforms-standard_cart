@@ -1,5 +1,5 @@
 {foreach $secondarySidebar as $panel}
-    <div menuItemName="{$panel->getName()}" class="panel {if $panel->getClass()}{$panel->getClass()}{else}panel-default{/if}{if $panel->getExtra('mobileSelect') and $panel->hasChildren()} hidden-sm hidden-xs{/if}"{if $panel->getAttribute('id')} id="{$panel->getAttribute('id')}"{/if}>
+    <div menuItemName="{$panel->getName()}" class="panel {if $panel->getClass()}{$panel->getClass()}{else}panel-sidebar{/if}{if $panel->getExtra('mobileSelect') and $panel->hasChildren()} hidden-sm hidden-xs{/if}"{if $panel->getAttribute('id')} id="{$panel->getAttribute('id')}"{/if}>
         <div class="panel-heading">
             <h3 class="panel-title">
                 {if $panel->hasIcon()}
@@ -11,6 +11,8 @@
                 {if $panel->hasBadge()}
                     &nbsp;<span class="badge">{$panel->getBadge()}</span>
                 {/if}
+
+                <i class="fa fa-chevron-up panel-minimise pull-right"></i>
             </h3>
         </div>
 
