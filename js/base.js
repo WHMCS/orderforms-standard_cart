@@ -127,6 +127,10 @@ jQuery(document).ready(function(){
         recalctotals();
     });
 
+    jQuery("#frmConfigureProduct").on('ifChecked', '.addon-selector', function(event) {
+        recalctotals();
+    });
+
     if (jQuery(".domain-selection-options input:checked").length == 0) {
         var firstInput = jQuery(".domain-selection-options input:first");
 
