@@ -171,7 +171,7 @@
                                         </div>
                                         <div class="price {$tldinfo.tldNoDots}">
                                             {if is_object($tldinfo.register)}
-                                                {$tldinfo.register->toPrefixed()}/{if $tldinfo.period > 1}{$tldinfo.period}yrs{else}yr{/if}
+                                                {$tldinfo.register->toPrefixed()}{if $tldinfo.period > 1}{lang key="orderForm.shortPerYears" years={$tldinfo.period}}{else}{lang key="orderForm.shortPerYear" years={$tldinfo.period}}{/if}
                                             {else}
                                                 N/A
                                             {/if}</div>
@@ -212,27 +212,24 @@
                             <div class="row">
                                 <div class="col-xs-4 text-center">
                                     {if current($price.register) >= 0}
-                                        {$pricing.currency.prefix}
                                         {current($price.register)}<br>
-                                        <small>{key($price.register)} Year{if key($price.register) > 1}s{/if}</small>
+                                        <small>{key($price.register)} {if key($price.register) > 1}{lang key="orderForm.years"}{else}{lang key="orderForm.year"}{/if}</small>
                                     {else}
                                         <small>N/A</small>
                                     {/if}
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     {if current($price.transfer) > 0}
-                                        {$pricing.currency.prefix}
                                         {current($price.transfer)}<br>
-                                        <small>{key($price.transfer)} Year{if key($price.register) > 1}s{/if}</small>
+                                        <small>{key($price.transfer)} {if key($price.register) > 1}{lang key="orderForm.years"}{else}{lang key="orderForm.year"}{/if}</small>
                                     {else}
                                         <small>N/A</small>
                                     {/if}
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     {if current($price.renew) > 0}
-                                        {$pricing.currency.prefix}
                                         {current($price.renew)}<br>
-                                        <small>{key($price.renew)} Year{if key($price.register) > 1}s{/if}</small>
+                                        <small>{key($price.renew)} {if key($price.register) > 1}{lang key="orderForm.years"}{else}{lang key="orderForm.year"}{/if}</small>
                                     {else}
                                         <small>N/A</small>
                                     {/if}
