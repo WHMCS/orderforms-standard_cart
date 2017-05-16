@@ -171,7 +171,7 @@
                                         </div>
                                         <div class="price {$tldinfo.tldNoDots}">
                                             {if is_object($tldinfo.register)}
-                                                {$tldinfo.register->toPrefixed()}{if $tldinfo.period > 1}{lang key="orderForm.shortPerYears" years={$tldinfo.period}}{else}{lang key="orderForm.shortPerYear" years={$tldinfo.period}}{/if}
+                                                {$tldinfo.register->toPrefixed()}{if $tldinfo.period > 1}{lang key="orderForm.shortPerYears" years={$tldinfo.period}}{else}{lang key="orderForm.shortPerYear" years=''}{/if}
                                             {else}
                                                 N/A
                                             {/if}</div>

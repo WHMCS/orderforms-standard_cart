@@ -303,6 +303,53 @@
                                     </div>
                                 {/foreach}
 
+                                {foreach $upgrades as $num => $upgrade}
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <span class="item-title">
+                                                    {$LANG.upgrade}
+                                                </span>
+                                                <span class="item-group">
+                                                    {if $upgrade->type == 'service'}
+                                                        {$upgrade->originalProduct->productGroup->name}<br>{$upgrade->originalProduct->name} => {$upgrade->newProduct->name}
+                                                    {elseif $upgrade->type == 'addon'}
+                                                        {$upgrade->originalAddon->name} => {$upgrade->newAddon->name}
+                                                    {/if}
+                                                </span>
+                                                <span class="item-domain">
+                                                    {if $upgrade->type == 'service'}
+                                                        {$upgrade->service->domain}
+                                                    {/if}
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4 item-price">
+                                                <span>{$upgrade->newRecurringAmount}</span>
+                                                <span class="cycle">{$upgrade->newCycle}</span>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('u','{$num}')">
+                                                    <i class="fa fa-times"></i>
+                                                    <span class="visible-xs">{$LANG.orderForm.remove}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row row-upgrade-credit">
+                                            <div class="col-sm-7">
+                                                <span class="item-group">
+                                                    {$LANG.upgradeCredit}
+                                                </span>
+                                                <div class="upgrade-calc-msg">
+                                                    {lang key="upgradeCreditDescription" daysRemaining=$upgrade->daysRemaining totalDays=$upgrade->totalDaysInCycle}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 item-price">
+                                                <span>-{$upgrade->creditAmount}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+
                                 {if $cartitems == 0}
                                     <div class="view-cart-empty">
                                         {$LANG.cartempty}
