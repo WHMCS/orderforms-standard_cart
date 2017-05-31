@@ -241,7 +241,7 @@
                 <div class="row tld-row no-tlds">
                     <div class="col-xs-12 text-center">
                         <br>
-                        Please choose a category from above.
+                        {lang key='pricing.selectExtCategory'}
                         <br><br>
                     </div>
                 </div>
