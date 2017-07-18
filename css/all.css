@@ -356,6 +356,13 @@
     font-size: 0.8em;
 }
 
+#order-standard_cart .row-upgrade-credit {
+    margin-top: 5px;
+}
+#order-standard_cart .row-upgrade-credit .item-price {
+    font-size: 0.9em;
+}
+
 /**
  * Checkout
  */
@@ -946,6 +953,41 @@
 .domain-suggestions-warning {
     padding: 10px 0;
     font-size: 0.7em;
+}
+
+/**
+ * -------------------------
+ * Order Configure Product Addon Promo Containers
+ * -------------------------
+ */
+
+#order-standard_cart .addon-promo-container {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #eee;
+    font-size: 0.9em;
+}
+#order-standard_cart .addon-promo-container h3 {
+    margin: 0 0 10px 0;
+}
+#order-standard_cart .addon-promo-container .logo {
+    float: right;
+    margin: 0 0 10px 20px;
+    text-align: right;
+    line-height: 100px;
+}
+#order-standard_cart .addon-promo-container img {
+    max-width: 120px;
+}
+#order-standard_cart .addon-promo-container .description {
+    margin: 10px 0;
+}
+#order-standard_cart .addon-promo-container label {
+    margin-top: 3px;
+    width: 98%;
+}
+#order-standard_cart .addon-promo-container a {
+    text-decoration: underline;
 }
 
 /**

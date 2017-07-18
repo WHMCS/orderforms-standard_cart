@@ -260,11 +260,17 @@ var _localLang = {
 
                         {/if}
 
-                        {if $addons}
+                        {if $addons || count($addonsPromoOutput) > 0}
 
                             <div class="sub-heading">
                                 <span>{$LANG.cartavailableaddons}</span>
                             </div>
+
+                            {foreach $addonsPromoOutput as $output}
+                                <div>
+                                    {$output}
+                                </div>
+                            {/foreach}
 
                             <div class="row addon-products">
                                 {foreach $addons as $addon}

@@ -127,6 +127,10 @@ jQuery(document).ready(function(){
         recalctotals();
     });
 
+    jQuery("#frmConfigureProduct").on('ifChecked', '.addon-selector', function(event) {
+        recalctotals();
+    });
+
     if (jQuery(".domain-selection-options input:checked").length == 0) {
         var firstInput = jQuery(".domain-selection-options input:first");
 
@@ -973,6 +977,41 @@ jQuery(document).ready(function(){
     });
     jQuery(".filtered-row:even").removeClass('highlighted');
     jQuery(".filtered-row:odd").addClass('highlighted');
+
+    jQuery('.promo-cart .btn-add').click(function(e) {
+        var self = jQuery(this);
+        self.attr('disabled', 'disabled')
+            .find('span.loading').hide().removeClass('hidden').show().end();
+        jQuery.post(
+            window.location.pathname,
+            {
+                'a': 'addUpSell',
+                'product_key': self.data('product-key'),
+                'token': csrfToken
+            },
+            function (data) {
+                console.log(data.modal);
+                if (typeof data.modal !== 'undefined') {
+                    openModal(
+                        data.modal,
+                        '',
+                        data.modalTitle,
+                        '',
+                        '',
+                        data.modalSubmit,
+                        data.modelSubmitId
+                    );
+                    return;
+                }
+                window.location.reload(true);
+            },
+            'json'
+        );
+    });
+
+    jQuery(document).on('click', '#btnAddUpSell', function(e) {
+        needRefresh = true;
+    });
 });
 
 function hasDomainLookupEnded() {
