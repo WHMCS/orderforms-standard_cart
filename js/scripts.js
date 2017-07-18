@@ -564,24 +564,35 @@ jQuery(document).ready(function(){
             return false;
         }
         var heightOfOrderSummary =  $orderSummaryEl.outerHeight();
-        var offsetTop = 0;
-        if (typeof offset !== "undefined") {
-            offsetTop = offset.top;
-        }
-        var newTopOffset = jQuery(window).scrollTop() - offsetTop + topPadding;
+        var newTopOffset = jQuery(window).scrollTop() - offset.top;
         if (newTopOffset > maxTopOffset - heightOfOrderSummary) {
             newTopOffset = maxTopOffset - heightOfOrderSummary;
         }
-        if (jQuery(window).scrollTop() > offsetTop) {
-            $orderSummaryEl.stop().animate({
-                marginTop: newTopOffset
+        
+        var sidebarWidth = jQuery("#scrollingPanelContainer").width();
+        var sidebarTopMargin = 20;
+        
+        if (jQuery(window).scrollTop() > offset.top + sidebarTopMargin) {
+            $orderSummaryEl.css({
+                position: 'fixed',
+                top: sidebarTopMargin + 'px',
+                width: sidebarWidth,
             });
         } else {
-            $orderSummaryEl.stop().animate({
-                marginTop: 0
+            $orderSummaryEl.css({
+                position: 'static',
+                top: 'auto',
             });
         }
     }
+    jQuery( window ).resize(function() {
+        if (jQuery("#scrollingPanelContainer").css('float') != 'left') {
+            $orderSummaryEl.css('position', 'static');
+        }
+        $orderSummaryEl.css({
+            width:  jQuery("#scrollingPanelContainer").width(),
+        });
+    });
 
     jQuery("#frmConfigureProduct").submit(function(e) {
         e.preventDefault();
