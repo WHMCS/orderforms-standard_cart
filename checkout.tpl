@@ -104,9 +104,12 @@
                         </div>
                     </div>
 
+                    {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-existing"}
                 </div>
 
                 <div id="containerNewUserSignup"{if !$loggedin && $custtype eq "existing"} class="hidden"{/if}>
+
+                    {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-new"}
 
                     <div class="sub-heading">
                         <span>{$LANG.orderForm.personalInformation}</span>
@@ -186,7 +189,10 @@
                         </div>
                         <div class="col-sm-5">
                             <div class="form-group prepend-icon">
-                                <label for="inputState" class="field-icon" id="inputStateIcon">
+                                <label for="state" class="field-icon" id="inputStateIcon">
+                                    <i class="fa fa-map-signs"></i>
+                                </label>
+                                <label for="stateinput" class="field-icon" id="inputStateIcon">
                                     <i class="fa fa-map-signs"></i>
                                 </label>
                                 <input type="text" name="state" id="inputState" class="field" placeholder="{$LANG.orderForm.state}" value="{$clientsdetails.state}"{if $loggedin} readonly="readonly"{/if}>
@@ -202,6 +208,9 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
+                                <label for="inputCountry" class="field-icon" id="inputCountryIcon">
+                                    <i class="fa fa-globe"></i>
+                                </label>
                                 <select name="country" id="inputCountry" class="field"{if $loggedin} disabled="disabled"{/if}>
                                     {foreach $countries as $countrycode => $countrylabel}
                                         <option value="{$countrycode}"{if (!$country && $countrycode == $defaultcountry) || $countrycode eq $country} selected{/if}>
@@ -360,19 +369,20 @@
 
                 {if !$loggedin}
 
-                    <div id="containerNewUserSecurity"{if !$loggedin && $custtype eq "existing"} class="hidden"{/if}>
+                    <div id="containerNewUserSecurity"{if (!$loggedin && $custtype eq "existing") || ($remote_auth_prelinked && !$securityquestions) } class="hidden"{/if}>
 
                         <div class="sub-heading">
                             <span>{$LANG.orderForm.accountSecurity}</span>
                         </div>
 
-                        <div class="row">
+                        <div id="containerPassword" class="row{if $remote_auth_prelinked && $securityquestions} hidden{/if}">
+                            <div id="passwdFeedback" style="display: none;" class="alert alert-info text-center col-sm-12"></div>
                             <div class="col-sm-6">
                                 <div class="form-group prepend-icon">
                                     <label for="inputNewPassword1" class="field-icon">
                                         <i class="fa fa-lock"></i>
                                     </label>
-                                    <input type="password" name="password" id="inputNewPassword1" class="field" placeholder="{$LANG.clientareapassword}">
+                                    <input type="password" name="password" id="inputNewPassword1" data-error-threshold="{$pwStrengthErrorThreshold}" data-warning-threshold="{$pwStrengthWarningThreshold}" class="field" placeholder="{$LANG.clientareapassword}"{if $remote_auth_prelinked} value="{$password}"{/if}>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -380,7 +390,7 @@
                                     <label for="inputNewPassword2" class="field-icon">
                                         <i class="fa fa-lock"></i>
                                     </label>
-                                    <input type="password" name="password2" id="inputNewPassword2" class="field" placeholder="{$LANG.clientareaconfirmpassword}">
+                                    <input type="password" name="password2" id="inputNewPassword2" class="field" placeholder="{$LANG.clientareaconfirmpassword}"{if $remote_auth_prelinked} value="{$password}"{/if}>
                                 </div>
                             </div>
                             <div class="col-sm-6">

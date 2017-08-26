@@ -242,7 +242,7 @@
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
                                                     <span class="cycle">{$domain.regperiod} {$domain.yearsLanguage}</span>
                                                     <span class="renewal cycle">
-                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}</span>
+                                                        {if isset($domain.renewprice)}{lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}{/if}</span>
                                                     </span>
                                                 {else}
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
@@ -262,7 +262,7 @@
                                                         </ul>
                                                     </div>
                                                     <span class="renewal cycle">
-                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}</span>
+                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{if isset($domain.renewprice)}{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}{/if}</span>
                                                     </span>
                                                 {/if}
                                             </div>

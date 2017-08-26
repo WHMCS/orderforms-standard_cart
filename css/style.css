@@ -59,12 +59,21 @@
   margin-top: 20px;
   margin-bottom: 30px;
 }
-#order-standard_cart .sub-heading span {
+
+#order-standard_cart .sub-heading-borderless {
+    height: 0;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+#order-standard_cart .sub-heading span,
+#order-standard_cart .sub-heading-borderless span {
     display: inline-block;
-  position: relative;
-  padding: 0 17px;
-  top: -11px;
-  font-size: 16px;
+    position: relative;
+    padding: 0 17px;
+    top: -11px;
+    font-size: 16px;
     color: #058;
     background-color: #fff;
 }
@@ -439,6 +448,7 @@
     height: auto;
 }
 #order-standard_cart .prepend-icon .field {
+    -webkit-appearance: none;
     padding-left: 36px;
 }
 #order-standard_cart .prepend-icon .field-icon i {
