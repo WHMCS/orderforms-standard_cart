@@ -559,6 +559,8 @@
     }
 })({
 provider: function () {
+    var callbackFired = false;
+
     /**
      * @return {jQuery}
      */
@@ -586,7 +588,6 @@ provider: function () {
     };
 
     this.showProgressMessage = function(callback) {
-        var callbackFired = false;
         this.feedbackContainer().fadeIn('fast', function () {
             if (typeof callback === 'function' && !callbackFired) {
                 callbackFired = true;
@@ -781,6 +782,7 @@ provider: function () {
 
     return this;
 }});
+
 /**
  * WHMCS client module
  *
