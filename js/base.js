@@ -834,7 +834,9 @@ jQuery(document).ready(function(){
             resultDomain = jQuery('#resultDomain'),
             resultDomainPricing = jQuery('#resultDomainPricingTerm');
 
-        buttons.attr('disabled', 'disabled');
+        buttons.attr('disabled', 'disabled').each(function() {
+            jQuery(this).css('width', jQuery(this).outerWidth());
+        });
 
         var sideOrder =
             ((jQuery(this).parents('.spotlight-tlds').length > 0)
@@ -1036,6 +1038,43 @@ jQuery(document).ready(function(){
     jQuery(document).on('click', '#btnAddUpSell', function(e) {
         needRefresh = true;
     });
+
+    var useFullCreditOnCheckout = jQuery('#iCheck-useFullCreditOnCheckout'),
+        skipCreditOnCheckout = jQuery('#iCheck-skipCreditOnCheckout');
+
+    useFullCreditOnCheckout.on('ifChecked', function() {
+        var radio = jQuery('#useFullCreditOnCheckout'),
+            selectedPaymentMethod = jQuery('input[name="paymentmethod"]:checked'),
+            isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
+            firstNonCcGateway = jQuery('input[name="paymentmethod"]')
+            .not(jQuery('input.is-credit-card[name="paymentmethod"]'))
+            .first();
+        if (radio.prop('checked')) {
+            if (isCcSelected && firstNonCcGateway.length) {
+                firstNonCcGateway.iCheck('check');
+            } else if (isCcSelected) {
+                jQuery('#creditCardInputFields').slideUp();
+            }
+            jQuery('#paymentGatewaysContainer').slideUp();
+        }
+    });
+
+    skipCreditOnCheckout.on('ifChecked', function() {
+        var selectedPaymentMethod = jQuery('input[name="paymentmethod"]:checked'),
+            isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
+            container = jQuery('#paymentGatewaysContainer');
+        if (!container.is(":visible")) {
+            container.slideDown();
+            if (isCcSelected) {
+                jQuery('#creditCardInputFields').slideDown();
+            }
+        }
+    });
+
+    if (typeof applyCredit !== "undefined" && applyCredit && useFullCreditOnCheckout.length) {
+        skipCreditOnCheckout.iCheck('check');
+        useFullCreditOnCheckout.iCheck('check');
+    }
 });
 
 function hasDomainLookupEnded() {

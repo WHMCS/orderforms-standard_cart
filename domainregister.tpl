@@ -107,7 +107,9 @@
                                                 <span class="added"><i class="glyphicon glyphicon-shopping-cart"></i> {lang key='checkout'}</span>
                                                 <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                             </button>
-                                            <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
+                                            <button type="button" class="btn btn-primary domain-contact-support hidden">
+                                                {lang key='domainChecker.contactSupport'}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -126,18 +128,22 @@
                     <ul id="domainSuggestions" class="domain-lookup-result list-group hidden">
                         <li class="domain-suggestion list-group-item hidden">
                             <span class="domain"></span><span class="extension"></span>
-                            <button type="button" class="btn btn-add-to-cart" data-whois="1" data-domain="">
-                                <span class="to-add">{$LANG.addtocart}</span>
-                                <span class="added"><i class="glyphicon glyphicon-shopping-cart"></i> {lang key='checkout'}</span>
-                                <span class="unavailable">{$LANG.domaincheckertaken}</span>
-                            </button>
-                            <button type="button" class="btn btn-primary domain-contact-support hidden">Contact Support to Purchase</button>
-                            <span class="price"></span>
                             <span class="promo hidden">
                                 <span class="sales-group-hot hidden">{lang key='domainCheckerSalesGroup.hot'}</span>
                                 <span class="sales-group-new hidden">{lang key='domainCheckerSalesGroup.new'}</span>
                                 <span class="sales-group-sale hidden">{lang key='domainCheckerSalesGroup.sale'}</span>
                             </span>
+                            <div class="actions">
+                                <span class="price"></span>
+                                <button type="button" class="btn btn-add-to-cart" data-whois="1" data-domain="">
+                                    <span class="to-add">{$LANG.addtocart}</span>
+                                    <span class="added"><i class="glyphicon glyphicon-shopping-cart"></i> {lang key='checkout'}</span>
+                                    <span class="unavailable">{$LANG.domaincheckertaken}</span>
+                                </button>
+                                <button type="button" class="btn btn-primary domain-contact-support hidden">
+                                    {lang key='domainChecker.contactSupport'}
+                                </button>
+                            </div>
                         </li>
                     </ul>
                     <div class="panel-footer more-suggestions hidden text-center">

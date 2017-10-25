@@ -444,7 +444,29 @@
                     {$LANG.ordertotalduetoday}: &nbsp; <strong>{$total}</strong>
                 </div>
 
-                <div class="form-group">
+                {if $canUseCreditOnCheckout}
+                    <div class="apply-credit-container">
+                        <p>{lang key='cart.availableCreditBalance' amount=$creditBalance}</p>
+
+                        {if $creditBalance->toNumeric() >= $total->toNumeric()}
+                            <label class="radio">
+                                <input id="useFullCreditOnCheckout" type="radio" name="applycredit" value="1"{if $applyCredit} checked{/if}>
+                                {lang key='cart.applyCreditAmountNoFurtherPayment' amount=$total}
+                            </label>
+                        {else}
+                            <label class="radio">
+                                <input id="useCreditOnCheckout" type="radio" name="applycredit" value="1"{if $applyCredit} checked{/if}>
+                                {lang key='cart.applyCreditAmount' amount=$creditBalance}
+                            </label>
+                        {/if}
+
+                        <label class="radio">
+                            <input id="skipCreditOnCheckout" type="radio" name="applycredit" value="0"{if !$applyCredit} checked{/if}>
+                            {lang key='cart.applyCreditSkip' amount=$creditBalance}
+                        </label>
+                    </div>
+                {/if}
+                <div id="paymentGatewaysContainer" class="form-group">
                     <p class="small text-muted">{$LANG.orderForm.preferredPaymentMethod}</p>
 
                     <div class="text-center">
@@ -612,3 +634,6 @@
 </div>
 
 <script type="text/javascript" src="{$BASE_PATH_JS}/jquery.payment.js"></script>
+<script type="text/javascript">
+    var applyCredit = {$applyCredit};
+</script>
