@@ -925,6 +925,14 @@ dataTable: function () {
                     }
                 };
             }
+            var ordering = el.data('ordering');
+            if (typeof ordering !== 'undefined') {
+                options["ordering"] = ordering;
+            }
+            var order = el.data('order');
+            if (typeof order !== 'undefined' && order) {
+                options["order"] = order;
+            }
             var colCss = el.data('columns');
             if (typeof colCss !== 'undefined' && colCss) {
                 options["columns"] = colCss;
@@ -993,7 +1001,49 @@ dataTable: function () {
     };
 
     return this;
-}});
+},
+
+/**
+ * ToolTip and Clipboard behaviors
+ */
+toolTip: function () {
+    this.registerClipboard = function () {
+        var self = this;
+        jQuery('[data-toggle="tooltip"]').tooltip();
+        var clipboard = new Clipboard('.copy-to-clipboard');
+        clipboard.on('success', function(e) {
+            var btn = jQuery(e.trigger);
+            self.setTip(btn, 'Copied!');
+            self.hideTip(btn);
+        });
+        clipboard.on('error', function(e) {
+            self.setTip(e.trigger, 'Press Ctrl+C to copy');
+            self.hideTip(e.trigger);
+        });
+        $('.copy-to-clipboard').tooltip({
+            trigger: 'click',
+            placement: 'bottom'
+        });
+    };
+
+    this.setTip = function (btn, message) {
+        var tip = btn.data('bs.tooltip');
+        if (tip.hoverState !== 'in') {
+            tip.hoverState = 'in';
+        }
+        btn.attr('data-original-title', message);
+        tip.show();
+
+        return tip;
+    };
+
+    this.hideTip = function (btn) {
+        return setTimeout(function() {
+            btn.data('bs.tooltip').hide()
+        }, 2000);
+    }
+}
+});
 
 /**
  * Form module
@@ -1016,27 +1066,36 @@ function () {
         var huntSelector = '.btn-check-all';
         jQuery(huntSelector).click(function (e) {
             var btn = jQuery(e.target);
-
-            var textDeselect = 'Deselect All';
-            var textSelect = 'Select All';
-            if (btn.data('label-text-deselect')) {
-                textDeselect = btn.data('label-text-deselect');
-            }
-            if (btn.data('label-text-select')) {
-                textSelect = btn.data('label-text-select');
-            }
-
             var targetInputs = jQuery(
                 '#' + btn.data('checkbox-container') + ' input[type="checkbox"]'
             );
-            if (btn.hasClass('toggle-active')) {
-                targetInputs.prop('checked',false);
-                btn.text(textDeselect);
-                btn.removeClass('toggle-active');
+            if (btn.data('btn-check-toggle')) {
+                // one control that changes
+                var textDeselect = 'Deselect All';
+                var textSelect = 'Select All';
+                if (btn.data('label-text-deselect')) {
+                    textDeselect = btn.data('label-text-deselect');
+                }
+                if (btn.data('label-text-select')) {
+                    textSelect = btn.data('label-text-select');
+                }
+
+                if (btn.hasClass('toggle-active')) {
+                    targetInputs.prop('checked',false);
+                    btn.text(textDeselect);
+                    btn.removeClass('toggle-active');
+                } else {
+                    targetInputs.prop('checked',true);
+                    btn.text(textSelect);
+                    btn.addClass('toggle-active');
+                }
             } else {
-                targetInputs.prop('checked',true);
-                btn.text(textSelect);
-                btn.addClass('toggle-active');
+                // two controls that are static
+                if (btn.data('btn-toggle-on')) {
+                    targetInputs.prop('checked',true);
+                } else {
+                    targetInputs.prop('checked',false);
+                }
             }
         });
     };
@@ -2164,7 +2223,7 @@ jQuery(document).ready(function(){
         }
     });
 
-    if (typeof applyCredit !== "undefined" && applyCredit && useFullCreditOnCheckout.length) {
+    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useFullCreditOnCheckout.length) {
         skipCreditOnCheckout.iCheck('check');
         useFullCreditOnCheckout.iCheck('check');
     }

@@ -1071,7 +1071,7 @@ jQuery(document).ready(function(){
         }
     });
 
-    if (typeof applyCredit !== "undefined" && applyCredit && useFullCreditOnCheckout.length) {
+    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useFullCreditOnCheckout.length) {
         skipCreditOnCheckout.iCheck('check');
         useFullCreditOnCheckout.iCheck('check');
     }

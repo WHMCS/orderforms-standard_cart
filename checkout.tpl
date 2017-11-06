@@ -445,7 +445,7 @@
                 </div>
 
                 {if $canUseCreditOnCheckout}
-                    <div class="apply-credit-container">
+                    <div id="applyCreditContainer" class="apply-credit-container" data-apply-credit="{$applyCredit}">
                         <p>{lang key='cart.availableCreditBalance' amount=$creditBalance}</p>
 
                         {if $creditBalance->toNumeric() >= $total->toNumeric()}
@@ -634,6 +634,3 @@
 </div>
 
 <script type="text/javascript" src="{$BASE_PATH_JS}/jquery.payment.js"></script>
-<script type="text/javascript">
-    var applyCredit = {$applyCredit};
-</script>
