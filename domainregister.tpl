@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
                                 <div class="input-group input-group-lg input-group-box">
-                                    <input type="text" name="domain" class="form-control" placeholder="{$LANG.findyourdomain}" value="{$lookupTerm}" id="inputDomain" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.domainOrKeyword'}" />
+                                    <input type="text" name="domain" class="form-control" placeholder="{$LANG.findyourdomain}" value="{$lookupTerm}" id="inputDomain" autocomplete="none" autocorrect="none" autocapitalize="none" spellcheck="false" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.domainOrKeyword'}" />
                                     <span class="input-group-btn">
                                         <button type="submit" id="btnCheckAvailability" class="btn btn-primary domain-check-availability">{$LANG.search}</button>
                                     </span>
