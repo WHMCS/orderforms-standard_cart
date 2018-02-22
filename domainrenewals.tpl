@@ -40,7 +40,7 @@
                         {foreach from=$renewals item=renewal}
                             <tr>
                                 <td>
-                                    {if !$renewal.pastgraceperiod && !$renewal.beforerenewlimit}
+                                    {if !$renewal.beforeRenewLimit && !($renewal.pastGracePeriod && $renewal.pastRedemptionGracePeriod)}
                                         <input type="checkbox" name="renewalids[]" value="{$renewal.id}" />
                                     {/if}
                                 </td>
@@ -59,15 +59,23 @@
                                         <span class="text-danger">
                                             {$renewal.daysuntilexpiry} {$LANG.domainrenewalsdays}
                                         </span>
+                                    {elseif $renewal.daysuntilexpiry === 0}
+                                        <span class="text-danger">
+                                            {lang key="expiresToday"}
+                                        </span>
                                     {else}
                                         <span>
                                             {$renewal.daysuntilexpiry*-1} {$LANG.domainrenewalsdaysago}
                                         </span>
                                     {/if}
-                                    {if $renewal.ingraceperiod}
+                                    {if $renewal.ingraceperiod || $renewal.inRedemptionGracePeriod}
                                         <br />
                                         <span class="text-danger">
-                                            {$LANG.domainrenewalsingraceperiod}
+                                            {if $renewal.inGracePeriod}
+                                                {lang key='domainrenewalsingraceperiod'}
+                                            {else}
+                                                {lang key='domainRenewalsInRedemptionGracePeriod'}
+                                            {/if}
                                         </span>
                                     {/if}
                                 </td>
@@ -76,7 +84,7 @@
                                         <span class="text-danger">
                                             {$LANG.domainrenewalsbeforerenewlimit|sprintf2:$renewal.beforerenewlimitdays}
                                         </span>
-                                    {elseif $renewal.pastgraceperiod}
+                                    {elseif $renewal.pastgraceperiod && $renewal.pastRedemptionGracePeriod}
                                         <span class="text-danger">
                                             {$LANG.domainrenewalspastgraceperiod}
                                         </span>

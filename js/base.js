@@ -18,7 +18,7 @@ var domainLookupCallCount,
 
 jQuery(document).ready(function(){
 
-    jQuery('#order-standard_cart').find('input').iCheck({
+    jQuery('#order-standard_cart').find('input').not('.no-icheck').iCheck({
         inheritID: true,
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
@@ -238,30 +238,27 @@ jQuery(document).ready(function(){
             spotlightTlds.hide().removeClass('hidden').fadeIn('fast');
             jQuery('#resultDomainOption').val(domainoption);
             var lookup = jQuery.post(
-                    'cart.php',
+                    WHMCS.utils.getRouteUrl('/domain/check'),
                     {
                         token: csrfToken,
-                        a: 'checkDomain',
                         type: 'domain',
                         domain: sld + tld
                     },
                     'json'
                 ),
                 spotlight = jQuery.post(
-                    'cart.php',
+                    WHMCS.utils.getRouteUrl('/domain/check'),
                     {
                         token: csrfToken,
-                        a: 'checkDomain',
                         type: 'spotlight',
                         domain: sld + tld
                     },
                     'json'
                 ),
                 suggestion = jQuery.post(
-                    'cart.php',
+                    WHMCS.utils.getRouteUrl('/domain/check'),
                     {
                         token: csrfToken,
-                        a: 'checkDomain',
                         type: 'suggestions',
                         domain: sld + tld
                     },
@@ -271,7 +268,7 @@ jQuery(document).ready(function(){
             // primary lookup handler
             lookup.done(function (data) {
                 jQuery.each(data.result, function(index, domain) {
-                    var pricing = domain.pricing,
+                    var pricing = null,
                         result = jQuery('#primaryLookupResult'),
                         available = result.find('.domain-available'),
                         availablePrice = result.find('.domain-price'),
@@ -282,7 +279,8 @@ jQuery(document).ready(function(){
                         resultDomainPricing = jQuery('#resultDomainPricingTerm');
                     result.removeClass('hidden').show();
                     jQuery('.domain-lookup-primary-loader').hide();
-                    if (domain.isValidDomain) {
+                    if (!data.result.error && domain.isValidDomain) {
+                        pricing = domain.pricing;
                         if (domain.isAvailable && typeof pricing !== 'string') {
                             if (domain.preferredTLDNotAvailable) {
                                 unavailable.show().find('strong').html(domain.originalUnavailableDomain);
@@ -419,10 +417,9 @@ jQuery(document).ready(function(){
         } else if (domainoption == 'transfer') {
             jQuery('#resultDomainOption').val(domainoption);
             var transfer = jQuery.post(
-                'cart.php',
+                WHMCS.utils.getRouteUrl('/domain/check'),
                 {
                     token: csrfToken,
-                    a: 'checkDomain',
                     type: 'transfer',
                     domain: sld + tld
                 },
@@ -434,14 +431,19 @@ jQuery(document).ready(function(){
                     jQuery('.domain-lookup-primary-loader').hide();
                     return;
                 }
+                var result = jQuery('#primaryLookupResult'),
+                    transfereligible = result.find('.transfer-eligible'),
+                    transferPrice = result.find('.domain-price'),
+                    transfernoteligible = result.find('.transfer-not-eligible'),
+                    resultDomain = jQuery('#resultDomain'),
+                    resultDomainPricing = jQuery('#resultDomainPricingTerm');
+                if (Object.keys(data.result).length === 0) {
+                    jQuery('.domain-lookup-primary-loader').hide();
+                    result.removeClass('hidden').show();
+                    transfernoteligible.show();
+                }
                 jQuery.each(data.result, function(index, domain) {
-                    var pricing = domain.pricing,
-                        result = jQuery('#primaryLookupResult'),
-                        transfereligible = result.find('.transfer-eligible'),
-                        transferPrice = result.find('.domain-price'),
-                        transfernoteligible = result.find('.transfer-not-eligible'),
-                        resultDomain = jQuery('#resultDomain'),
-                        resultDomainPricing = jQuery('#resultDomainPricingTerm');
+                    var pricing = domain.pricing;
                     jQuery('.domain-lookup-primary-loader').hide();
                     result.removeClass('hidden').show();
                     if (domain.isRegistered) {
@@ -463,10 +465,9 @@ jQuery(document).ready(function(){
         } else if (domainoption == 'owndomain' || domainoption == 'subdomain' || domainoption == 'incart') {
 
             var otherDomain = jQuery.post(
-                'cart.php',
+                WHMCS.utils.getRouteUrl('/domain/check'),
                 {
                     token: csrfToken,
-                    a: 'checkDomain',
                     type: domainoption,
                     pid: pid,
                     domain: sld + tld
@@ -646,29 +647,29 @@ jQuery(document).ready(function(){
         }
 
         var lookup = jQuery.post(
-                frmDomain.attr('action'),
+                WHMCS.utils.getRouteUrl('/domain/check'),
                 frmDomain.serialize() + '&type=domain',
                 'json'
             ),
             spotlight = jQuery.post(
-                frmDomain.attr('action'),
+                WHMCS.utils.getRouteUrl('/domain/check'),
                 frmDomain.serialize() + '&type=spotlight',
                 'json'
             ),
             suggestion = jQuery.post(
-                frmDomain.attr('action'),
+                WHMCS.utils.getRouteUrl('/domain/check'),
                 frmDomain.serialize() + '&type=suggestions',
                 'json'
             );
 
         // primary lookup handler
         lookup.done(function (data) {
-            if (typeof data != 'object' || data.result.length == 0 || data.result.error) {
+            if (typeof data != 'object' || data.result.length == 0) {
                 jQuery('.domain-lookup-primary-loader').hide();
                 return;
             }
             jQuery.each(data.result, function(index, domain) {
-                var pricing = domain.pricing,
+                var pricing = null,
                     result = jQuery('#primaryLookupResult'),
                     available = result.find('.domain-available'),
                     availablePrice = result.find('.domain-price'),
@@ -678,7 +679,8 @@ jQuery(document).ready(function(){
                 jQuery('.domain-lookup-primary-loader').hide();
                 result.find('.btn-add-to-cart').removeClass('checkout');
                 result.removeClass('hidden').show();
-                if (domain.isValidDomain) {
+                if (!data.result.error && domain.isValidDomain) {
+                    pricing = domain.pricing;
                     unavailable.hide();
                     contactSupport.hide();
                     invalid.hide();
@@ -974,35 +976,6 @@ jQuery(document).ready(function(){
     jQuery('#frmProductDomain input[type=text]:visible').first().focus();
     jQuery('#frmDomainChecker input[type=text]:visible').first().focus();
     jQuery('#frmDomainTransfer input[type=text]:visible').first().focus();
-
-    // Domain Pricing Table Filters
-    jQuery(".tld-filters a").click(function(e) {
-        e.preventDefault();
-
-        if (jQuery(this).hasClass('label-success')) {
-            jQuery(this).removeClass('label-success');
-        } else {
-            jQuery(this).addClass('label-success');
-        }
-
-        jQuery('.tld-row').removeClass('filtered-row');
-        jQuery('.tld-filters a.label-success').each(function(index) {
-            var filterValue = jQuery(this).data('category');
-            jQuery('.tld-row[data-category*="' + filterValue + '"]').addClass('filtered-row');
-        });
-        jQuery(".filtered-row:even").removeClass('highlighted');
-        jQuery(".filtered-row:odd").addClass('highlighted');
-        jQuery('.tld-row:not(".filtered-row")').fadeOut('', function() {
-            if (jQuery('.filtered-row').size() == 0) {
-                jQuery('.tld-row.no-tlds').show();
-            } else {
-                jQuery('.tld-row.no-tlds').hide();
-            }
-        });
-        jQuery('.tld-row.filtered-row').fadeIn();
-    });
-    jQuery(".filtered-row:even").removeClass('highlighted');
-    jQuery(".filtered-row:odd").addClass('highlighted');
 
     jQuery('.promo-cart .btn-add').click(function(e) {
         var self = jQuery(this);

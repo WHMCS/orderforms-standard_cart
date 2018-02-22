@@ -1,4 +1,4 @@
-<span class="product-name">{$producttotals.productinfo.name}</span>
+<span class="product-name">{if $producttotals.allowqty && $producttotals.qty > 1}{$producttotals.qty} x {/if}{$producttotals.productinfo.name}</span>
 <span class="product-group">{$producttotals.productinfo.groupname}</span>
 
 <div class="clearfix">
