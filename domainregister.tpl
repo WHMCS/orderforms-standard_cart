@@ -179,8 +179,9 @@
                                             {if is_object($tldinfo.register)}
                                                 {$tldinfo.register->toPrefixed()}{if $tldinfo.period > 1}{lang key="orderForm.shortPerYears" years={$tldinfo.period}}{else}{lang key="orderForm.shortPerYear" years=''}{/if}
                                             {else}
-                                                N/A
-                                            {/if}</div>
+                                                {lang key="domainregnotavailable"}
+                                            {/if}
+                                        </div>
                                     </div>
                                 </div>
                             {/foreach}

@@ -1048,6 +1048,78 @@ jQuery(document).ready(function(){
         skipCreditOnCheckout.iCheck('check');
         useFullCreditOnCheckout.iCheck('check');
     }
+
+    jQuery('#domainRenewals').find('span.added').hide().end().find('span.to-add').find('i').hide();
+    jQuery('.btn-add-renewal-to-cart').on('click', function() {
+        var self = jQuery(this),
+            domainId = self.data('domain-id'),
+            period = jQuery('#renewalPricing' + domainId).val();
+
+        if (self.hasClass('checkout')) {
+            window.location = 'cart.php?a=view';
+            return;
+        }
+
+        self.attr('disabled', 'disabled').each(function() {
+            jQuery(this).find('i').fadeIn('fast').end().css('width', jQuery(this).outerWidth());
+        });
+
+        jQuery.post(
+            WHMCS.utils.getRouteUrl('/cart/domain/renew/add'),
+            {
+                domainId: domainId,
+                period: period,
+                token: csrfToken
+            },
+            'json'
+        ).done(function (data) {
+            self.find('span.to-add').hide();
+            if (data.result === 'added') {
+                self.find('span.added').show().end().find('i').fadeOut('fast').css('width', self.outerWidth());
+            }
+            recalculateRenewalTotals();
+        });
+    });
+    jQuery(document).on('submit', '#removeRenewalForm', function(e) {
+        e.preventDefault();
+
+        jQuery.post(
+            'cart.php',
+            jQuery(this).serialize() + '&ajax=1'
+        ).done(function(data) {
+            var domainId = data.i,
+                button = jQuery('#renewDomain' + domainId);
+
+            button.attr('disabled', 'disabled').each(function() {
+                jQuery(this).find('span.added').hide().end()
+                    .removeClass('checkout').find('span.to-add').show().end().removeAttr('disabled');
+                jQuery(this).css('width', jQuery(this).outerWidth());
+            });
+
+        }).always(function () {
+            jQuery('#modalRemoveItem').modal('hide');
+            recalculateRenewalTotals();
+        });
+    });
+
+    jQuery('.select-renewal-pricing').on('change', function() {
+        var self = jQuery(this),
+            domainId = self.data('domain-id'),
+            button = jQuery('#renewDomain' + domainId);
+
+        button.attr('disabled', 'disabled').each(function() {
+            jQuery(this).css('width', jQuery(this).outerWidth());
+            jQuery(this).find('span.added').hide().end()
+                .removeClass('checkout').find('span.to-add').show().end().removeAttr('disabled');
+        });
+    });
+
+    jQuery('#domainRenewalFilter').on('keyup', function() {
+        var inputText = jQuery(this).val().toLowerCase();
+        jQuery('#domainRenewals').find('div.domain-renewal').filter(function() {
+            jQuery(this).toggle(jQuery(this).data('domain').toLowerCase().indexOf(inputText) > -1);
+        });
+    });
 });
 
 function hasDomainLookupEnded() {
@@ -1110,6 +1182,27 @@ function recalctotals() {
         }
     );
     post.always(
+        function() {
+            jQuery("#orderSummaryLoader").delay(500).fadeOut('slow');
+        }
+    );
+}
+
+function recalculateRenewalTotals() {
+    if (!jQuery("#orderSummaryLoader").is(":visible")) {
+        jQuery("#orderSummaryLoader").fadeIn('fast');
+    }
+
+    var thisRequestId = Math.floor((Math.random() * 1000000) + 1);
+    window.lastSliderUpdateRequestId = thisRequestId;
+
+    jQuery.get(
+        WHMCS.utils.getRouteUrl('/cart/domain/renew/calculate')
+    ).done(function(data) {
+        if (thisRequestId === window.lastSliderUpdateRequestId) {
+            jQuery("#producttotal").html(data.body);
+        }
+    }).always(
         function() {
             jQuery("#orderSummaryLoader").delay(500).fadeOut('slow');
         }
