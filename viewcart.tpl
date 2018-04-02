@@ -325,7 +325,7 @@
                                             </div>
                                             <div class="col-sm-4 item-price">
                                                 <span>{$upgrade->newRecurringAmount}</span>
-                                                <span class="cycle">{$upgrade->newCycle}</span>
+                                                <span class="cycle">{$upgrade->localisedNewCycle}</span>
                                             </div>
                                             <div class="col-sm-1">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('u','{$num}')">
@@ -334,19 +334,21 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="row row-upgrade-credit">
-                                            <div class="col-sm-7">
-                                                <span class="item-group">
-                                                    {$LANG.upgradeCredit}
-                                                </span>
-                                                <div class="upgrade-calc-msg">
-                                                    {lang key="upgradeCreditDescription" daysRemaining=$upgrade->daysRemaining totalDays=$upgrade->totalDaysInCycle}
+                                        {if $upgrade->totalDaysInCycle > 0}
+                                            <div class="row row-upgrade-credit">
+                                                <div class="col-sm-7">
+                                                    <span class="item-group">
+                                                        {$LANG.upgradeCredit}
+                                                    </span>
+                                                    <div class="upgrade-calc-msg">
+                                                        {lang key="upgradeCreditDescription" daysRemaining=$upgrade->daysRemaining totalDays=$upgrade->totalDaysInCycle}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 item-price">
+                                                    <span>-{$upgrade->creditAmount}</span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 item-price">
-                                                <span>-{$upgrade->creditAmount}</span>
-                                            </div>
-                                        </div>
+                                        {/if}
                                     </div>
                                 {/foreach}
 

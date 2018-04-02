@@ -60,13 +60,13 @@
     {if $carttotals.renewals}
         <span class="product-name">{lang key='domainrenewals'}</span>
         {foreach $carttotals.renewals as $domainId => $renewal}
-            <div class="clearfix">
+            <div class="clearfix" id="cartDomainRenewal{$domainId}">
                 <span class="pull-left">
                     {$renewal.domain} - {$renewal.regperiod} {if $renewal.regperiod == 1}{lang key='orderForm.year'}{else}{lang key='orderForm.years'}{/if}
                 </span>
                 <span class="pull-right">
-                    {$renewal.price}
-                    <a onclick="removeItem('r','{$domainId}'); return false;" href="#">
+                    {$renewal.priceBeforeTax}
+                    <a onclick="removeItem('r','{$domainId}'); return false;" href="#" id="linkCartRemoveDomainRenewal{$domainId}">
                         <i class="fa fa-fw fa-trash"></i>
                     </a>
                 </span>
@@ -99,8 +99,12 @@
 
         {/foreach}
     {/if}
-    {if $carttotals.taxrate || $carttotals.taxrate2}
-        <div class="summary-totals">
+    <div class="summary-totals">
+        <div class="clearfix">
+            <span class="pull-left">{lang key='ordersubtotal'}:</span>
+            <span class="pull-right">{$carttotals.subtotal}</span>
+        </div>
+        {if ($carttotals.taxrate && $carttotals.taxtotal) || ($carttotals.taxrate2 && $carttotals.taxtotal2)}
             {if $carttotals.taxrate}
                 <div class="clearfix">
                     <span class="pull-left">{$carttotals.taxname} @ {$carttotals.taxrate}%:</span>
@@ -110,11 +114,11 @@
             {if $carttotals.taxrate2}
                 <div class="clearfix">
                     <span class="pull-left">{$carttotals.taxname2} @ {$carttotals.taxrate2}%:</span>
-                    <span class="pull-right">{{$carttotals.taxtotal2}}</span>
+                    <span class="pull-right">{$carttotals.taxtotal2}</span>
                 </div>
             {/if}
-        </div>
-    {/if}
+        {/if}
+    </div>
     <div class="total-due-today">
         <span class="amt">{$carttotals.total}</span>
         <span>{lang key='ordertotalduetoday'}</span>

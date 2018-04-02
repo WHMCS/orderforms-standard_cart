@@ -33,7 +33,7 @@
                     {if $totalResults < $totalDomainCount}
                         <div class="text-center">
                             {lang key='domainRenewal.showingDomains' showing=$totalResults totalCount=$totalDomainCount}
-                            <a href="{routePath('cart-domain-renewals')}">{lang key='domainRenewal.showAll'}</a>
+                            <a id="linkShowAll" href="{routePath('cart-domain-renewals')}">{lang key='domainRenewal.showAll'}</a>
                         </div>
                     {/if}
 
@@ -59,7 +59,7 @@
                                         </span>
                                     {elseif $renewalData.beforeRenewLimit}
                                         <span class="label label-info">
-                                            {lang key='domainrenewalsbeforerenewlimit' days=$renewalData.beforeRenewLimitDays}
+                                            {lang key='domainRenewal.maximumAdvanceRenewal' days=$renewalData.beforeRenewLimitDays}
                                         </span>
                                     {else}
                                         <span class="label label-danger">
@@ -142,7 +142,7 @@
                         </div>
                         <div class="text-center">
                             <a id="btnGoToCart" class="btn btn-primary btn-lg" href="cart.php?a=view">
-                                {lang key='checkout'}
+                                {lang key='viewcart'}
                                 <i class="glyphicon glyphicon-shopping-cart"></i>
                             </a>
                         </div>

@@ -510,6 +510,7 @@ jQuery(document).ready(function(){
         if (jQuery("#stateselect").attr('required')) {
             jQuery("#stateselect").removeAttr('required').addClass('requiredAttributeRemoved');
         }
+        jQuery('.marketing-email-optin').slideUp();
     });
 
     jQuery("#btnNewUserSignup").click(function() {
@@ -523,6 +524,7 @@ jQuery(document).ready(function(){
                     jQuery("#btnAlreadyRegistered").removeClass('hidden').fadeIn();
                 });
             });
+            jQuery('.marketing-email-optin').slideDown();
         });
         if (jQuery("#stateselect").hasClass('requiredAttributeRemoved')) {
             jQuery("#stateselect").attr('required', 'required').removeClass('requiredAttributeRemoved');
