@@ -141,7 +141,7 @@
                             <div class="summary-container" id="producttotal"></div>
                         </div>
                         <div class="text-center">
-                            <a id="btnGoToCart" class="btn btn-primary btn-lg" href="cart.php?a=view">
+                            <a id="btnGoToCart" class="btn btn-primary btn-lg" href="{$WEB_ROOT}/cart.php?a=view">
                                 {lang key='viewcart'}
                                 <i class="glyphicon glyphicon-shopping-cart"></i>
                             </a>
@@ -152,7 +152,7 @@
             </div>
         </div>
     </div>
-    <form id="removeRenewalForm" method="post" action="cart.php">
+    <form id="removeRenewalForm" method="post" action="{$WEB_ROOT}/cart.php">
         <input type="hidden" name="a" value="remove" />
         <input type="hidden" name="r" value="" id="inputRemoveItemType" />
         <input type="hidden" name="i" value="" id="inputRemoveItemRef" />

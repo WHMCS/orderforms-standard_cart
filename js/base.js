@@ -1086,7 +1086,7 @@ jQuery(document).ready(function(){
         e.preventDefault();
 
         jQuery.post(
-            'cart.php',
+            whmcsBaseUrl + '/cart.php',
             jQuery(this).serialize() + '&ajax=1'
         ).done(function(data) {
             var domainId = data.i,
