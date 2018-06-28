@@ -106,7 +106,7 @@
                                     {else}
                                         <button id="renewDomain{$renewalData.id}" class="btn btn-default btn-sm btn-add-renewal-to-cart" data-domain-id="{$renewalData.id}">
                                             <span class="to-add">
-                                                <i class="fa fa-fw fa-spinner fa-spin"></i>
+                                                <i class="fas fa-fw fa-spinner fa-spin"></i>
                                                 {lang key='addtocart'}
                                             </span>
                                             <span class="added">{lang key='domaincheckeradded'}</span>
@@ -135,7 +135,7 @@
                     <div id="orderSummary">
                         <div class="order-summary">
                             <div class="loader" id="orderSummaryLoader">
-                                <i class="fa fa-fw fa-refresh fa-spin"></i>
+                                <i class="fas fa-fw fa-sync fa-spin"></i>
                             </div>
                             <h2>{lang key='ordersummary'}</h2>
                             <div class="summary-container" id="producttotal"></div>
@@ -164,7 +164,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <h4 class="modal-title">
-                            <i class="fa fa-times fa-3x"></i>
+                            <i class="fas fa-times fa-3x"></i>
                             <span>{lang key='orderForm.removeItem'}</span>
                         </h4>
                     </div>

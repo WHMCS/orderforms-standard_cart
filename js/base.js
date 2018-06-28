@@ -25,6 +25,16 @@ jQuery(document).ready(function(){
         increaseArea: '20%'
     });
 
+    $('.mc-promo .header').click(function(e) {
+        e.preventDefault();
+        if ($(e.target).is('.btn, .btn span,.btn .fa')) {
+            return;
+        }
+        $(this).parent().find('.rotate').toggleClass('down');
+        $(this).parent().find('.body').slideToggle('fast');
+    });
+    $('.mc-promos.viewcart .mc-promo:first-child .header').click();
+
     if (jQuery('#inputCardNumber').length) {
         jQuery('#inputCardNumber').payment('formatCardNumber');
         jQuery('#inputCardCVV').payment('formatCardCVC');
@@ -80,7 +90,7 @@ jQuery(document).ready(function(){
 
         var btnOriginalText = jQuery(button).html();
         jQuery(button).find('i').removeClass('fa-arrow-circle-right').addClass('fa-spinner fa-spin');
-        jQuery.post("cart.php", 'ajax=1&a=confproduct&' + jQuery("#frmConfigureProduct").serialize(),
+        WHMCS.http.jqClient.post("cart.php", 'ajax=1&a=confproduct&' + jQuery("#frmConfigureProduct").serialize(),
             function(data) {
                 if (data) {
                     jQuery("#btnCompleteProductConfig").html(btnOriginalText);
@@ -120,14 +130,14 @@ jQuery(document).ready(function(){
         var $activeAddon = jQuery(this).parents('.panel-addon');
         $activeAddon.addClass('panel-addon-selected');
         $activeAddon.find('input[type="checkbox"]').iCheck('check');
-        $activeAddon.find('.panel-add').html('<i class="fa fa-shopping-cart"></i> '+localTrans('addedToCartRemove', 'Added to Cart (Remove)'));
+        $activeAddon.find('.panel-add').html('<i class="fas fa-shopping-cart"></i> '+localTrans('addedToCartRemove', 'Added to Cart (Remove)'));
         recalctotals();
     });
     jQuery(".addon-products").on('ifUnchecked', '.panel-addon input', function(event) {
         var $activeAddon = jQuery(this).parents('.panel-addon');
         $activeAddon.removeClass('panel-addon-selected');
         $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
-        $activeAddon.find('.panel-add').html('<i class="fa fa-plus"></i> '+localTrans('addToCart', 'Add to Cart'));
+        $activeAddon.find('.panel-add').html('<i class="fas fa-plus"></i> '+localTrans('addToCart', 'Add to Cart'));
         recalctotals();
     });
 
@@ -237,7 +247,7 @@ jQuery(document).ready(function(){
             jQuery('.suggested-domains').hide().removeClass('hidden').fadeIn('fast');
             spotlightTlds.hide().removeClass('hidden').fadeIn('fast');
             jQuery('#resultDomainOption').val(domainoption);
-            var lookup = jQuery.post(
+            var lookup = WHMCS.http.jqClient.post(
                     WHMCS.utils.getRouteUrl('/domain/check'),
                     {
                         token: csrfToken,
@@ -246,7 +256,7 @@ jQuery(document).ready(function(){
                     },
                     'json'
                 ),
-                spotlight = jQuery.post(
+                spotlight = WHMCS.http.jqClient.post(
                     WHMCS.utils.getRouteUrl('/domain/check'),
                     {
                         token: csrfToken,
@@ -255,7 +265,7 @@ jQuery(document).ready(function(){
                     },
                     'json'
                 ),
-                suggestion = jQuery.post(
+                suggestion = WHMCS.http.jqClient.post(
                     WHMCS.utils.getRouteUrl('/domain/check'),
                     {
                         token: csrfToken,
@@ -416,7 +426,7 @@ jQuery(document).ready(function(){
             });
         } else if (domainoption == 'transfer') {
             jQuery('#resultDomainOption').val(domainoption);
-            var transfer = jQuery.post(
+            var transfer = WHMCS.http.jqClient.post(
                 WHMCS.utils.getRouteUrl('/domain/check'),
                 {
                     token: csrfToken,
@@ -464,7 +474,7 @@ jQuery(document).ready(function(){
             });
         } else if (domainoption == 'owndomain' || domainoption == 'subdomain' || domainoption == 'incart') {
 
-            var otherDomain = jQuery.post(
+            var otherDomain = WHMCS.http.jqClient.post(
                 WHMCS.utils.getRouteUrl('/domain/check'),
                 {
                     token: csrfToken,
@@ -648,17 +658,17 @@ jQuery(document).ready(function(){
             jQuery('#DomainSearchResults').hide().removeClass('hidden').fadeIn();
         }
 
-        var lookup = jQuery.post(
+        var lookup = WHMCS.http.jqClient.post(
                 WHMCS.utils.getRouteUrl('/domain/check'),
                 frmDomain.serialize() + '&type=domain',
                 'json'
             ),
-            spotlight = jQuery.post(
+            spotlight = WHMCS.http.jqClient.post(
                 WHMCS.utils.getRouteUrl('/domain/check'),
                 frmDomain.serialize() + '&type=spotlight',
                 'json'
             ),
-            suggestion = jQuery.post(
+            suggestion = WHMCS.http.jqClient.post(
                 WHMCS.utils.getRouteUrl('/domain/check'),
                 frmDomain.serialize() + '&type=suggestions',
                 'json'
@@ -847,7 +857,7 @@ jQuery(document).ready(function(){
             ||
             (jQuery(this).parents('.suggested-domains').length > 0)) ? 1 : 0;
 
-        var addToCart = jQuery.post(
+        var addToCart = WHMCS.http.jqClient.post(
             window.location.pathname,
             {
                 a: 'addToCart',
@@ -911,9 +921,10 @@ jQuery(document).ready(function(){
             .find('span').hide().removeClass('hidden').end()
             .find('.loader').show();
 
-        jQuery.post(
+        WHMCS.http.jqClient.post(
             frmDomain.attr('action'),
             frmDomain.serialize(),
+            null,
             'json'
         ).done(function (data) {
             if (typeof data != 'object') {
@@ -979,11 +990,11 @@ jQuery(document).ready(function(){
     jQuery('#frmDomainChecker input[type=text]:visible').first().focus();
     jQuery('#frmDomainTransfer input[type=text]:visible').first().focus();
 
-    jQuery('.promo-cart .btn-add').click(function(e) {
+    jQuery('.mc-promo .btn-add').click(function(e) {
         var self = jQuery(this);
         self.attr('disabled', 'disabled')
-            .find('span.loading').hide().removeClass('hidden').show().end();
-        jQuery.post(
+            .find('span.arrow i').removeClass('fa-chevron-right').addClass('fa-spinner fa-spin');
+        WHMCS.http.jqClient.post(
             window.location.pathname,
             {
                 'a': 'addUpSell',
@@ -991,7 +1002,6 @@ jQuery(document).ready(function(){
                 'token': csrfToken
             },
             function (data) {
-                console.log(data.modal);
                 if (typeof data.modal !== 'undefined') {
                     openModal(
                         data.modal,
@@ -1066,13 +1076,14 @@ jQuery(document).ready(function(){
             jQuery(this).find('i').fadeIn('fast').end().css('width', jQuery(this).outerWidth());
         });
 
-        jQuery.post(
+        WHMCS.http.jqClient.post(
             WHMCS.utils.getRouteUrl('/cart/domain/renew/add'),
             {
                 domainId: domainId,
                 period: period,
                 token: csrfToken
             },
+            null,
             'json'
         ).done(function (data) {
             self.find('span.to-add').hide();
@@ -1085,7 +1096,7 @@ jQuery(document).ready(function(){
     jQuery(document).on('submit', '#removeRenewalForm', function(e) {
         e.preventDefault();
 
-        jQuery.post(
+        WHMCS.http.jqClient.post(
             whmcsBaseUrl + '/cart.php',
             jQuery(this).serialize() + '&ajax=1'
         ).done(function(data) {
@@ -1122,6 +1133,8 @@ jQuery(document).ready(function(){
             jQuery(this).toggle(jQuery(this).data('domain').toLowerCase().indexOf(inputText) > -1);
         });
     });
+
+    WHMCS.recaptcha.register();
 });
 
 function hasDomainLookupEnded() {
@@ -1152,7 +1165,7 @@ function removeItem(type, num) {
 
 function updateConfigurableOptions(i, billingCycle) {
 
-    jQuery.post("cart.php", 'a=cyclechange&ajax=1&i='+i+'&billingcycle='+billingCycle,
+    WHMCS.http.jqClient.post("cart.php", 'a=cyclechange&ajax=1&i='+i+'&billingcycle='+billingCycle,
         function(data) {
             jQuery("#productConfigurableOptions").html(jQuery(data).find('#productConfigurableOptions').html());
             jQuery('input').iCheck({
@@ -1175,7 +1188,7 @@ function recalctotals() {
     var thisRequestId = Math.floor((Math.random() * 1000000) + 1);
     window.lastSliderUpdateRequestId = thisRequestId;
 
-    var post = jQuery.post("cart.php", 'ajax=1&a=confproduct&calctotal=true&'+jQuery("#frmConfigureProduct").serialize());
+    var post = WHMCS.http.jqClient.post("cart.php", 'ajax=1&a=confproduct&calctotal=true&'+jQuery("#frmConfigureProduct").serialize());
     post.done(
         function(data) {
             if (thisRequestId == window.lastSliderUpdateRequestId) {
@@ -1198,7 +1211,7 @@ function recalculateRenewalTotals() {
     var thisRequestId = Math.floor((Math.random() * 1000000) + 1);
     window.lastSliderUpdateRequestId = thisRequestId;
 
-    jQuery.get(
+    WHMCS.http.jqClient.get(
         WHMCS.utils.getRouteUrl('/cart/domain/renew/calculate')
     ).done(function(data) {
         if (thisRequestId === window.lastSliderUpdateRequestId) {
@@ -1225,7 +1238,7 @@ function selectDomainPeriodInCart(domainName, price, period, yearsString) {
     }
     jQuery("[name='" + domainName + "Pricing']").html(period + ' ' + yearsString + ' <span class="caret"></span>');
     jQuery("[name='" + domainName + "Price']").html(price);
-    var update = jQuery.post(
+    var update = WHMCS.http.jqClient.post(
         window.location.pathname,
         {
             domain: domainName,
@@ -1322,9 +1335,10 @@ function validate_captcha(form)
         return false;
     }
 
-    var validate = jQuery.post(
+    var validate = WHMCS.http.jqClient.post(
         form.attr('action'),
         form.serialize() + '&a=validateCaptcha',
+        null,
         'json'
     );
 

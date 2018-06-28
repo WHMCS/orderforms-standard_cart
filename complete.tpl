@@ -58,7 +58,7 @@
             <div class="text-center">
                 <a href="clientarea.php" class="btn btn-default">
                     {$LANG.orderForm.continueToClientArea}
-                    &nbsp;<i class="fa fa-arrow-circle-right"></i>
+                    &nbsp;<i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
 

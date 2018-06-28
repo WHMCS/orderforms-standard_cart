@@ -25,7 +25,7 @@
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
             <div class="alert alert-danger error-heading">
-                <i class="fa fa-warning"></i>
+                <i class="fas fa-exclamation-triangle"></i>
                 {$errortitle}
             </div>
 
@@ -36,7 +36,7 @@
 
                     <div class="text-center">
                         <a href="javascript:history.go(-1)" class="btn btn-default">
-                            <i class="fa fa-arrow-left"></i>&nbsp;
+                            <i class="fas fa-arrow-left"></i>&nbsp;
                             {$LANG.problemgoback}
                         </a>
                     </div>

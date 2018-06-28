@@ -81,7 +81,7 @@
             </form>
 
             <div class="domain-loading-spinner" id="domainLoadingSpinner">
-                <i class="fa fa-3x fa-spinner fa-spin"></i>
+                <i class="fas fa-3x fa-spinner fa-spin"></i>
             </div>
 
             <form method="post" action="cart.php?a=add&domain={$domain}">

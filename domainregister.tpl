@@ -64,7 +64,7 @@
             <div id="DomainSearchResults" class="hidden">
 
                 <div id="searchDomainInfo" class="domain-checker-result-headline">
-                    <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching"><i class="fa fa-spinner fa-spin"></i> {lang key='orderForm.searching'}...</p>
+                    <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching"><i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.searching'}...</p>
                     <div id="primaryLookupResult" class="domain-lookup-result hidden">
                         <p class="domain-invalid domain-checker-invalid">{lang key='orderForm.domainLetterOrNumber'}<span class="domain-length-restrictions">{lang key='orderForm.domainLengthRequirements'}</span></p>
                         <p class="domain-unavailable domain-checker-unavailable">{lang key='orderForm.domainIsUnavailable'}</p>
@@ -92,7 +92,7 @@
                                         {/if}
                                         {$data.tld}
                                         <span class="domain-lookup-loader domain-lookup-spotlight-loader">
-                                            <i class="fa fa-spinner fa-spin"></i>
+                                            <i class="fas fa-spinner fa-spin"></i>
                                         </span>
                                         <div class="domain-lookup-result">
                                             <button type="button" class="btn unavailable hidden" disabled="disabled">
@@ -123,7 +123,7 @@
                         {lang key='orderForm.suggestedDomains'}
                     </div>
                     <div id="suggestionsLoader" class="panel-body domain-lookup-loader domain-lookup-suggestions-loader">
-                        <i class="fa fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
+                        <i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
                     </div>
                     <ul id="domainSuggestions" class="domain-lookup-result list-group hidden">
                         <li class="domain-suggestion list-group-item hidden">
@@ -260,7 +260,7 @@
                     <div class="domain-promo-box">
 
                         <div class="clearfix">
-                            <i class="fa fa-server fa-4x"></i>
+                            <i class="fas fa-server fa-4x"></i>
                             <h3>{lang key='orderForm.addHosting'}</h3>
                             <p class="font-bold text-warning">{lang key='orderForm.chooseFromRange'}</p>
                         </div>
@@ -277,7 +277,7 @@
                         <div class="domain-promo-box">
 
                             <div class="clearfix">
-                                <i class="fa fa-globe fa-4x"></i>
+                                <i class="fas fa-globe fa-4x"></i>
                                 <h3>{lang key='orderForm.transferToUs'}</h3>
                                 <p class="font-bold text-primary">{lang key='orderForm.transferExtend'}*</p>
                             </div>

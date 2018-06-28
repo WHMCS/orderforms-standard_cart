@@ -15,7 +15,7 @@
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
             <div class="alert alert-danger error-heading">
-                <i class="fa fa-warning"></i>
+                <i class="fas fa-exclamation-triangle"></i>
                 {$errortitle}
             </div>
 
@@ -27,7 +27,7 @@
                     <div class="text-center">
                         <a href="submitticket.php" class="btn btn-default">
                             {$LANG.orderForm.submitTicket}
-                            &nbsp;<i class="fa fa-arrow-right"></i>
+                            &nbsp;<i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
 

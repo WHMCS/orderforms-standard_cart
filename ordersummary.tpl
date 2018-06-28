@@ -67,7 +67,7 @@
                 <span class="pull-right">
                     {$renewal.priceBeforeTax}
                     <a onclick="removeItem('r','{$domainId}'); return false;" href="#" id="linkCartRemoveDomainRenewal{$domainId}">
-                        <i class="fa fa-fw fa-trash"></i>
+                        <i class="fas fa-fw fa-trash-alt"></i>
                     </a>
                 </span>
             </div>

@@ -47,7 +47,7 @@
                                 <div class="form-group">
                                     <label for="inputAuthCode" style="width:100%;">
                                         {lang key='orderForm.authCode'}
-                                        <a href="" data-toggle="tooltip" data-placement="left" title="{lang key='orderForm.authCodeTooltip'}" class="pull-right"><i class="fa fa-question-circle"></i> {lang key='orderForm.help'}</a>
+                                        <a href="" data-toggle="tooltip" data-placement="left" title="{lang key='orderForm.authCodeTooltip'}" class="pull-right"><i class="fas fa-question-circle"></i> {lang key='orderForm.help'}</a>
                                     </label>
                                     <input type="text" class="form-control" name="epp" id="inputAuthCode" placeholder="{lang key='orderForm.authCodePlaceholder'}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                 </div>
@@ -72,7 +72,7 @@
                             <div class="panel-footer text-right">
                                 <button type="submit" id="btnTransferDomain" class="btn btn-primary btn-transfer">
                                     <span class="loader hidden" id="addTransferLoader">
-                                        <i class="fa fa-fw fa-spinner fa-spin"></i>
+                                        <i class="fas fa-fw fa-spinner fa-spin"></i>
                                     </span>
                                     <span id="addToCart">{lang key="orderForm.addToCart"}</span>
                                 </button>

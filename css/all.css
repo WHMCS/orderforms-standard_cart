@@ -1076,6 +1076,155 @@
     text-decoration: underline;
 }
 
+#order-standard_cart .mc-promos {
+    margin: 20px auto 30px;
+    max-width: 575px;
+}
+
+#order-standard_cart .mc-promo {
+    margin: 0 0 10px 0;
+    border: 1px dashed #ccc;
+    border-bottom: 4px solid #9abb3a;
+}
+#order-standard_cart .mc-promo .cta {
+    float: right;
+    padding: 3px 10px;
+    text-align: center;
+}
+#order-standard_cart .mc-promo .headline {
+    padding-top: 8px;
+    font-size: 1.5em;
+}
+#order-standard_cart .mc-promo .tagline {
+    font-size: 1.2em;
+    font-weight: 300;
+}
+#order-standard_cart .mc-promo .header {
+    border-bottom: 0;
+    height: 70px;
+    overflow: hidden;
+    cursor: pointer;
+}
+#order-standard_cart .mc-promo .icon {
+    float: left;
+    margin: 10px;
+    width: 64px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+#order-standard_cart .mc-promo .icon img {
+    max-width: 100%;
+    max-height: 100%;
+}
+#order-standard_cart .mc-promo .body {
+    padding: 10px 15px;
+    border-top: 10px solid #eaeaea;
+    background-color: #f8f8f8;
+    font-size: 0.85em;
+    display: none;
+}
+#order-standard_cart .mc-promo .body i {
+    color: #99bc3a;
+    padding-right: 3px;
+}
+.mc-promo em {
+    font-weight: bold;
+    font-style: normal;
+}
+#order-standard_cart .mc-promo .body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#order-standard_cart .mc-promo .body li {
+    float: left;
+    width: 50%;
+}
+#order-standard_cart .mc-promo .price {
+    padding: 4px 0;
+    font-size: 1.15em;
+    color: #83a032;
+}
+#order-standard_cart .mc-promo .btn-add {
+    padding: 0;
+    background-color: #99bb3a;
+    color: #fff;
+    font-size: 1em;
+}
+#order-standard_cart .mc-promo .arrow {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #84b436;
+}
+#order-standard_cart .mc-promo .text{
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.9em;
+}
+#order-standard_cart .mc-promo .expander {
+    float: left;
+    width: 28px;
+    font-size: 1.5em;
+    color: #99bc3a;
+    text-align: right;
+    line-height: 60px;
+    transition: all 2s linear;
+}
+
+#order-standard_cart .mc-promo.weebly {
+    border-color: #7b7b7b;
+}
+#order-standard_cart .mc-promo.weebly .btn-add {
+    background-color: #7b7b7b;
+}
+#order-standard_cart .mc-promo.weebly .arrow {
+    background-color: #666;
+}
+#order-standard_cart .mc-promo.weebly .expander,
+#order-standard_cart .mc-promo.weebly .price {
+    color: #7b7b7b;
+}
+
+#order-standard_cart .mc-promo.spamexperts {
+    border-color: #56a2da;
+}
+#order-standard_cart .mc-promo.spamexperts .btn-add {
+    background-color: #56a2da;
+}
+#order-standard_cart .mc-promo.spamexperts .arrow {
+    background-color: #4e98d0;
+}
+#order-standard_cart .mc-promo.spamexperts .expander,
+#order-standard_cart .mc-promo.spamexperts .price {
+    color: #56a2da;
+}
+
+#order-standard_cart .mc-promo.sitelock {
+    border-color: #f29f44;
+}
+#order-standard_cart .mc-promo.sitelock .btn-add {
+    background-color: #f29f44;
+}
+#order-standard_cart .mc-promo.sitelock .arrow {
+    background-color: #f08f3d;
+}
+#order-standard_cart .mc-promo.sitelock .expander,
+#order-standard_cart .mc-promo.sitelock .price {
+    color: #f29f44;
+}
+
+#order-standard_cart .mc-promo .rotate{
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+#order-standard_cart .mc-promo .rotate.down{
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    transform:rotate(90deg);
+}
+
 /**
  * -------------------------
  * Domain Checker Captchas

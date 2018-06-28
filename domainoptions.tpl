@@ -161,14 +161,14 @@
 
     {if $continueok}
         <div class="alert alert-info info-text-sm">
-            <i class="fa fa-info-circle"></i>
+            <i class="fas fa-info-circle"></i>
             {$LANG.orderForm.domainAvailabilityCached}
         </div>
 
         <div class="text-center">
             <button type="submit" class="btn btn-primary btn-lg">
                 {$LANG.continue}
-                &nbsp;<i class="fa fa-arrow-circle-right"></i>
+                &nbsp;<i class="fas fa-arrow-circle-right"></i>
             </button>
         </div>
     {/if}

@@ -193,7 +193,7 @@
 
                     <div id="searchDomainInfo">
                         <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching domain-checker-result-headline">
-                            <i class="fa fa-spinner fa-spin"></i>
+                            <i class="fas fa-spinner fa-spin"></i>
                             <span class="domain-lookup-register-loader">{lang key='orderForm.checkingAvailability'}...</span>
                             <span class="domain-lookup-transfer-loader">{lang key='orderForm.verifyingTransferEligibility'}...</span>
                             <span class="domain-lookup-other-loader">{lang key='orderForm.verifyingDomain'}...</span>
@@ -242,7 +242,7 @@
                                                 {/if}
                                                 {$data.tld}
                                                 <span class="domain-lookup-loader domain-lookup-spotlight-loader">
-                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                    <i class="fas fa-spinner fa-spin"></i>
                                                 </span>
                                                 <div class="domain-lookup-result">
                                                     <button type="button" class="btn unavailable hidden" disabled="disabled">
@@ -271,7 +271,7 @@
                                 {lang key='orderForm.suggestedDomains'}
                             </div>
                             <div id="suggestionsLoader" class="panel-body domain-lookup-loader domain-lookup-suggestions-loader">
-                                <i class="fa fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
+                                <i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
                             </div>
                             <ul id="domainSuggestions" class="domain-lookup-result list-group hidden">
                                 <li class="domain-suggestion list-group-item hidden">
@@ -300,7 +300,7 @@
                 <div class="text-center">
                     <button id="btnDomainContinue" type="submit" class="btn btn-primary btn-lg hidden" disabled="disabled">
                         {$LANG.continue}
-                        &nbsp;<i class="fa fa-arrow-circle-right"></i>
+                        &nbsp;<i class="fas fa-arrow-circle-right"></i>
                     </button>
                 </div>
             </form>

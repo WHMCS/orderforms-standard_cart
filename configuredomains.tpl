@@ -69,7 +69,7 @@ var _localLang = {
                                 <div class="form-group prepend-icon">
                                     <input type="text" name="epp[{$num}]" id="inputEppcode{$num}" value="{$domain.eppvalue}" class="field" placeholder="{$LANG.domaineppcode}" />
                                     <label for="inputEppcode{$num}" class="field-icon">
-                                        <i class="fa fa-lock"></i>
+                                        <i class="fas fa-lock"></i>
                                     </label>
                                     <span class="field-help-text">
                                         {$LANG.domaineppcodedesc}
@@ -96,7 +96,7 @@ var _localLang = {
                                             {$domain.dnsmanagementprice} / {$domain.regperiod} {$LANG.orderyears}
                                         </div>
                                         <div class="panel-add">
-                                            <i class="fa fa-plus"></i>
+                                            <i class="fas fa-plus"></i>
                                             {$LANG.orderForm.addToCart}
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@ var _localLang = {
                                             {$domain.idprotectionprice} / {$domain.regperiod} {$LANG.orderyears}
                                         </div>
                                         <div class="panel-add">
-                                            <i class="fa fa-plus"></i>
+                                            <i class="fas fa-plus"></i>
                                             {$LANG.orderForm.addToCart}
                                         </div>
                                     </div>
@@ -138,7 +138,7 @@ var _localLang = {
                                             {$domain.emailforwardingprice} / {$domain.regperiod} {$LANG.orderyears}
                                         </div>
                                         <div class="panel-add">
-                                            <i class="fa fa-plus"></i>
+                                            <i class="fas fa-plus"></i>
                                             {$LANG.orderForm.addToCart}
                                         </div>
                                     </div>
@@ -202,7 +202,7 @@ var _localLang = {
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary btn-lg">
                         {$LANG.continue}
-                        &nbsp;<i class="fa fa-arrow-circle-right"></i>
+                        &nbsp;<i class="fas fa-arrow-circle-right"></i>
                     </button>
                 </div>
 

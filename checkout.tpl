@@ -89,7 +89,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputLoginEmail" class="field-icon">
-                                    <i class="fa fa-envelope"></i>
+                                    <i class="fas fa-envelope"></i>
                                 </label>
                                 <input type="text" name="loginemail" id="inputLoginEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}">
                             </div>
@@ -97,7 +97,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputLoginPassword" class="field-icon">
-                                    <i class="fa fa-lock"></i>
+                                    <i class="fas fa-lock"></i>
                                 </label>
                                 <input type="password" name="loginpassword" id="inputLoginPassword" class="field" placeholder="{$LANG.clientareapassword}">
                             </div>
@@ -119,7 +119,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputFirstName" class="field-icon">
-                                    <i class="fa fa-user"></i>
+                                    <i class="fas fa-user"></i>
                                 </label>
                                 <input type="text" name="firstname" id="inputFirstName" class="field" placeholder="{$LANG.orderForm.firstName}" value="{$clientsdetails.firstname}"{if $loggedin} readonly="readonly"{/if} autofocus>
                             </div>
@@ -127,7 +127,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputLastName" class="field-icon">
-                                    <i class="fa fa-user"></i>
+                                    <i class="fas fa-user"></i>
                                 </label>
                                 <input type="text" name="lastname" id="inputLastName" class="field" placeholder="{$LANG.orderForm.lastName}" value="{$clientsdetails.lastname}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -135,7 +135,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputEmail" class="field-icon">
-                                    <i class="fa fa-envelope"></i>
+                                    <i class="fas fa-envelope"></i>
                                 </label>
                                 <input type="email" name="email" id="inputEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}" value="{$clientsdetails.email}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -143,7 +143,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputPhone" class="field-icon">
-                                    <i class="fa fa-phone"></i>
+                                    <i class="fas fa-phone"></i>
                                 </label>
                                 <input type="tel" name="phonenumber" id="inputPhone" class="field" placeholder="{$LANG.orderForm.phoneNumber}" value="{$clientsdetails.phonenumber}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -158,7 +158,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputCompanyName" class="field-icon">
-                                    <i class="fa fa-building"></i>
+                                    <i class="fas fa-building"></i>
                                 </label>
                                 <input type="text" name="companyname" id="inputCompanyName" class="field" placeholder="{$LANG.orderForm.companyName} ({$LANG.orderForm.optional})" value="{$clientsdetails.companyname}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -166,7 +166,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputAddress1" class="field-icon">
-                                    <i class="fa fa-building-o"></i>
+                                    <i class="far fa-building"></i>
                                 </label>
                                 <input type="text" name="address1" id="inputAddress1" class="field" placeholder="{$LANG.orderForm.streetAddress}" value="{$clientsdetails.address1}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -174,7 +174,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputAddress2" class="field-icon">
-                                    <i class="fa fa-map-marker"></i>
+                                    <i class="fas fa-map-marker-alt"></i>
                                 </label>
                                 <input type="text" name="address2" id="inputAddress2" class="field" placeholder="{$LANG.orderForm.streetAddress2}" value="{$clientsdetails.address2}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -182,7 +182,7 @@
                         <div class="col-sm-4">
                             <div class="form-group prepend-icon">
                                 <label for="inputCity" class="field-icon">
-                                    <i class="fa fa-building-o"></i>
+                                    <i class="far fa-building"></i>
                                 </label>
                                 <input type="text" name="city" id="inputCity" class="field" placeholder="{$LANG.orderForm.city}" value="{$clientsdetails.city}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -190,10 +190,10 @@
                         <div class="col-sm-5">
                             <div class="form-group prepend-icon">
                                 <label for="state" class="field-icon" id="inputStateIcon">
-                                    <i class="fa fa-map-signs"></i>
+                                    <i class="fas fa-map-signs"></i>
                                 </label>
                                 <label for="stateinput" class="field-icon" id="inputStateIcon">
-                                    <i class="fa fa-map-signs"></i>
+                                    <i class="fas fa-map-signs"></i>
                                 </label>
                                 <input type="text" name="state" id="inputState" class="field" placeholder="{$LANG.orderForm.state}" value="{$clientsdetails.state}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -201,7 +201,7 @@
                         <div class="col-sm-3">
                             <div class="form-group prepend-icon">
                                 <label for="inputPostcode" class="field-icon">
-                                    <i class="fa fa-certificate"></i>
+                                    <i class="fas fa-certificate"></i>
                                 </label>
                                 <input type="text" name="postcode" id="inputPostcode" class="field" placeholder="{$LANG.orderForm.postcode}" value="{$clientsdetails.postcode}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
@@ -209,7 +209,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputCountry" class="field-icon" id="inputCountryIcon">
-                                    <i class="fa fa-globe"></i>
+                                    <i class="fas fa-globe"></i>
                                 </label>
                                 <select name="country" id="inputCountry" class="field"{if $loggedin} disabled="disabled"{/if}>
                                     {foreach $countries as $countrycode => $countrylabel}
@@ -275,7 +275,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCFirstName" class="field-icon">
-                                    <i class="fa fa-user"></i>
+                                    <i class="fas fa-user"></i>
                                 </label>
                                 <input type="text" name="domaincontactfirstname" id="inputDCFirstName" class="field" placeholder="{$LANG.orderForm.firstName}" value="{$domaincontact.firstname}">
                             </div>
@@ -283,7 +283,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCLastName" class="field-icon">
-                                    <i class="fa fa-user"></i>
+                                    <i class="fas fa-user"></i>
                                 </label>
                                 <input type="text" name="domaincontactlastname" id="inputDCLastName" class="field" placeholder="{$LANG.orderForm.lastName}" value="{$domaincontact.lastname}">
                             </div>
@@ -291,7 +291,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCEmail" class="field-icon">
-                                    <i class="fa fa-envelope"></i>
+                                    <i class="fas fa-envelope"></i>
                                 </label>
                                 <input type="email" name="domaincontactemail" id="inputDCEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}" value="{$domaincontact.email}">
                             </div>
@@ -299,7 +299,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCPhone" class="field-icon">
-                                    <i class="fa fa-phone"></i>
+                                    <i class="fas fa-phone"></i>
                                 </label>
                                 <input type="tel" name="domaincontactphonenumber" id="inputDCPhone" class="field" placeholder="{$LANG.orderForm.phoneNumber}" value="{$domaincontact.phonenumber}">
                             </div>
@@ -307,7 +307,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCCompanyName" class="field-icon">
-                                    <i class="fa fa-building"></i>
+                                    <i class="fas fa-building"></i>
                                 </label>
                                 <input type="text" name="domaincontactcompanyname" id="inputDCCompanyName" class="field" placeholder="{$LANG.orderForm.companyName} ({$LANG.orderForm.optional})" value="{$domaincontact.companyname}">
                             </div>
@@ -315,7 +315,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCAddress1" class="field-icon">
-                                    <i class="fa fa-building-o"></i>
+                                    <i class="far fa-building"></i>
                                 </label>
                                 <input type="text" name="domaincontactaddress1" id="inputDCAddress1" class="field" placeholder="{$LANG.orderForm.streetAddress}" value="{$domaincontact.address1}">
                             </div>
@@ -323,7 +323,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCAddress2" class="field-icon">
-                                    <i class="fa fa-map-marker"></i>
+                                    <i class="fas fa-map-marker-alt"></i>
                                 </label>
                                 <input type="text" name="domaincontactaddress2" id="inputDCAddress2" class="field" placeholder="{$LANG.orderForm.streetAddress2}" value="{$domaincontact.address2}">
                             </div>
@@ -331,7 +331,7 @@
                         <div class="col-sm-4">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCCity" class="field-icon">
-                                    <i class="fa fa-building-o"></i>
+                                    <i class="far fa-building"></i>
                                 </label>
                                 <input type="text" name="domaincontactcity" id="inputDCCity" class="field" placeholder="{$LANG.orderForm.city}" value="{$domaincontact.city}">
                             </div>
@@ -339,7 +339,7 @@
                         <div class="col-sm-5">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCState" class="field-icon">
-                                    <i class="fa fa-map-signs"></i>
+                                    <i class="fas fa-map-signs"></i>
                                 </label>
                                 <input type="text" name="domaincontactstate" id="inputDCState" class="field" placeholder="{$LANG.orderForm.state}" value="{$domaincontact.state}">
                             </div>
@@ -347,7 +347,7 @@
                         <div class="col-sm-3">
                             <div class="form-group prepend-icon">
                                 <label for="inputDCPostcode" class="field-icon">
-                                    <i class="fa fa-certificate"></i>
+                                    <i class="fas fa-certificate"></i>
                                 </label>
                                 <input type="text" name="domaincontactpostcode" id="inputDCPostcode" class="field" placeholder="{$LANG.orderForm.postcode}" value="{$domaincontact.postcode}">
                             </div>
@@ -380,7 +380,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group prepend-icon">
                                     <label for="inputNewPassword1" class="field-icon">
-                                        <i class="fa fa-lock"></i>
+                                        <i class="fas fa-lock"></i>
                                     </label>
                                     <input type="password" name="password" id="inputNewPassword1" data-error-threshold="{$pwStrengthErrorThreshold}" data-warning-threshold="{$pwStrengthWarningThreshold}" class="field" placeholder="{$LANG.clientareapassword}"{if $remote_auth_prelinked} value="{$password}"{/if}>
                                 </div>
@@ -388,7 +388,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group prepend-icon">
                                     <label for="inputNewPassword2" class="field-icon">
-                                        <i class="fa fa-lock"></i>
+                                        <i class="fas fa-lock"></i>
                                     </label>
                                     <input type="password" name="password2" id="inputNewPassword2" class="field" placeholder="{$LANG.clientareaconfirmpassword}"{if $remote_auth_prelinked} value="{$password}"{/if}>
                                 </div>
@@ -418,7 +418,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group prepend-icon">
                                         <label for="inputSecurityQAns" class="field-icon">
-                                            <i class="fa fa-lock"></i>
+                                            <i class="fas fa-lock"></i>
                                         </label>
                                         <input type="password" name="securityqans" id="inputSecurityQAns" class="field" placeholder="{$LANG.clientareasecurityanswer}">
                                     </div>
@@ -512,16 +512,16 @@
                                 <div class="dropdown" id="cardType">
                                     <button class="btn btn-default dropdown-toggle field" type="button" id="creditCardType" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         <span id="selectedCardType">
-                                            <i class="fa {getFontAwesomeCCIcon ccType=$acceptedcctypes.0} fa-fw"></i>
+                                            <i class="fas {getFontAwesomeCCIcon ccType=$acceptedcctypes.0} fa-fw"></i>
                                             {$acceptedcctypes.0}
                                         </span>
-                                        <span class="fa fa-caret-down fa-fw"></span>
+                                        <span class="fas fa-caret-down fa-fw"></span>
                                     </button>
                                     <ul class="dropdown-menu" id="creditCardTypeDropDown" aria-labelledby="creditCardType">
                                         {foreach $acceptedcctypes as $cardType}
                                             <li>
                                                 <a href="#">
-                                                    <i class="fa {getFontAwesomeCCIcon ccType=$cardType} fa-fw"></i>
+                                                    <i class="fas {getFontAwesomeCCIcon ccType=$cardType} fa-fw"></i>
                                                     <span class="type">
                                                         {$cardType}
                                                     </span>
@@ -535,7 +535,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputCardNumber" class="field-icon">
-                                    <i class="fa fa-credit-card"></i>
+                                    <i class="fas fa-credit-card"></i>
                                 </label>
                                 <input type="tel" name="ccnumber" id="inputCardNumber" class="field" placeholder="{$LANG.orderForm.cardNumber}" autocomplete="cc-number">
                             </div>
@@ -544,7 +544,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group prepend-icon">
                                     <label for="inputCardStart" class="field-icon">
-                                        <i class="fa fa-calendar-check-o"></i>
+                                        <i class="far fa-calendar-check"></i>
                                     </label>
                                     <input type="tel" name="ccstartdate" id="inputCardStart" class="field" placeholder="MM / YY ({$LANG.creditcardcardstart})" autocomplete="cc-exp">
                                 </div>
@@ -552,7 +552,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group prepend-icon">
                                     <label for="inputCardIssue" class="field-icon">
-                                        <i class="fa fa-asterisk"></i>
+                                        <i class="fas fa-asterisk"></i>
                                     </label>
                                     <input type="tel" name="ccissuenum" id="inputCardIssue" class="field" placeholder="{$LANG.creditcardcardissuenum}">
                                 </div>
@@ -561,7 +561,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputCardExpiry" class="field-icon">
-                                    <i class="fa fa-calendar"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                 </label>
                                 <input type="tel" name="ccexpirydate" id="inputCardExpiry" class="field" placeholder="MM / YY{if $showccissuestart} ({$LANG.creditcardcardexpires}){/if}" autocomplete="cc-exp">
                             </div>
@@ -569,7 +569,7 @@
                         <div class="col-sm-6">
                             <div class="form-group prepend-icon">
                                 <label for="inputCardCVV" class="field-icon">
-                                    <i class="fa fa-barcode"></i>
+                                    <i class="fas fa-barcode"></i>
                                 </label>
                                 <input type="tel" name="cccvv" id="inputCardCVV" class="field" placeholder="{$LANG.orderForm.cvv}" autocomplete="cc-cvc">
                             </div>
@@ -579,7 +579,7 @@
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
                                 <label for="inputCardCvvExisting" class="field-icon">
-                                    <i class="fa fa-barcode"></i>
+                                    <i class="fas fa-barcode"></i>
                                 </label>
                                 <input type="tel" name="cccvvexisting" id="inputCardCvvExisting" class="field" placeholder="{$LANG.orderForm.cvv}" autocomplete="cc-cvc">
                             </div>
@@ -623,16 +623,20 @@
                         </p>
                     {/if}
 
-                    <button type="submit" id="btnCompleteOrder" class="btn btn-primary btn-lg"{if $cartitems==0} disabled="disabled"{/if} onclick="this.value='{$LANG.pleasewait}'">
+                    <button type="submit"
+                            id="btnCompleteOrder"
+                            class="btn btn-primary btn-lg disable-on-click spinner-on-click{if $recaptcha} btn-recaptcha{/if}{if $recaptchaInvisible} btn-recaptcha-invisible{/if}"
+                            {if $cartitems==0}disabled="disabled"{/if}
+                            onclick="this.value='{$LANG.pleasewait}'">
                         {$LANG.completeorder}
-                        &nbsp;<i class="fa fa-arrow-circle-right"></i>
+                        &nbsp;<i class="fas fa-arrow-circle-right"></i>
                     </button>
                 </div>
             </form>
 
             {if $servedOverSsl}
                 <div class="alert alert-warning checkout-security-msg">
-                    <i class="fa fa-lock"></i>
+                    <i class="fas fa-lock"></i>
                     {$LANG.ordersecure} (<strong>{$ipaddress}</strong>) {$LANG.ordersecure2}
                 </div>
             {/if}

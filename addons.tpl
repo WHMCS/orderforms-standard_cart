@@ -28,7 +28,7 @@
                 </div>
                 <p class="text-center">
                     <a href="clientarea.php" class="btn btn-default">
-                        <i class="fa fa-arrow-circle-left"></i>
+                        <i class="fas fa-arrow-circle-left"></i>
                         {$LANG.orderForm.returnToClientArea}
                     </a>
                 </p>
@@ -71,7 +71,7 @@
                                             {/if}
                                         </div>
                                         <button type="submit" class="btn btn-success btn-sm">
-                                            <i class="fa fa-shopping-cart"></i>
+                                            <i class="fas fa-shopping-cart"></i>
                                             {$LANG.ordernowbutton}
                                         </button>
                                     </footer>
