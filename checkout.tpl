@@ -638,6 +638,7 @@
                 <div class="alert alert-warning checkout-security-msg">
                     <i class="fas fa-lock"></i>
                     {$LANG.ordersecure} (<strong>{$ipaddress}</strong>) {$LANG.ordersecure2}
+                    <div class="clearfix"></div>
                 </div>
             {/if}
 

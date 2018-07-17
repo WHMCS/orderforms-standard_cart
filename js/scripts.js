@@ -558,8 +558,6 @@ jQuery(document).ready(function() {
                 .addClass('fas fa-spinner fa-spin');
         }
     });
-
-    WHMCS.form.register();
 });
 
 /**
@@ -1233,8 +1231,13 @@ toolTip: function () {
     }
 })(
 function () {
+    this.checkAllBound = false;
+
     this.register = function () {
-        this.bindCheckAll();
+        if (!this.checkAllBound) {
+            this.bindCheckAll();
+            this.checkAllBound = true;
+        }
     };
 
     this.bindCheckAll = function ()
