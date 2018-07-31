@@ -107,9 +107,11 @@
                     {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-existing"}
                 </div>
 
-                <div id="containerNewUserSignup"{if $loggedin || $custtype eq "existing"} class="hidden"{/if}>
+                <div id="containerNewUserSignup">
 
-                    {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-new"}
+                    <div{if $loggedin || $custtype eq "existing"} class="hidden"{/if}>
+                        {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-new"}
+                    </div>
 
                     <div class="sub-heading">
                         <span>{$LANG.orderForm.personalInformation}</span>

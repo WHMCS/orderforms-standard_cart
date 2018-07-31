@@ -346,6 +346,8 @@ jQuery(document).ready(function(){
                                 .find('button.btn-add-to-cart')
                                 .attr('data-domain', domain.idnDomainName)
                                 .removeClass('hidden');
+
+                            result.find('button.domain-contact-support').addClass('hidden').end();
                         } else {
                             if (typeof pricing === 'string') {
                                 if (pricing == '') {
@@ -752,6 +754,8 @@ jQuery(document).ready(function(){
                             .find('button').not('button.unavailable').not('button.invalid')
                             .attr('data-domain', domain.idnDomainName)
                             .removeClass('hidden');
+
+                        result.find('button.domain-contact-support').addClass('hidden').end();
                     } else {
                         if (typeof pricing === 'string') {
                             if (pricing == '') {
