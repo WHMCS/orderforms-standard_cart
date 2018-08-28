@@ -15,19 +15,19 @@
 </script>
 {function name=getFontAwesomeCCIcon}
     {if $ccType eq "Visa"}
-        fa-cc-visa
+        fab fa-cc-visa
     {elseif $ccType eq "MasterCard"}
-        fa-cc-mastercard
+        fab fa-cc-mastercard
     {elseif $ccType eq "Discover"}
-        fa-cc-discover
+        fab fa-cc-discover
     {elseif $ccType eq "American Express"}
-        fa-cc-amex
+        fab fa-cc-amex
     {elseif $ccType eq "JCB"}
-        fa-cc-jcb
+        fab fa-cc-jcb
     {elseif $ccType eq "Diners Club" || $ccType eq "EnRoute"}
-        fa-cc-diners-club
+        fab fa-cc-diners-club
     {else}
-        fa-credit-card
+        fas fa-credit-card
     {/if}
 {/function}
 
@@ -514,7 +514,7 @@
                                 <div class="dropdown" id="cardType">
                                     <button class="btn btn-default dropdown-toggle field" type="button" id="creditCardType" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         <span id="selectedCardType">
-                                            <i class="fas {getFontAwesomeCCIcon ccType=$acceptedcctypes.0} fa-fw"></i>
+                                            <i class="{getFontAwesomeCCIcon ccType=$acceptedcctypes.0} fa-fw"></i>
                                             {$acceptedcctypes.0}
                                         </span>
                                         <span class="fas fa-caret-down fa-fw"></span>
@@ -523,7 +523,7 @@
                                         {foreach $acceptedcctypes as $cardType}
                                             <li>
                                                 <a href="#">
-                                                    <i class="fas {getFontAwesomeCCIcon ccType=$cardType} fa-fw"></i>
+                                                    <i class="{getFontAwesomeCCIcon ccType=$cardType} fa-fw"></i>
                                                     <span class="type">
                                                         {$cardType}
                                                     </span>

@@ -20,16 +20,16 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2">
+                <div class="col-sm-8 col-sm-offset-2 text-center">
 
                     <p class="margin-bottom">{$error}</p>
 
-                    <div class="text-center">
+                    <p>
                         <a href="submitticket.php" class="btn btn-default">
                             {$LANG.orderForm.submitTicket}
                             &nbsp;<i class="fas fa-arrow-right"></i>
                         </a>
-                    </div>
+                    </p>
 
                 </div>
             </div>

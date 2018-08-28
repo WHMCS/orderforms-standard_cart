@@ -492,7 +492,9 @@
     color: #bbb;
 }
 #order-standard_cart .field[disabled],
-#order-standard_cart .field[readonly] {
+#order-standard_cart .field[readonly],
+#order-standard_cart .form-control[disabled],
+#order-standard_cart .form-control[readonly] {
   background-color: #f8f8f8;
   opacity: 1;
 }
