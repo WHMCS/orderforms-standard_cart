@@ -252,7 +252,10 @@ jQuery(document).ready(function(){
                     {
                         token: csrfToken,
                         type: 'domain',
-                        domain: sld + tld
+                        domain: sld + tld,
+                        sld: sld,
+                        tld: tld,
+                        source: 'cartAddDomain'
                     },
                     'json'
                 ),
@@ -261,7 +264,10 @@ jQuery(document).ready(function(){
                     {
                         token: csrfToken,
                         type: 'spotlight',
-                        domain: sld + tld
+                        domain: sld + tld,
+                        sld: sld,
+                        tld: tld,
+                        source: 'cartAddDomain'
                     },
                     'json'
                 ),
@@ -270,7 +276,10 @@ jQuery(document).ready(function(){
                     {
                         token: csrfToken,
                         type: 'suggestions',
-                        domain: sld + tld
+                        domain: sld + tld,
+                        sld: sld,
+                        tld: tld,
+                        source: 'cartAddDomain'
                     },
                     'json'
                 );
@@ -433,7 +442,10 @@ jQuery(document).ready(function(){
                 {
                     token: csrfToken,
                     type: 'transfer',
-                    domain: sld + tld
+                    domain: sld + tld,
+                    sld: sld,
+                    tld: tld,
+                    source: 'cartAddDomain'
                 },
                 'json'
             );
@@ -482,7 +494,10 @@ jQuery(document).ready(function(){
                     token: csrfToken,
                     type: domainoption,
                     pid: pid,
-                    domain: sld + tld
+                    domain: sld + tld,
+                    sld: sld,
+                    tld: tld,
+                    source: 'cartAddDomain'
                 },
                 'json'
             );
@@ -616,7 +631,7 @@ jQuery(document).ready(function(){
         var frmDomain = jQuery('#frmDomainChecker'),
             inputDomain = jQuery('#inputDomain'),
             suggestions = jQuery('#domainSuggestions'),
-            reCaptchaContainer = jQuery('#google-recaptcha'),
+            reCaptchaContainer = jQuery('#divDynamicRecaptcha'),
             captcha = jQuery('#inputCaptcha');
 
         domainLookupCallCount = 0;
@@ -689,7 +704,8 @@ jQuery(document).ready(function(){
                     availablePrice = result.find('.domain-price'),
                     contactSupport = result.find('.domain-contact-support'),
                     unavailable = result.find('.domain-unavailable'),
-                    invalid = result.find('.domain-invalid');
+                    invalid = result.find('.domain-invalid'),
+                    error = result.find('.domain-error');
                 jQuery('.domain-lookup-primary-loader').hide();
                 result.find('.btn-add-to-cart').removeClass('checkout');
                 result.removeClass('hidden').show();
@@ -698,6 +714,7 @@ jQuery(document).ready(function(){
                     unavailable.hide();
                     contactSupport.hide();
                     invalid.hide();
+                    error.hide();
                     if (domain.isAvailable && typeof pricing !== 'string') {
                         if (domain.preferredTLDNotAvailable) {
                             unavailable.show().find('strong').html(domain.originalUnavailableDomain);
@@ -719,14 +736,23 @@ jQuery(document).ready(function(){
                     availablePrice.hide();
                     unavailable.hide();
                     contactSupport.hide();
-                    var invalidLength = invalid.find('span.domain-length-restrictions');
+                    invalid.hide();
+                    error.hide();
+                    var invalidLength = invalid.find('span.domain-length-restrictions'),
+                        done = false;
                     invalidLength.hide();
                     if (domain.minLength > 0 && domain.maxLength > 0) {
                         invalidLength.find('.min-length').html(domain.minLength).end()
                             .find('.max-length').html(domain.maxLength).end();
                         invalidLength.show();
+                    } else if (data.result.error) {
+                        error.html(data.result.error);
+                        error.show();
+                        done = true;
                     }
-                    invalid.show();
+                    if (!done) {
+                        invalid.show();
+                    }
                 }
 
             });
@@ -902,7 +928,7 @@ jQuery(document).ready(function(){
             domain = inputDomain.val(),
             authCode = authField.val(),
             redirect = false,
-            reCaptchaContainer = jQuery('#google-recaptcha'),
+            reCaptchaContainer = jQuery('#divDynamicRecaptcha'),
             captcha = jQuery('#inputCaptcha');
 
         if (!domain) {
@@ -978,7 +1004,7 @@ jQuery(document).ready(function(){
     jQuery("#cardType li a").click(function (e) {
         e.preventDefault();
         jQuery("#selectedCardType").html(jQuery(this).html());
-        jQuery("#cctype").val(jQuery('span.type', this).html());
+        jQuery("#cctype").val(jQuery('span.type', this).html().trim());
     });
 
     jQuery(document).on('click', '.domain-contact-support', function(e) {
@@ -1137,8 +1163,6 @@ jQuery(document).ready(function(){
             jQuery(this).toggle(jQuery(this).data('domain').toLowerCase().indexOf(inputText) > -1);
         });
     });
-
-    WHMCS.recaptcha.register();
 });
 
 function hasDomainLookupEnded() {
@@ -1326,7 +1350,7 @@ function loadMoreSuggestions()
 function validate_captcha(form)
 {
     var reCaptcha = jQuery('#g-recaptcha-response'),
-        reCaptchaContainer = jQuery('#google-recaptcha'),
+        reCaptchaContainer = jQuery('#divDynamicRecaptcha'),
         captcha = jQuery('#inputCaptcha');
 
     if (reCaptcha.length && !reCaptcha.val()) {

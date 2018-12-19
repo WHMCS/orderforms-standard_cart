@@ -52,25 +52,23 @@
                                     <input type="text" class="form-control" name="epp" id="inputAuthCode" placeholder="{lang key='orderForm.authCodePlaceholder'}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                 </div>
                                 <div id="transferUnavailable" class="alert alert-warning slim-alert text-center hidden"></div>
-                                {if $captcha}
+                                {if $captcha->isEnabled() && !$captcha->recaptcha->isEnabled()}
                                     <div class="captcha-container" id="captchaContainer">
-                                        {if $captcha eq "recaptcha"}
-                                            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                                            <div id="google-recaptcha" class="g-recaptcha recaptcha-transfer center-block" data-sitekey="{$reCaptchaPublicKey}" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.required'}" ></div>
-                                        {else}
-                                            <div class="default-captcha">
-                                                <p>{lang key="cartSimpleCaptcha"}</p>
-                                                <div>
-                                                    <img id="inputCaptchaImage" src="includes/verifyimage.php" />
-                                                    <input id="inputCaptcha" type="text" name="code" maxlength="5" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
-                                                </div>
+                                        <div class="default-captcha">
+                                            <p>{lang key="cartSimpleCaptcha"}</p>
+                                            <div>
+                                                <img id="inputCaptchaImage" src="includes/verifyimage.php" />
+                                                <input id="inputCaptcha" type="text" name="code" maxlength="5" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                             </div>
-                                        {/if}
+                                        </div>
                                     </div>
+                                {elseif $captcha->isEnabled() && $captcha->recaptcha->isEnabled() && !$captcha->recaptcha->isInvisible()}
+                                    <div class="form-group recaptcha-container" id="captchaContainer"></div>
                                 {/if}
                             </div>
+
                             <div class="panel-footer text-right">
-                                <button type="submit" id="btnTransferDomain" class="btn btn-primary btn-transfer">
+                                <button type="submit" id="btnTransferDomain" class="btn btn-primary btn-transfer{$captcha->getButtonClass($captchaForm)}">
                                     <span class="loader hidden" id="addTransferLoader">
                                         <i class="fas fa-fw fa-spinner fa-spin"></i>
                                     </span>

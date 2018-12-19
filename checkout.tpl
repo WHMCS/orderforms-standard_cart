@@ -222,6 +222,14 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-sm-12">
+                            <div class="form-group prepend-icon">
+                                <label for="inputTaxId" class="field-icon">
+                                    <i class="fas fa-building"></i>
+                                </label>
+                                <input type="text" name="tax_id" id="inputTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$clientsdetails.tax_id}"{if $loggedin} readonly="readonly"{/if}>
+                            </div>
+                        </div>
                     </div>
 
                     {if $customfields}
@@ -356,6 +364,9 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group prepend-icon">
+                                <label for="inputDCCountry" class="field-icon" id="inputCountryIcon">
+                                    <i class="fas fa-globe"></i>
+                                </label>
                                 <select name="domaincontactcountry" id="inputDCCountry" class="field">
                                     {foreach $countries as $countrycode => $countrylabel}
                                         <option value="{$countrycode}"{if (!$domaincontact.country && $countrycode == $defaultcountry) || $countrycode eq $domaincontact.country} selected{/if}>
@@ -363,6 +374,14 @@
                                         </option>
                                     {/foreach}
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group prepend-icon">
+                                <label for="inputDCTaxId" class="field-icon">
+                                    <i class="fas fa-building"></i>
+                                </label>
+                                <input type="text" name="domaincontacttax_id" id="inputDCTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$domaincontact.tax_id}"{if $loggedin} readonly="readonly"{/if}>
                             </div>
                         </div>
                     </div>
@@ -524,9 +543,7 @@
                                             <li>
                                                 <a href="#">
                                                     <i class="{getFontAwesomeCCIcon ccType=$cardType} fa-fw"></i>
-                                                    <span class="type">
-                                                        {$cardType}
-                                                    </span>
+                                                    <span class="type">{$cardType}</span>
                                                 </a>
                                             </li>
                                         {/foreach}
@@ -624,10 +641,15 @@
                             </label>
                         </p>
                     {/if}
+                    {if $captcha}
+                        <div class="text-center margin-bottom">
+                            {include file="$template/includes/captcha.tpl"}
+                        </div>
+                    {/if}
 
                     <button type="submit"
                             id="btnCompleteOrder"
-                            class="btn btn-primary btn-lg disable-on-click spinner-on-click{if $recaptcha} btn-recaptcha{/if}{if $recaptchaInvisible} btn-recaptcha-invisible{/if}"
+                            class="btn btn-primary btn-lg disable-on-click spinner-on-click{$captcha->getButtonClass($captchaForm)}"
                             {if $cartitems==0}disabled="disabled"{/if}
                             onclick="this.value='{$LANG.pleasewait}'">
                         {$LANG.completeorder}

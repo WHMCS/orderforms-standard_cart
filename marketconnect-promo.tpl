@@ -13,12 +13,12 @@
                 {lang key="addtocart"}
             </span>
             <span class="arrow">
-                <i class="fa fa-chevron-right"></i>
+                <i class="fas fa-chevron-right"></i>
             </span>
         </button>
     </div>
         <div class="expander">
-            <i class="fa fa-chevron-right rotate" data-toggle="tooltip" data-placement="right" title="Click to learn more"></i>
+            <i class="fas fa-chevron-right rotate" data-toggle="tooltip" data-placement="right" title="Click to learn more"></i>
         </div>
         <div class="icon">
             <img src="{$promotion->getImagePath()}">
@@ -32,7 +32,7 @@
         {if $promotion->hasFeatures()}
             <ul>
                 {foreach $promotion->getFeatures() as $feature}
-                    <li><i class="fa fa-check"></i> {$feature}</li>
+                    <li><i class="fas fa-check"></i> {$feature}</li>
                 {/foreach}
             </ul>
         {/if}
