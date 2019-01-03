@@ -222,14 +222,16 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-group prepend-icon">
-                                <label for="inputTaxId" class="field-icon">
-                                    <i class="fas fa-building"></i>
-                                </label>
-                                <input type="text" name="tax_id" id="inputTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$clientsdetails.tax_id}"{if $loggedin} readonly="readonly"{/if}>
+                        {if $showTaxIdField}
+                            <div class="col-sm-12">
+                                <div class="form-group prepend-icon">
+                                    <label for="inputTaxId" class="field-icon">
+                                        <i class="fas fa-building"></i>
+                                    </label>
+                                    <input type="text" name="tax_id" id="inputTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$clientsdetails.tax_id}"{if $loggedin} readonly="readonly"{/if}>
+                                </div>
                             </div>
-                        </div>
+                        {/if}
                     </div>
 
                     {if $customfields}
