@@ -651,7 +651,7 @@
 
                     <button type="submit"
                             id="btnCompleteOrder"
-                            class="btn btn-primary btn-lg disable-on-click spinner-on-click{$captcha->getButtonClass($captchaForm)}"
+                            class="btn btn-primary btn-lg disable-on-click spinner-on-click{if $captcha}{$captcha->getButtonClass($captchaForm)}{/if}"
                             {if $cartitems==0}disabled="disabled"{/if}
                             onclick="this.value='{$LANG.pleasewait}'">
                         {$LANG.completeorder}
