@@ -13,23 +13,6 @@
     window.langPasswordModerate = "{$LANG.pwstrengthmoderate}";
     window.langPasswordStrong = "{$LANG.pwstrengthstrong}";
 </script>
-{function name=getFontAwesomeCCIcon}
-    {if $ccType eq "Visa"}
-        fab fa-cc-visa
-    {elseif $ccType eq "MasterCard"}
-        fab fa-cc-mastercard
-    {elseif $ccType eq "Discover"}
-        fab fa-cc-discover
-    {elseif $ccType eq "American Express"}
-        fab fa-cc-amex
-    {elseif $ccType eq "JCB"}
-        fab fa-cc-jcb
-    {elseif $ccType eq "Diners Club" || $ccType eq "EnRoute"}
-        fab fa-cc-diners-club
-    {else}
-        fas fa-credit-card
-    {/if}
-{/function}
 
 <div id="order-standard_cart">
 
@@ -383,7 +366,7 @@
                                 <label for="inputDCTaxId" class="field-icon">
                                     <i class="fas fa-building"></i>
                                 </label>
-                                <input type="text" name="domaincontacttax_id" id="inputDCTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$domaincontact.tax_id}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="domaincontacttax_id" id="inputDCTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$domaincontact.tax_id}">
                             </div>
                         </div>
                     </div>
@@ -417,13 +400,18 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="passwordStrengthMeterBar">
-                                    </div>
-                                </div>
+                                <button type="button" class="btn btn-default btn-sm generate-password" data-targetfields="inputNewPassword1,inputNewPassword2">
+                                    {$LANG.generatePassword.btnLabel}
+                                </button>
                             </div>
                             <div class="col-sm-6">
-                                <p class="text-center small text-muted" id="passwordStrengthTextLabel">{$LANG.pwstrength}: {$LANG.pwstrengthenter}</p>
+                                <div class="password-strength-meter">
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="passwordStrengthMeterBar">
+                                        </div>
+                                    </div>
+                                    <p class="text-center small text-muted" id="passwordStrengthTextLabel">{$LANG.pwstrength}: {$LANG.pwstrengthenter}</p>
+                                </div>
                             </div>
                         </div>
                         {if $securityquestions}
@@ -493,9 +481,16 @@
                     <p class="small text-muted">{$LANG.orderForm.preferredPaymentMethod}</p>
 
                     <div class="text-center">
-                        {foreach key=num item=gateway from=$gateways}
+                        {foreach $gateways as $gateway}
                             <label class="radio-inline">
-                                <input type="radio" name="paymentmethod" value="{$gateway.sysname}" class="payment-methods{if $gateway.type eq "CC"} is-credit-card{/if}"{if $selectedgateway eq $gateway.sysname} checked{/if} />
+                                <input type="radio"
+                                       name="paymentmethod"
+                                       value="{$gateway.sysname}"
+                                       data-payment-type="{$gateway.payment_type}"
+                                       data-show-local="{$gateway.show_local_cards}"
+                                       class="payment-methods{if $gateway.type eq "CC"} is-credit-card{/if}"
+                                       {if $selectedgateway eq $gateway.sysname} checked{/if}
+                                />
                                 {$gateway.name}
                             </label>
                         {/foreach}
@@ -506,63 +501,118 @@
 
                 <div class="clearfix"></div>
 
-                <div id="creditCardInputFields"{if $selectedgatewaytype neq "CC"} class="hidden"{/if}>
-                    {if $clientsdetails.cclastfour}
-                        <div class="row margin-bottom">
-                            <div class="col-sm-12">
-                                <div class="text-center">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="ccinfo" value="useexisting" id="useexisting" {if $clientsdetails.cclastfour} checked{else} disabled{/if} />
-                                        {$LANG.creditcarduseexisting}
-                                        {if $clientsdetails.cclastfour}
-                                            ({$clientsdetails.cclastfour})
-                                        {/if}
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="ccinfo" value="new" id="new" {if !$clientsdetails.cclastfour || $ccinfo eq "new"} checked{/if} />
-                                        {$LANG.creditcardenternewcard}
-                                    </label>
+                <div class="cc-input-container{if $selectedgatewaytype neq "CC"} hidden{/if}" id="creditCardInputFields">
+                    {if $client}
+                        <div id="existingCardsContainer" class="existing-cc-grid">
+                            {foreach $client->payMethods->validateGateways()->sortByExpiryDate() as $payMethod}
+                                {assign "payMethodExpired" 0}
+                                {assign "expiryDate" ""}
+                                {if $payMethod->isCreditCard()}
+                                    {if ($payMethod->payment->isExpired())}
+                                        {assign "payMethodExpired" 1}
+                                    {/if}
+
+                                    {if $payMethod->payment->getExpiryDate()}
+                                        {assign "expiryDate" $payMethod->payment->getExpiryDate()->format('m/Y')}
+                                    {/if}
+                                {/if}
+
+                                <div class="paymethod-info radio-inline" data-paymethod-id="{$payMethod->id}">
+                                    <input
+                                        type="radio"
+                                        name="ccinfo"
+                                        class="existing-card"
+                                        {if $payMethodExpired}disabled{/if}
+                                        data-payment-type="{$payMethod->getType()}"
+                                        data-payment-gateway="{$payMethod->gateway_name}"
+                                        data-order-preference="{$payMethod->order_preference}"
+                                        value="{$payMethod->id}">
                                 </div>
-                            </div>
-                        </div>
-                    {else}
-                        <input type="hidden" name="ccinfo" value="new" />
-                    {/if}
-                    <div id="newCardInfo" class="row{if $clientsdetails.cclastfour && $ccinfo neq "new"} hidden{/if}">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="hidden" id="cctype" name="cctype" value="{$acceptedcctypes.0}" />
-                                <div class="dropdown" id="cardType">
-                                    <button class="btn btn-default dropdown-toggle field" type="button" id="creditCardType" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <span id="selectedCardType">
-                                            <i class="{getFontAwesomeCCIcon ccType=$acceptedcctypes.0} fa-fw"></i>
-                                            {$acceptedcctypes.0}
+
+                                <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
+                                    <i class="{$payMethod->getFontAwesomeIcon()}"></i>
+                                </div>
+                                <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
+                                    {if $payMethod->isCreditCard() || $payMethod->isRemoteBankAccount()}
+                                        {$payMethod->payment->getDisplayName()}
+                                    {else}
+                                        <span class="type">
+                                            {$payMethod->payment->getAccountType()}
                                         </span>
-                                        <span class="fas fa-caret-down fa-fw"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" id="creditCardTypeDropDown" aria-labelledby="creditCardType">
-                                        {foreach $acceptedcctypes as $cardType}
-                                            <li>
-                                                <a href="#">
-                                                    <i class="{getFontAwesomeCCIcon ccType=$cardType} fa-fw"></i>
-                                                    <span class="type">{$cardType}</span>
-                                                </a>
-                                            </li>
-                                        {/foreach}
-                                    </ul>
+                                        {substr($payMethod->payment->getAccountNumber(), -4)}
+                                    {/if}
+                                </div>
+                                <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
+                                    {$payMethod->getDescription()}
+                                </div>
+                                <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
+                                    {$expiryDate}{if $payMethodExpired}<br><small>{$LANG.clientareaexpired}</small>{/if}
+                                </div>
+                            {/foreach}
+                        </div>
+                    {/if}
+                    <div class="row cvv-input" id="existingCardInfo">
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="form-group prepend-icon">
+                                <label for="inputCardCVV2" class="field-icon">
+                                    <i class="fas fa-barcode"></i>
+                                </label>
+                                <div class="input-group">
+                                    <input type="tel" name="cccvv" id="inputCardCVV2" class="field" placeholder="{$LANG.creditcardcvvnumbershort}" autocomplete="cc-cvc">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" data-toggle="popover" data-placement="bottom" data-content="<img src='{$BASE_PATH_IMG}/ccv.gif' width='210' />">
+                                            ?
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                    </div>
+
+                    <ul>
+                        <li>
+                            <label class="radio-inline">
+                                <input type="radio" name="ccinfo" value="new" id="new" {if !$client || $client->payMethods->count() === 0} checked="checked"{/if} />
+                                &nbsp;
+                                {lang key='creditcardenternewcard'}
+                            </label>
+                        </li>
+                    </ul>
+
+                    <div class="row" id="newCardInfo">
+                        <div id="cardNumberContainer" class="col-sm-6 new-card-container">
                             <div class="form-group prepend-icon">
                                 <label for="inputCardNumber" class="field-icon">
                                     <i class="fas fa-credit-card"></i>
                                 </label>
-                                <input type="tel" name="ccnumber" id="inputCardNumber" class="field" placeholder="{$LANG.orderForm.cardNumber}" autocomplete="cc-number">
+                                <input type="tel" name="ccnumber" id="inputCardNumber" class="field cc-number-field" placeholder="{$LANG.orderForm.cardNumber}" autocomplete="cc-number">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 new-card-container">
+                            <div class="form-group prepend-icon">
+                                <label for="inputCardExpiry" class="field-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </label>
+                                <input type="tel" name="ccexpirydate" id="inputCardExpiry" class="field" placeholder="MM / YY{if $showccissuestart} ({$LANG.creditcardcardexpires}){/if}" autocomplete="cc-exp">
+                            </div>
+                        </div>
+                        <div class="col-sm-3" id="cvv-field-container">
+                            <div class="form-group prepend-icon">
+                                <label for="inputCardCVV" class="field-icon">
+                                    <i class="fas fa-barcode"></i>
+                                </label>
+                                <div class="input-group">
+                                    <input type="tel" name="cccvv" id="inputCardCVV" class="field" placeholder="{$LANG.creditcardcvvnumbershort}" autocomplete="cc-cvc">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" data-toggle="popover" data-placement="bottom" data-content="<img src='{$BASE_PATH_IMG}/ccv.gif' width='210' />">
+                                            ?
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         {if $showccissuestart}
-                            <div class="col-sm-6">
+                            <div class="col-sm-3 col-sm-offset-6 new-card-container">
                                 <div class="form-group prepend-icon">
                                     <label for="inputCardStart" class="field-icon">
                                         <i class="far fa-calendar-check"></i>
@@ -570,7 +620,7 @@
                                     <input type="tel" name="ccstartdate" id="inputCardStart" class="field" placeholder="MM / YY ({$LANG.creditcardcardstart})" autocomplete="cc-exp">
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-3 new-card-container">
                                 <div class="form-group prepend-icon">
                                     <label for="inputCardIssue" class="field-icon">
                                         <i class="fas fa-asterisk"></i>
@@ -579,31 +629,25 @@
                                 </div>
                             </div>
                         {/if}
-                        <div class="col-sm-6">
-                            <div class="form-group prepend-icon">
-                                <label for="inputCardExpiry" class="field-icon">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </label>
-                                <input type="tel" name="ccexpirydate" id="inputCardExpiry" class="field" placeholder="MM / YY{if $showccissuestart} ({$LANG.creditcardcardexpires}){/if}" autocomplete="cc-exp">
+                        <div class="form-group new-card-container">
+                            <div id="inputDescriptionContainer" class="col-md-6">
+                                <div class="prepend-icon">
+                                    <label for="inputDescription" class="field-icon">
+                                        <i class="fas fa-pencil"></i>
+                                    </label>
+                                    <input type="text" class="field" id="inputDescription" name="ccdescription" autocomplete="off" value="" placeholder="{$LANG.paymentMethods.descriptionInput} {$LANG.paymentMethodsManage.optional}" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group prepend-icon">
-                                <label for="inputCardCVV" class="field-icon">
-                                    <i class="fas fa-barcode"></i>
-                                </label>
-                                <input type="tel" name="cccvv" id="inputCardCVV" class="field" placeholder="{$LANG.orderForm.cvv}" autocomplete="cc-cvc">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="existingCardInfo" class="row{if !$clientsdetails.cclastfour || $ccinfo eq "new"} hidden{/if}">
-                        <div class="col-sm-12">
-                            <div class="form-group prepend-icon">
-                                <label for="inputCardCvvExisting" class="field-icon">
-                                    <i class="fas fa-barcode"></i>
-                                </label>
-                                <input type="tel" name="cccvvexisting" id="inputCardCvvExisting" class="field" placeholder="{$LANG.orderForm.cvv}" autocomplete="cc-cvc">
-                            </div>
+                            {if $allowClientsToRemoveCards}
+                                <div class="col-md-6" style="line-height: 32px;">
+                                    <input type="hidden" name="nostore" value="1">
+                                    <input type="checkbox" class="toggle-switch-success no-icheck" data-size="mini" checked="checked" name="nostore" id="inputNoStore" value="0" data-on-text="{lang key='yes'}" data-off-text="{lang key='no'}">
+                                    <label for="inputNoStore" class="checkbox-inline no-padding">
+                                        &nbsp;&nbsp;
+                                        {$LANG.creditCardStore}
+                                    </label>
+                                </div>
+                            {/if}
                         </div>
                     </div>
                 </div>

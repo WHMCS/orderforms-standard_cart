@@ -23,7 +23,7 @@
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
             {if count($addons) == 0}
-                <div class="alert alert-warning text-center" role="alert">
+                <div id="noAddons" class="alert alert-warning text-center" role="alert">
                     {$LANG.cartproductaddonsnone}
                 </div>
                 <p class="text-center">

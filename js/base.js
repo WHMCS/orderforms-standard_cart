@@ -25,21 +25,26 @@ jQuery(document).ready(function(){
         increaseArea: '20%'
     });
 
-    $('.mc-promo .header').click(function(e) {
+    jQuery('.mc-promo .header').click(function(e) {
         e.preventDefault();
-        if ($(e.target).is('.btn, .btn span,.btn .fa')) {
+        if (jQuery(e.target).is('.btn, .btn span,.btn .fa')) {
             return;
         }
-        $(this).parent().find('.rotate').toggleClass('down');
-        $(this).parent().find('.body').slideToggle('fast');
+        jQuery(this).parent().find('.rotate').toggleClass('down');
+        jQuery(this).parent().find('.body').slideToggle('fast');
     });
-    $('.mc-promos.viewcart .mc-promo:first-child .header').click();
+    jQuery('.mc-promos.viewcart .mc-promo:first-child .header').click();
 
-    if (jQuery('#inputCardNumber').length) {
-        jQuery('#inputCardNumber').payment('formatCardNumber');
+    var cardNumber = jQuery('#inputCardNumber'),
+        existingCvv = jQuery('#inputCardCVV2');
+    if (cardNumber.length) {
+        cardNumber.payment('formatCardNumber');
         jQuery('#inputCardCVV').payment('formatCardCVC');
         jQuery('#inputCardStart').payment('formatCardExpiry');
         jQuery('#inputCardExpiry').payment('formatCardExpiry');
+    }
+    if (existingCvv.length) {
+        existingCvv.payment('formatCardCVC');
     }
 
     var $orderSummaryEl = jQuery("#orderSummary");
@@ -295,10 +300,12 @@ jQuery(document).ready(function(){
                         invalid= result.find('.domain-invalid'),
                         contactSupport = result.find('.domain-contact-support'),
                         resultDomain = jQuery('#resultDomain'),
-                        resultDomainPricing = jQuery('#resultDomainPricingTerm');
+                        resultDomainPricing = jQuery('#resultDomainPricingTerm'),
+                        error = result.find('.domain-error');
                     result.removeClass('hidden').show();
                     jQuery('.domain-lookup-primary-loader').hide();
                     if (!data.result.error && domain.isValidDomain) {
+                        error.hide();
                         pricing = domain.pricing;
                         if (domain.isAvailable && typeof pricing !== 'string') {
                             if (domain.preferredTLDNotAvailable) {
@@ -320,14 +327,22 @@ jQuery(document).ready(function(){
                             }
                         }
                     } else {
-                        var invalidLength = invalid.find('span.domain-length-restrictions');
+                        var invalidLength = invalid.find('span.domain-length-restrictions'),
+                            done = false;
                         invalidLength.hide();
+                        error.hide();
                         if (domain.minLength > 0 && domain.maxLength > 0) {
                             invalidLength.find('.min-length').html(domain.minLength).end()
                                 .find('.max-length').html(domain.maxLength).end();
                             invalidLength.show();
+                        } else if (data.result.error) {
+                            error.html(data.result.error);
+                            error.show();
+                            done = true;
                         }
-                        invalid.show();
+                        if (!done) {
+                            invalid.show();
+                        }
                     }
 
 
@@ -558,25 +573,123 @@ jQuery(document).ready(function(){
         }
     });
 
+    var existingCards = jQuery('.existing-card'),
+        cvvFieldContainer = jQuery('#cvv-field-container'),
+        existingCardContainer = jQuery('#existingCardsContainer'),
+        newCardInfo = jQuery('#newCardInfo'),
+        existingCardInfo = jQuery('#existingCardInfo'),
+        newCardOption = jQuery('#new'),
+        creditCardInputFields = jQuery('#creditCardInputFields');
+
+    existingCards.on('ifChecked', function(event) {
+        if (jQuery('.payment-methods:checked').val() === 'stripe') {
+            return;
+        }
+
+        newCardInfo.slideUp().find('input').attr('disabled', 'disabled');
+        existingCardInfo.slideDown().find('input').removeAttr('disabled');
+    });
+    newCardOption.on('ifChecked', function(event) {
+        if (jQuery('.payment-methods:checked').val() === 'stripe') {
+            return;
+        }
+
+        newCardInfo.slideDown().find('input').removeAttr('disabled');
+        existingCardInfo.slideUp().find('input').attr('disabled', 'disabled');
+    });
+
+    if (!existingCards.length) {
+        existingCardInfo.slideUp().find('input').attr('disabled', 'disabled');
+    }
+
     jQuery(".payment-methods").on('ifChecked', function(event) {
         if (jQuery(this).hasClass('is-credit-card')) {
-            if (!jQuery("#creditCardInputFields").is(":visible")) {
-                jQuery("#creditCardInputFields").hide().removeClass('hidden').slideDown();
+            var gatewayPaymentType = jQuery(this).data('payment-type'),
+                gatewayModule = jQuery(this).val(),
+                showLocal = jQuery(this).data('show-local'),
+                relevantMethods = [];
+
+            existingCards.each(function(index) {
+                var paymentType = jQuery(this).data('payment-type'),
+                    paymentModule = jQuery(this).data('payment-gateway'),
+                    payMethodId = jQuery(this).val();
+
+                var paymentTypeMatch = (paymentType === gatewayPaymentType);
+
+                var paymentModuleMatch = false;
+                if (gatewayPaymentType === 'RemoteCreditCard') {
+                    // only show remote credit cards that belong to the selected gateway
+                    paymentModuleMatch = (paymentModule === gatewayModule);
+                } else if (gatewayPaymentType === 'CreditCard') {
+                    // any local credit card can be used with any credit card gateway
+                    paymentModuleMatch = true;
+                }
+
+                if (showLocal && paymentType === 'CreditCard') {
+                    paymentTypeMatch = true;
+                    paymentModuleMatch = true;
+                }
+
+                var payMethodElements = jQuery('[data-paymethod-id="' + payMethodId + '"]');
+
+                if (paymentTypeMatch && paymentModuleMatch) {
+                    jQuery(payMethodElements).show();
+                    relevantMethods.push(this);
+                } else {
+                    jQuery(payMethodElements).hide();
+                }
+            });
+
+            var enabledRelevantMethods = relevantMethods.filter(function (item) {
+                return ! jQuery(item).attr('disabled');
+            });
+
+            if (enabledRelevantMethods.length > 0) {
+                var defaultId = null;
+                jQuery.each(enabledRelevantMethods, function(index, value) {
+                    var jQueryElement = jQuery(value),
+                        order = parseInt(jQueryElement.data('order-preference'), 10);
+                    if ((defaultId === null) || (order < defaultId)) {
+                        defaultId = jQueryElement.val();
+                    }
+                });
+                if (defaultId === null) {
+                    defaultId = 'new';
+                }
+
+                jQuery.each(enabledRelevantMethods, function(index, value) {
+                    var jQueryElement = jQuery(value);
+                    if (jQueryElement.val() === defaultId) {
+                        jQueryElement.iCheck('check');
+                        return false;
+                    }
+                });
+
+                existingCardContainer.show();
+                existingCardInfo.removeClass('hidden').show().find('input').removeAttr('disabled');
+            } else {
+                jQuery(newCardOption).iCheck('check');
+                existingCardContainer.hide();
+                existingCardInfo.hide().find('input').attr('disabled', 'disabled');
+            }
+
+            if (!creditCardInputFields.is(":visible")) {
+                creditCardInputFields.hide().removeClass('hidden').slideDown();
             }
         } else {
-            jQuery("#creditCardInputFields").slideUp();
+            creditCardInputFields.slideUp();
         }
     });
 
-    jQuery("input[name='ccinfo']").on('ifChecked', function(event) {
-        if (jQuery(this).val() == 'new') {
-            jQuery("#existingCardInfo").slideUp('', function() {
-                jQuery("#newCardInfo").hide().removeClass('hidden').slideDown();
-            });
-        } else {
-            jQuery("#newCardInfo").slideUp('', function() {
-                jQuery("#existingCardInfo").hide().removeClass('hidden').slideDown();
-            });
+    // make sure relevant payment methods are displayed for the pre-selected gateway
+    jQuery(".payment-methods:checked").trigger('ifChecked');
+
+    jQuery('.cc-input-container .paymethod-info').click(function() {
+        var payMethodId = $(this).data('paymethod-id');
+        var input = jQuery('input[name="ccinfo"][value=' + payMethodId + ']:not(:disabled)');
+
+        if (input.length > 0) {
+            input.iCheck('check');
         }
     });
 

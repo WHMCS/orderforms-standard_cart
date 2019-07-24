@@ -224,6 +224,7 @@
                                 <span class="transfer-price-label hidden">{lang key='orderForm.domainPriceTransferLabel'}</span>
                                 <span class="price"></span>
                             </div>
+                            <p class="domain-error domain-checker-unavailable headline"></p>
                             <input type="hidden" id="resultDomainOption" name="domainoption" />
                             <input type="hidden" id="resultDomain" name="domains[]" />
                             <input type="hidden" id="resultDomainPricingTerm" />
