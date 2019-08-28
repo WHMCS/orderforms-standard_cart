@@ -14,6 +14,7 @@ if (typeof localTrans === 'undefined') {
 }
 
 var domainLookupCallCount,
+    checkoutForm,
     furtherSuggestions;
 
 jQuery(document).ready(function(){
@@ -1276,7 +1277,61 @@ jQuery(document).ready(function(){
             jQuery(this).toggle(jQuery(this).data('domain').toLowerCase().indexOf(inputText) > -1);
         });
     });
+
+    checkoutForm = jQuery('#frmCheckout');
+    if (checkoutForm.length) {
+        checkoutForm.on('submit', validateCheckoutCreditCardInput);
+    }
 });
+//checkoutForm
+function validateCheckoutCreditCardInput(e)
+{
+    var newOrExisting = jQuery('input[name="ccinfo"]:checked').val(),
+        submitButton = checkoutForm.find('*[type="submit"]'),
+        cardType = null,
+        submit = true,
+        selectedPaymentMethod = checkoutForm.find('input[name="paymentmethod"]:checked'),
+        isCreditCardGateway = selectedPaymentMethod.hasClass('is-credit-card'),
+        isRemoteCard = selectedPaymentMethod.data('payment-type') === 'RemoteCreditCard',
+        cardNumber = jQuery('#inputCardNumber');
+
+    checkoutForm.find('.form-group').removeClass('has-error');
+    checkoutForm.find('.field-error-msg').hide();
+
+    if (isCreditCardGateway && !isRemoteCard) {
+        if (newOrExisting === 'new') {
+            cardType = jQuery.payment.cardType(checkoutForm.find('#inputCardNumber').val());
+            if (!jQuery.payment.validateCardNumber(checkoutForm.find('#inputCardNumber').val()) || cardNumber.hasClass('unsupported')) {
+                var error = cardNumber.data('message-invalid');
+                if (cardNumber.hasClass('unsupported')) {
+                    error = cardNumber.data('message-unsupported');
+                }
+                checkoutForm.find('#inputCardNumber').setInputError(error).showInputError();
+                submit = false;
+            }
+            if (
+                !jQuery.payment.validateCardExpiry(
+                    checkoutForm.find('#inputCardExpiry').payment('cardExpiryVal')
+                )
+            ) {
+                checkoutForm.find('#inputCardExpiry').showInputError();
+                submit = false;
+            }
+        }
+        if (!jQuery.payment.validateCardCVC(checkoutForm.find('#inputCardCVV').val(), cardType)) {
+            checkoutForm.find('#inputCardCVV').showInputError();
+            submit = false;
+        }
+        if (!submit) {
+            submitButton.prop('disabled', false)
+                .removeClass('disabled')
+                .find('i')
+                .removeAttr('class')
+                .addClass('fas fa-arrow-circle-right');
+            e.preventDefault();
+        }
+    }
+}
 
 function hasDomainLookupEnded() {
     domainLookupCallCount++;

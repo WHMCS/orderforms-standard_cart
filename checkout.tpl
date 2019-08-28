@@ -585,7 +585,8 @@
                                 <label for="inputCardNumber" class="field-icon">
                                     <i class="fas fa-credit-card"></i>
                                 </label>
-                                <input type="tel" name="ccnumber" id="inputCardNumber" class="field cc-number-field" placeholder="{$LANG.orderForm.cardNumber}" autocomplete="cc-number">
+                                <input type="tel" name="ccnumber" id="inputCardNumber" class="field cc-number-field" placeholder="{$LANG.orderForm.cardNumber}" autocomplete="cc-number" data-message-unsupported="{lang key='paymentMethodsManage.unsupportedCardType'}" data-message-invalid="{lang key='paymentMethodsManage.cardNumberNotValid'}" data-supported-cards="{$supportedCardTypes}" />
+                                <span class="field-error-msg"></span>
                             </div>
                         </div>
                         <div class="col-sm-3 new-card-container">
@@ -594,6 +595,7 @@
                                     <i class="fas fa-calendar-alt"></i>
                                 </label>
                                 <input type="tel" name="ccexpirydate" id="inputCardExpiry" class="field" placeholder="MM / YY{if $showccissuestart} ({$LANG.creditcardcardexpires}){/if}" autocomplete="cc-exp">
+                                <span class="field-error-msg">{lang key="paymentMethodsManage.expiryDateNotValid"}</span>
                             </div>
                         </div>
                         <div class="col-sm-3" id="cvv-field-container">
@@ -607,8 +609,9 @@
                                         <button type="button" class="btn btn-default" data-toggle="popover" data-placement="bottom" data-content="<img src='{$BASE_PATH_IMG}/ccv.gif' width='210' />">
                                             ?
                                         </button>
-                                    </span>
+                                    </span><br>
                                 </div>
+                                <span class="field-error-msg">{lang key="paymentMethodsManage.cvcNumberNotValid"}</span>
                             </div>
                         </div>
                         {if $showccissuestart}
@@ -697,7 +700,7 @@
                             id="btnCompleteOrder"
                             class="btn btn-primary btn-lg disable-on-click spinner-on-click{if $captcha}{$captcha->getButtonClass($captchaForm)}{/if}"
                             {if $cartitems==0}disabled="disabled"{/if}
-                            onclick="this.value='{$LANG.pleasewait}'">
+                    >
                         {$LANG.completeorder}
                         &nbsp;<i class="fas fa-arrow-circle-right"></i>
                     </button>
