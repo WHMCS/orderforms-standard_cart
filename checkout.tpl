@@ -565,6 +565,7 @@
                                         </button>
                                     </span>
                                 </div>
+                                <span class="field-error-msg">{lang key="paymentMethodsManage.cvcNumberNotValid"}</span>
                             </div>
                         </div>
                     </div>

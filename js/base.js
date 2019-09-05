@@ -1299,7 +1299,11 @@ function validateCheckoutCreditCardInput(e)
     checkoutForm.find('.field-error-msg').hide();
 
     if (isCreditCardGateway && !isRemoteCard) {
+        var cvvField = checkoutForm.find('#inputCardCVV2');
+
         if (newOrExisting === 'new') {
+            cvvField = checkoutForm.find('#inputCardCVV');
+
             cardType = jQuery.payment.cardType(checkoutForm.find('#inputCardNumber').val());
             if (!jQuery.payment.validateCardNumber(checkoutForm.find('#inputCardNumber').val()) || cardNumber.hasClass('unsupported')) {
                 var error = cardNumber.data('message-invalid');
@@ -1318,8 +1322,8 @@ function validateCheckoutCreditCardInput(e)
                 submit = false;
             }
         }
-        if (!jQuery.payment.validateCardCVC(checkoutForm.find('#inputCardCVV').val(), cardType)) {
-            checkoutForm.find('#inputCardCVV').showInputError();
+        if (!jQuery.payment.validateCardCVC(cvvField.val(), cardType)) {
+            cvvField.showInputError();
             submit = false;
         }
         if (!submit) {
