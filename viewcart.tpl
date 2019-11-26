@@ -242,7 +242,7 @@
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
                                                     <span class="cycle">{$domain.regperiod} {$domain.yearsLanguage}</span>
                                                     <span class="renewal cycle">
-                                                        {if isset($domain.renewprice)}{lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}{/if}</span>
+                                                        {if isset($domain.renewprice)}{lang key='domainrenewalprice'} <span class="renewal-price cycle">{$domain.renewprice->toPrefixed()}{$domain.shortRenewalYearsLanguage}{/if}</span>
                                                     </span>
                                                 {else}
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
@@ -262,7 +262,7 @@
                                                         </ul>
                                                     </div>
                                                     <span class="renewal cycle">
-                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{if isset($domain.renewprice)}{$domain.renewprice->toPrefixed()}{$domain.shortYearsLanguage}{/if}</span>
+                                                        {lang key='domainrenewalprice'} <span class="renewal-price cycle">{if isset($domain.renewprice)}{$domain.renewprice->toPrefixed()}{$domain.shortRenewalYearsLanguage}{/if}</span>
                                                     </span>
                                                 {/if}
                                             </div>
@@ -514,8 +514,17 @@
                                     <span>{$LANG.ordertotalduetoday}</span>
                                 </div>
 
+                                <div class="express-checkout-buttons">
+                                    {foreach $expressCheckoutButtons as $checkoutButton}
+                                        {$checkoutButton}
+                                        <div class="separator">
+                                            - {$LANG.or|strtoupper} -
+                                        </div>
+                                    {/foreach}
+                                </div>
+
                                 <div class="text-right">
-                                    <a href="cart.php?a=checkout" class="btn btn-success btn-lg btn-checkout{if $cartitems == 0} disabled{/if}" id="checkout">
+                                    <a href="cart.php?a=checkout&e=false" class="btn btn-success btn-lg btn-checkout{if $cartitems == 0} disabled{/if}" id="checkout">
                                         {$LANG.orderForm.checkout}
                                         <i class="fas fa-arrow-right"></i>
                                     </a><br />

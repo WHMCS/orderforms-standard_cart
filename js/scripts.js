@@ -560,6 +560,27 @@ jQuery(document).ready(function() {
     });
 });
 
+function scrollToGatewayInputError() {
+    var frm = elementsDiv.closest('form'),
+        displayError = jQuery('.gateway-errors,.assisted-cc-input-feedback').first();
+    frm.find('button[type="submit"],input[type="submit"]')
+        .prop('disabled', false)
+        .removeClass('disabled')
+        .find('i.fas,i.far,i.fal,i.fab')
+        .removeAttr('class')
+        .addClass('fas fa-arrow-circle-right')
+        .find('span').toggleClass('hidden');
+
+    if (displayError.length) {
+        jQuery('html, body').animate(
+            {
+                scrollTop: displayError.offset().top - 50
+            },
+            500
+        );
+    }
+}
+
 /**
  * WHMCS authentication module
  *
@@ -923,6 +944,40 @@ jqClient: function () {
                 }
             )
         );
+    };
+
+    /**
+     * @param options
+     * @returns {*}
+     */
+    this.jsonGet = function (options) {
+        options = options || {};
+        this.get(options.url, options.data, function(response) {
+            if (response.warning) {
+                console.log('[WHMCS] Warning: ' + response.warning);
+                if (typeof options.warning === 'function') {
+                    options.warning(response.warning);
+                }
+            } else if (response.error) {
+                console.log('[WHMCS] Error: ' + response.error);
+                if (typeof options.error === 'function') {
+                    options.error(response.error);
+                }
+            } else {
+                if (typeof options.success === 'function') {
+                    options.success(response);
+                }
+            }
+        }, 'json').error(function(xhr, errorMsg){
+            console.log('[WHMCS] Error: ' + errorMsg);
+            if (typeof options.fail === 'function') {
+                options.fail(errorMsg);
+            }
+        }).always(function() {
+            if (typeof options.always === 'function') {
+                options.always();
+            }
+        });
     };
 
     /**
@@ -1517,6 +1572,16 @@ function () {
                 }
             }
         });
+    };
+
+    this.reloadCaptcha = function (element)
+    {
+        if (!element) {
+            element = jQuery('#inputCaptchaImage');
+        }
+
+        var src = jQuery(element).data('src');
+        jQuery(element).attr('src', src + '?nocache=' + (new Date()).getTime());
     };
 
     return this;
@@ -2145,7 +2210,7 @@ jQuery(document).ready(function(){
                                 .find('.max-length').html(domain.maxLength).end();
                             invalidLength.show();
                         } else if (data.result.error) {
-                            error.html(data.result.error);
+                            error.text(data.result.error);
                             error.show();
                             done = true;
                         }
@@ -2336,7 +2401,13 @@ jQuery(document).ready(function(){
                         window.location = 'cart.php?a=confproduct&i=' + result.num;
                     } else {
                         jQuery('.domain-lookup-primary-loader').hide();
-                        jQuery('#primaryLookupResult').removeClass('hidden').show().find('.domain-invalid').show();
+                        if (typeof result === 'string') {
+                            jQuery('#primaryLookupResult').removeClass('hidden').show().find('.domain-error')
+                                .text(result)
+                                .show();
+                        } else {
+                            jQuery('#primaryLookupResult').removeClass('hidden').show().find('.domain-invalid').show();
+                        }
                     }
                 });
 
@@ -2668,7 +2739,7 @@ jQuery(document).ready(function(){
                             .find('.max-length').html(domain.maxLength).end();
                         invalidLength.show();
                     } else if (data.result.error) {
-                        error.html(data.result.error);
+                        error.text(data.result.error);
                         error.show();
                         done = true;
                     }
@@ -3259,7 +3330,7 @@ function selectDomainPeriodInCart(domainName, price, period, yearsString) {
         function(data) {
             data.domains.forEach(function(domain) {
                 jQuery("[name='" + domain.domain + "Price']").parent('div').find('.renewal-price').html(
-                    domain.renewprice + domain.shortYearsLanguage
+                    domain.prefixedRenewPrice + domain.shortRenewalYearsLanguage
                 ).end();
             });
             jQuery('#subtotal').html(data.subtotal);
@@ -3355,7 +3426,7 @@ function validate_captcha(form)
             jQuery('#inputCaptcha').attr('data-original-title', data.error).tooltip('show');
             if (captcha.length) {
                 jQuery('#inputCaptchaImage').replaceWith(
-                    '<img id="inputCaptchaImage" src="includes/verifyimage.php" align="middle" />'
+                    '<img id="inputCaptchaImage" src="' + whmcsBaseUrl + 'includes/verifyimage.php" align="middle" />'
                 );
             }
         } else {

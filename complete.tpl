@@ -34,7 +34,15 @@
 
             <p>{$LANG.orderfinalinstructions}</p>
 
-            {if $invoiceid && !$ispaid}
+            {if $expressCheckoutInfo}
+                <div class="alert alert-info text-center">
+                    {$expressCheckoutInfo}
+                </div>
+            {elseif $expressCheckoutError}
+                <div class="alert alert-danger text-center">
+                    {$expressCheckoutError}
+                </div>
+            {elseif $invoiceid && !$ispaid}
                 <div class="alert alert-warning text-center">
                     {$LANG.ordercompletebutnotpaid}
                     <br /><br />

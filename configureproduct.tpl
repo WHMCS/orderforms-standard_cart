@@ -88,6 +88,34 @@ var _localLang = {
                             </div>
                         {/if}
 
+                        {if count($metrics) > 0}
+                            <div class="sub-heading">
+                                <span>{$LANG.metrics.title}</span>
+                            </div>
+
+                            <p>{$LANG.metrics.explanation}</p>
+
+                            <ul>
+                                {foreach $metrics as $metric}
+                                    <li>
+                                        {$metric.displayName}
+                                        -
+                                        {if count($metric.pricing) > 1}
+                                            {$LANG.metrics.startingFrom} {$metric.lowestPrice} / {if $metric.unitName}{$metric.unitName}{else}{$LANG.metrics.unit}{/if}
+                                            <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalMetricPricing-{$metric.systemName}">
+                                                {$LANG.metrics.viewPricing}
+                                            </button>
+                                        {elseif count($metric.pricing) == 1}
+                                            {$metric.lowestPrice} / {if $metric.unitName}{$metric.unitName}{else}{$LANG.metrics.unit}{/if}
+                                        {/if}
+                                        {include file="$template/usagebillingpricing.tpl"}
+                                    </li>
+                                {/foreach}
+                            </ul>
+
+                            <br>
+                        {/if}
+
                         {if $productinfo.type eq "server"}
                             <div class="sub-heading">
                                 <span>{$LANG.cartconfigserver}</span>

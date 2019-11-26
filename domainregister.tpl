@@ -40,7 +40,7 @@
                                 </div>
                             </div>
 
-                            {if $captcha->isEnabled() && !$captcha->recaptcha->isInvisible()}
+                            {if $captcha->isEnabled() && $captcha->isEnabledForForm($captchaForm) && !$captcha->recaptcha->isInvisible()}
                                 <div class="col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
                                     <div class="captcha-container" id="captchaContainer">
                                         {if $captcha == "recaptcha"}
@@ -50,7 +50,7 @@
                                             <div class="default-captcha default-captcha-register-margin">
                                                 <p>{lang key="cartSimpleCaptcha"}</p>
                                                 <div>
-                                                    <img id="inputCaptchaImage" src="includes/verifyimage.php" align="middle" />
+                                                    <img id="inputCaptchaImage" src="{$systemurl}includes/verifyimage.php" align="middle" />
                                                     <input id="inputCaptcha" type="text" name="code" maxlength="5" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                                 </div>
                                             </div>

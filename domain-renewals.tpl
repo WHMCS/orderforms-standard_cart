@@ -72,7 +72,7 @@
 
                                 <p>{lang key='clientareadomainexpirydate'}: {$renewalData.expiryDate->format('j M Y')} ({$renewalData.expiryDate->diffForHumans()})</p>
 
-                                {if ($renewalData.pastGracePeriod && $renewalData.pastRedemptionGracePeriod)}
+                                {if ($renewalData.pastGracePeriod && $renewalData.pastRedemptionGracePeriod) || !count($renewalData.renewalOptions)}
                                 {else}
                                 <form class="form-horizontal">
                                     <div class="form-group row">

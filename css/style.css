@@ -708,6 +708,13 @@
     text-align: center;
 }
 
+#order-standard_cart .express-checkout-buttons .separator {
+    margin-left: 70px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
 /**
  * Completion Page
  */
@@ -1052,6 +1059,7 @@
 /**
  * Domain Renewals
  */
+
 .form-control.domain-renewals-filter {
     background: url(../../../../assets/img/search.png) #fff no-repeat 8px 5px !important;
     padding: 7px 10px 7px 45px !important;
@@ -1258,6 +1266,20 @@
 #order-standard_cart .mc-promo.sitelock .expander,
 #order-standard_cart .mc-promo.sitelock .price {
     color: #f29f44;
+}
+
+#order-standard_cart .mc-promo.sitelockvpn {
+    border-color: #555;
+}
+#order-standard_cart .mc-promo.sitelockvpn .btn-add {
+    background-color: #555;
+}
+#order-standard_cart .mc-promo.sitelockvpn .arrow {
+    background-color: #333;
+}
+#order-standard_cart .mc-promo.sitelockvpn .expander,
+#order-standard_cart .mc-promo.sitelockvpn .price {
+    color: #555;
 }
 
 #order-standard_cart .mc-promo .rotate{

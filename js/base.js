@@ -337,7 +337,7 @@ jQuery(document).ready(function(){
                                 .find('.max-length').html(domain.maxLength).end();
                             invalidLength.show();
                         } else if (data.result.error) {
-                            error.html(data.result.error);
+                            error.text(data.result.error);
                             error.show();
                             done = true;
                         }
@@ -528,7 +528,13 @@ jQuery(document).ready(function(){
                         window.location = 'cart.php?a=confproduct&i=' + result.num;
                     } else {
                         jQuery('.domain-lookup-primary-loader').hide();
-                        jQuery('#primaryLookupResult').removeClass('hidden').show().find('.domain-invalid').show();
+                        if (typeof result === 'string') {
+                            jQuery('#primaryLookupResult').removeClass('hidden').show().find('.domain-error')
+                                .text(result)
+                                .show();
+                        } else {
+                            jQuery('#primaryLookupResult').removeClass('hidden').show().find('.domain-invalid').show();
+                        }
                     }
                 });
 
@@ -860,7 +866,7 @@ jQuery(document).ready(function(){
                             .find('.max-length').html(domain.maxLength).end();
                         invalidLength.show();
                     } else if (data.result.error) {
-                        error.html(data.result.error);
+                        error.text(data.result.error);
                         error.show();
                         done = true;
                     }
@@ -1451,7 +1457,7 @@ function selectDomainPeriodInCart(domainName, price, period, yearsString) {
         function(data) {
             data.domains.forEach(function(domain) {
                 jQuery("[name='" + domain.domain + "Price']").parent('div').find('.renewal-price').html(
-                    domain.renewprice + domain.shortYearsLanguage
+                    domain.prefixedRenewPrice + domain.shortRenewalYearsLanguage
                 ).end();
             });
             jQuery('#subtotal').html(data.subtotal);
@@ -1547,7 +1553,7 @@ function validate_captcha(form)
             jQuery('#inputCaptcha').attr('data-original-title', data.error).tooltip('show');
             if (captcha.length) {
                 jQuery('#inputCaptchaImage').replaceWith(
-                    '<img id="inputCaptchaImage" src="includes/verifyimage.php" align="middle" />'
+                    '<img id="inputCaptchaImage" src="' + whmcsBaseUrl + 'includes/verifyimage.php" align="middle" />'
                 );
             }
         } else {
