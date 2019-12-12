@@ -584,12 +584,15 @@ jQuery(document).ready(function(){
         cvvFieldContainer = jQuery('#cvv-field-container'),
         existingCardContainer = jQuery('#existingCardsContainer'),
         newCardInfo = jQuery('#newCardInfo'),
+        newCardSaveSettings = jQuery('#newCardSaveSettings'),
+        inputNoStoreContainer = jQuery('#inputNoStoreContainer'),
         existingCardInfo = jQuery('#existingCardInfo'),
         newCardOption = jQuery('#new'),
         creditCardInputFields = jQuery('#creditCardInputFields');
 
     existingCards.on('ifChecked', function(event) {
-        if (jQuery('.payment-methods:checked').val() === 'stripe') {
+        newCardSaveSettings.slideUp().find('input').attr('disabled', 'disabled');
+        if (jQuery('.payment-methods:checked').data('remote-inputs') === 1) {
             return;
         }
 
@@ -597,7 +600,8 @@ jQuery(document).ready(function(){
         existingCardInfo.slideDown().find('input').removeAttr('disabled');
     });
     newCardOption.on('ifChecked', function(event) {
-        if (jQuery('.payment-methods:checked').val() === 'stripe') {
+        newCardSaveSettings.slideDown().find('input').removeAttr('disabled');
+        if (jQuery('.payment-methods:checked').data('remote-inputs') === 1) {
             return;
         }
 
@@ -615,6 +619,13 @@ jQuery(document).ready(function(){
                 gatewayModule = jQuery(this).val(),
                 showLocal = jQuery(this).data('show-local'),
                 relevantMethods = [];
+            if (gatewayPaymentType === 'RemoteCreditCard') {
+                inputNoStoreContainer.hide().find('input').prop('disabled', 'disabled');
+            } else {
+                if (!(inputNoStoreContainer.is(':visible'))) {
+                    inputNoStoreContainer.show().find('input').removeProp('disabled');
+                }
+            }
 
             existingCards.each(function(index) {
                 var paymentType = jQuery(this).data('payment-type'),

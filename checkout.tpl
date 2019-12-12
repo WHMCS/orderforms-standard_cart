@@ -490,6 +490,7 @@
                                            value="{$gateway.sysname}"
                                            data-payment-type="{$gateway.payment_type}"
                                            data-show-local="{$gateway.show_local_cards}"
+                                           data-remote-inputs="{$gateway.uses_remote_inputs}"
                                            class="payment-methods{if $gateway.type eq "CC"} is-credit-card{/if}"
                                            {if $selectedgateway eq $gateway.sysname} checked{/if}
                                     />
@@ -635,6 +636,8 @@
                                     </div>
                                 </div>
                             {/if}
+                        </div>
+                        <div class="row" id="newCardSaveSettings">
                             <div class="form-group new-card-container">
                                 <div id="inputDescriptionContainer" class="col-md-6">
                                     <div class="prepend-icon">
@@ -645,7 +648,7 @@
                                     </div>
                                 </div>
                                 {if $allowClientsToRemoveCards}
-                                    <div class="col-md-6" style="line-height: 32px;">
+                                    <div id="inputNoStoreContainer" class="col-md-6" style="line-height: 32px;">
                                         <input type="hidden" name="nostore" value="1">
                                         <input type="checkbox" class="toggle-switch-success no-icheck" data-size="mini" checked="checked" name="nostore" id="inputNoStore" value="0" data-on-text="{lang key='yes'}" data-off-text="{lang key='no'}">
                                         <label for="inputNoStore" class="checkbox-inline no-padding">
@@ -658,9 +661,13 @@
                         </div>
                     </div>
                 {else}
-                    <p align="center">
-                        {lang key='paymentPreApproved' gateway=$expressCheckoutGateway}
-                    </p>
+                    {if $expressCheckoutOutput}
+                        {$expressCheckoutOutput}
+                    {else}
+                        <p align="center">
+                            {lang key='paymentPreApproved' gateway=$expressCheckoutGateway}
+                        </p>
+                    {/if}
                 {/if}
 
                 {if $shownotesfield}
