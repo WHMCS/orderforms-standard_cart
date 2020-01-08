@@ -3175,6 +3175,10 @@ jQuery(document).ready(function(){
     if (checkoutForm.length) {
         checkoutForm.on('submit', validateCheckoutCreditCardInput);
     }
+
+    if (existingCardContainer.is(':visible')) {
+        newCardInfo.hide();
+    }
 });
 //checkoutForm
 function validateCheckoutCreditCardInput(e)
