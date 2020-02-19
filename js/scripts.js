@@ -2205,7 +2205,9 @@ jQuery(document).ready(function(){
                         }
                     } else {
                         var invalidLength = invalid.find('span.domain-length-restrictions'),
-                            done = false;
+                            done = false,
+                            reg = /<br\s*\/>/,
+                            errors = [];
                         invalidLength.hide();
                         error.hide();
                         if (domain.minLength > 0 && domain.maxLength > 0) {
@@ -2213,7 +2215,23 @@ jQuery(document).ready(function(){
                                 .find('.max-length').html(domain.maxLength).end();
                             invalidLength.show();
                         } else if (data.result.error) {
-                            error.text(data.result.error);
+                            if (!data.result.error.match(reg)) {
+                                error.text(data.result.error);
+                            } else {
+                                error.text('');
+                                errors = data.result.error.split(reg);
+                                for(var i=0; i < errors.length; i++) {
+                                    var errorMsg = errors[i];
+                                    if (errorMsg.length) {
+                                        if (error.text()) {
+                                            // only add line break if there is
+                                            // multiple lines of text
+                                            error.append('<br />');
+                                        }
+                                        error.append(jQuery('<span></span>').text(errorMsg));
+                                    }
+                                }
+                            }
                             error.show();
                             done = true;
                         }
@@ -2746,14 +2764,32 @@ jQuery(document).ready(function(){
                     invalid.hide();
                     error.hide();
                     var invalidLength = invalid.find('span.domain-length-restrictions'),
-                        done = false;
+                        done = false,
+                        reg = /<br\s*\/>/,
+                        errors = [];
                     invalidLength.hide();
                     if (domain.minLength > 0 && domain.maxLength > 0) {
                         invalidLength.find('.min-length').html(domain.minLength).end()
                             .find('.max-length').html(domain.maxLength).end();
                         invalidLength.show();
                     } else if (data.result.error) {
-                        error.text(data.result.error);
+                        if (!data.result.error.match(reg)) {
+                            error.text(data.result.error);
+                        } else {
+                            error.text('');
+                            errors = data.result.error.split(reg);
+                            for(var i=0; i < errors.length; i++) {
+                                var errorMsg = errors[i];
+                                if (errorMsg.length) {
+                                    if (error.text()) {
+                                        // only add line break if there is
+                                        // multiple lines of text
+                                        error.append('<br />');
+                                    }
+                                    error.append(jQuery('<span></span>').text(errorMsg));
+                                }
+                            }
+                        }
                         error.show();
                         done = true;
                     }
@@ -3070,14 +3106,18 @@ jQuery(document).ready(function(){
             isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
             firstNonCcGateway = jQuery('input[name="paymentmethod"]')
             .not(jQuery('input.is-credit-card[name="paymentmethod"]'))
-            .first();
+            .first(),
+            container = jQuery('#paymentGatewaysContainer'),
+            ccInputFields = jQuery('#creditCardInputFields');
         if (radio.prop('checked')) {
-            if (isCcSelected && firstNonCcGateway.length) {
+            if (isCcSelected && firstNonCcGateway.length !== 0) {
                 firstNonCcGateway.iCheck('check');
-            } else if (isCcSelected) {
-                jQuery('#creditCardInputFields').slideUp();
+                ccInputFields.slideUp();
+                container.slideUp();
+            } else if (isCcSelected && !container.is(":visible")) {
+                ccInputFields.slideDown();
+                container.slideDown();
             }
-            jQuery('#paymentGatewaysContainer').slideUp();
         }
     });
 
