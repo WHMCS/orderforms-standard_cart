@@ -1665,11 +1665,11 @@ var recaptchaLoadComplete = false;
                 };
                 recaptchaContent.attr('data-callback', funcName);
 
-                // alter submit button to integrate invisible recaptcha
-                // otherwise setup a callback to twiddle UI after grecaptcha
-                // has inject DOM
+                // setup an on form submit event to ensure that we
+                // are allowing required field validation to occur before
+                // we do the invisible recaptcha checking
                 if (isInvisible) {
-                    btnRecaptcha.on('click', function (event) {
+                    frm.on('submit', function (event) {
                         if (!grecaptcha.getResponse().trim()) {
                             event.preventDefault();
                             grecaptcha.execute();
@@ -2563,6 +2563,9 @@ jQuery(document).ready(function(){
                         order = parseInt(jQueryElement.data('order-preference'), 10);
                     if ((defaultId === null) || (order < defaultId)) {
                         defaultId = jQueryElement.val();
+                        if (order === 0) {
+                            return false;
+                        }
                     }
                 });
                 if (defaultId === null) {

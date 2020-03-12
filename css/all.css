@@ -1282,6 +1282,20 @@
     color: #555;
 }
 
+#order-standard_cart .mc-promo.marketgoo {
+    border-color: #3090e0;
+}
+#order-standard_cart .mc-promo.marketgoo .btn-add {
+    background-color: #3090e0;
+}
+#order-standard_cart .mc-promo.marketgoo .arrow {
+    background-color: #3090e0;
+}
+#order-standard_cart .mc-promo.marketgoo .expander,
+#order-standard_cart .mc-promo.marketgoo .price {
+    color: #3090e0;
+}
+
 #order-standard_cart .mc-promo .rotate{
     -moz-transition: all 0.2s linear;
     -webkit-transition: all 0.2s linear;

@@ -687,6 +687,9 @@ jQuery(document).ready(function(){
                         order = parseInt(jQueryElement.data('order-preference'), 10);
                     if ((defaultId === null) || (order < defaultId)) {
                         defaultId = jQueryElement.val();
+                        if (order === 0) {
+                            return false;
+                        }
                     }
                 });
                 if (defaultId === null) {
