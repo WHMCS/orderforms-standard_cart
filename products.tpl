@@ -104,7 +104,7 @@
                                             {/if}
                                         {/if}
                                     </div>
-                                    <a href="cart.php?a=add&{if $product.bid}bid={$product.bid}{else}pid={$product.pid}{/if}" class="btn btn-success btn-sm" id="product{$product@iteration}-order-button">
+                                    <a href="{$WEB_ROOT}/cart.php?a=add&{if $product.bid}bid={$product.bid}{else}pid={$product.pid}{/if}" class="btn btn-success btn-sm" id="product{$product@iteration}-order-button">
                                         <i class="fas fa-shopping-cart"></i>
                                         {$LANG.ordernowbutton}
                                     </a>

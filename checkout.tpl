@@ -45,7 +45,8 @@
                         {$LANG.orderForm.createAccount}
                     </button>
                 </div>
-                <p>{$LANG.orderForm.enterPersonalDetails}</p>
+
+                <p>{lang key='orderForm.enterPersonalDetails'}</p>
             </div>
 
             {if $errormessage}
@@ -61,6 +62,59 @@
             <form method="post" action="{$smarty.server.PHP_SELF}?a=checkout" name="orderfrm" id="frmCheckout">
                 <input type="hidden" name="submit" value="true" />
                 <input type="hidden" name="custtype" id="inputCustType" value="{$custtype}" />
+
+                {if $custtype neq "new" && $loggedin}
+                    <div class="sub-heading">
+                        <span>
+                            {lang key='switchAccount.title'}
+                        </span>
+                    </div>
+                    <div id="containerExistingAccountSelect" class="row account-select-container">
+                        {foreach $accounts as $account}
+                            <div class="col-sm-{if $accounts->count() == 1}12{else}6{/if}">
+                                <div class="account{if $selectedAccountId == $account->id} active{/if}">
+                                    <label class="radio-inline" for="account{$account->id}">
+                                        <input id="account{$account->id}" class="account-select{if $account->isClosed || $account->noPermission || $inExpressCheckout} disabled{/if}" type="radio" name="account_id" value="{$account->id}"{if $account->isClosed || $account->noPermission || $inExpressCheckout} disabled="disabled"{/if}{if $selectedAccountId == $account->id} checked="checked"{/if}>
+                                        <span class="address">
+                                            <strong>
+                                                {if $account->company}{$account->company}{else}{$account->fullName}{/if}
+                                            </strong>
+                                            {if $account->isClosed || $account->noPermission}
+                                                <span class="label label-default">
+                                                    {if $account->isClosed}
+                                                        {lang key='closed'}
+                                                    {else}
+                                                        {lang key='noPermission'}
+                                                    {/if}
+                                                </span>
+                                            {elseif $account->currencyCode}
+                                                <span class="label label-info">
+                                                    {$account->currencyCode}
+                                                </span>
+                                            {/if}
+                                            <br>
+                                            <span class="small">
+                                                {$account->address1}{if $account->address2}, {$account->address2}{/if}<br>
+                                                {if $account->city}{$account->city},{/if}
+                                                {if $account->state} {$account->state},{/if}
+                                                {if $account->postcode} {$account->postcode},{/if}
+                                                {$account->countryName}
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        {/foreach}
+                        <div class="col-sm-12">
+                            <div class="account border-bottom{if !$selectedAccountId || !is_numeric($selectedAccountId)} active{/if}">
+                                <label class="radio-inline">
+                                    <input class="account-select" type="radio" name="account_id" value="new"{if !$selectedAccountId || !is_numeric($selectedAccountId)} checked="checked"{/if}{if $inExpressCheckout} disabled="disabled" class="disabled"{/if}>
+                                    {lang key='orderForm.createAccount'}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
 
                 <div id="containerExistingUserSignin"{if $loggedin || $custtype neq "existing"} class="hidden"{/if}>
 
@@ -90,7 +144,7 @@
                     {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-existing"}
                 </div>
 
-                <div id="containerNewUserSignup"{if $custtype eq "existing" AND !$loggedin} class="hidden"{/if}>
+                <div id="containerNewUserSignup"{if $custtype === 'existing' || (is_numeric($selectedAccountId) && $selectedAccountId > 0) || ($loggedin && $accounts->count() > 0 && $selectedAccountId !== 'new')} class="hidden"{/if}>
 
                     <div{if $loggedin} class="hidden"{/if}>
                         {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-new"}
@@ -106,7 +160,7 @@
                                 <label for="inputFirstName" class="field-icon">
                                     <i class="fas fa-user"></i>
                                 </label>
-                                <input type="text" name="firstname" id="inputFirstName" class="field" placeholder="{$LANG.orderForm.firstName}" value="{$clientsdetails.firstname}"{if $loggedin} readonly="readonly"{/if} autofocus>
+                                <input type="text" name="firstname" id="inputFirstName" class="field" placeholder="{$LANG.orderForm.firstName}" value="{$clientsdetails.firstname}" autofocus>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -114,7 +168,7 @@
                                 <label for="inputLastName" class="field-icon">
                                     <i class="fas fa-user"></i>
                                 </label>
-                                <input type="text" name="lastname" id="inputLastName" class="field" placeholder="{$LANG.orderForm.lastName}" value="{$clientsdetails.lastname}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="lastname" id="inputLastName" class="field" placeholder="{$LANG.orderForm.lastName}" value="{$clientsdetails.lastname}">
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -122,7 +176,7 @@
                                 <label for="inputEmail" class="field-icon">
                                     <i class="fas fa-envelope"></i>
                                 </label>
-                                <input type="email" name="email" id="inputEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}" value="{$clientsdetails.email}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="email" name="email" id="inputEmail" class="field" placeholder="{$LANG.orderForm.emailAddress}" value="{$clientsdetails.email}">
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -130,7 +184,7 @@
                                 <label for="inputPhone" class="field-icon">
                                     <i class="fas fa-phone"></i>
                                 </label>
-                                <input type="tel" name="phonenumber" id="inputPhone" class="field" placeholder="{$LANG.orderForm.phoneNumber}" value="{$clientsdetails.phonenumber}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="tel" name="phonenumber" id="inputPhone" class="field" placeholder="{$LANG.orderForm.phoneNumber}" value="{$clientsdetails.phonenumber}">
                             </div>
                         </div>
                     </div>
@@ -145,7 +199,7 @@
                                 <label for="inputCompanyName" class="field-icon">
                                     <i class="fas fa-building"></i>
                                 </label>
-                                <input type="text" name="companyname" id="inputCompanyName" class="field" placeholder="{$LANG.orderForm.companyName} ({$LANG.orderForm.optional})" value="{$clientsdetails.companyname}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="companyname" id="inputCompanyName" class="field" placeholder="{$LANG.orderForm.companyName} ({$LANG.orderForm.optional})" value="{$clientsdetails.companyname}">
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -153,7 +207,7 @@
                                 <label for="inputAddress1" class="field-icon">
                                     <i class="far fa-building"></i>
                                 </label>
-                                <input type="text" name="address1" id="inputAddress1" class="field" placeholder="{$LANG.orderForm.streetAddress}" value="{$clientsdetails.address1}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="address1" id="inputAddress1" class="field" placeholder="{$LANG.orderForm.streetAddress}" value="{$clientsdetails.address1}">
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -161,7 +215,7 @@
                                 <label for="inputAddress2" class="field-icon">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </label>
-                                <input type="text" name="address2" id="inputAddress2" class="field" placeholder="{$LANG.orderForm.streetAddress2}" value="{$clientsdetails.address2}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="address2" id="inputAddress2" class="field" placeholder="{$LANG.orderForm.streetAddress2}" value="{$clientsdetails.address2}">
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -169,7 +223,7 @@
                                 <label for="inputCity" class="field-icon">
                                     <i class="far fa-building"></i>
                                 </label>
-                                <input type="text" name="city" id="inputCity" class="field" placeholder="{$LANG.orderForm.city}" value="{$clientsdetails.city}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="city" id="inputCity" class="field" placeholder="{$LANG.orderForm.city}" value="{$clientsdetails.city}">
                             </div>
                         </div>
                         <div class="col-sm-5">
@@ -180,7 +234,7 @@
                                 <label for="stateinput" class="field-icon" id="inputStateIcon">
                                     <i class="fas fa-map-signs"></i>
                                 </label>
-                                <input type="text" name="state" id="inputState" class="field" placeholder="{$LANG.orderForm.state}" value="{$clientsdetails.state}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="state" id="inputState" class="field" placeholder="{$LANG.orderForm.state}" value="{$clientsdetails.state}">
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -188,7 +242,7 @@
                                 <label for="inputPostcode" class="field-icon">
                                     <i class="fas fa-certificate"></i>
                                 </label>
-                                <input type="text" name="postcode" id="inputPostcode" class="field" placeholder="{$LANG.orderForm.postcode}" value="{$clientsdetails.postcode}"{if $loggedin} readonly="readonly"{/if}>
+                                <input type="text" name="postcode" id="inputPostcode" class="field" placeholder="{$LANG.orderForm.postcode}" value="{$clientsdetails.postcode}">
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -196,7 +250,7 @@
                                 <label for="inputCountry" class="field-icon" id="inputCountryIcon">
                                     <i class="fas fa-globe"></i>
                                 </label>
-                                <select name="country" id="inputCountry" class="field"{if $loggedin} disabled="disabled"{/if}>
+                                <select name="country" id="inputCountry" class="field">
                                     {foreach $countries as $countrycode => $countrylabel}
                                         <option value="{$countrycode}"{if (!$country && $countrycode == $defaultcountry) || $countrycode eq $country} selected{/if}>
                                             {$countrylabel}
@@ -211,7 +265,7 @@
                                     <label for="inputTaxId" class="field-icon">
                                         <i class="fas fa-building"></i>
                                     </label>
-                                    <input type="text" name="tax_id" id="inputTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$clientsdetails.tax_id}"{if $loggedin} readonly="readonly"{/if}>
+                                    <input type="text" name="tax_id" id="inputTaxId" class="field" placeholder="{lang key=\WHMCS\Billing\Tax\Vat::getLabel()} ({$LANG.orderForm.optional})" value="{$clientsdetails.tax_id}">
                                 </div>
                             </div>
                         {/if}
@@ -451,32 +505,27 @@
                     <span>{$LANG.orderForm.paymentDetails}</span>
                 </div>
 
-                <div class="alert alert-success text-center large-text" role="alert">
-                    {$LANG.ordertotalduetoday}: &nbsp; <strong>{$total}</strong>
+                <div class="alert alert-success text-center large-text" role="alert" id="totalDueToday">
+                    {$LANG.ordertotalduetoday}: &nbsp; <strong id="totalCartPrice">{$total}</strong>
                 </div>
 
-                {if $canUseCreditOnCheckout}
-                    <div id="applyCreditContainer" class="apply-credit-container" data-apply-credit="{$applyCredit}">
-                        <p>{lang key='cart.availableCreditBalance' amount=$creditBalance}</p>
+                <div id="applyCreditContainer" class="apply-credit-container{if !$canUseCreditOnCheckout} hidden{/if}" data-apply-credit="{$applyCredit}">
+                    <p>{lang key='cart.availableCreditBalance' amount=$creditBalance}</p>
 
-                        {if $creditBalance->toNumeric() >= $total->toNumeric()}
-                            <label class="radio">
-                                <input id="useFullCreditOnCheckout" type="radio" name="applycredit" value="1"{if $applyCredit} checked{/if}>
-                                {lang key='cart.applyCreditAmountNoFurtherPayment' amount=$total}
-                            </label>
-                        {else}
-                            <label class="radio">
-                                <input id="useCreditOnCheckout" type="radio" name="applycredit" value="1"{if $applyCredit} checked{/if}>
-                                {lang key='cart.applyCreditAmount' amount=$creditBalance}
-                            </label>
-                        {/if}
-
-                        <label class="radio">
-                            <input id="skipCreditOnCheckout" type="radio" name="applycredit" value="0"{if !$applyCredit} checked{/if}>
-                            {lang key='cart.applyCreditSkip' amount=$creditBalance}
-                        </label>
-                    </div>
-                {/if}
+                    <label class="radio">
+                        <input id="useCreditOnCheckout" type="radio" name="applycredit" value="1"{if $applyCredit} checked{/if}>
+                        <span id="spanFullCredit"{if !($creditBalance->toNumeric() >= $total->toNumeric())} class="hidden"{/if}>
+                            {lang key='cart.applyCreditAmountNoFurtherPayment' amount=$total}
+                        </span>
+                        <span id="spanUseCredit"{if $creditBalance->toNumeric() >= $total->toNumeric()} class="hidden"{/if}>
+                            {lang key='cart.applyCreditAmount' amount=$creditBalance}
+                        </span>
+                    </label>
+                    <label class="radio">
+                        <input id="skipCreditOnCheckout" type="radio" name="applycredit" value="0"{if !$applyCredit} checked{/if}>
+                        {lang key='cart.applyCreditSkip' amount=$creditBalance}
+                    </label>
+                </div>
 
                 {if !$inExpressCheckout}
                     <div id="paymentGatewaysContainer" class="form-group">
@@ -507,51 +556,7 @@
                     <div class="cc-input-container{if $selectedgatewaytype neq "CC"} hidden{/if}" id="creditCardInputFields">
                         {if $client}
                             <div id="existingCardsContainer" class="existing-cc-grid">
-                                {foreach $client->payMethods->validateGateways()->sortByExpiryDate() as $payMethod}
-                                    {assign "payMethodExpired" 0}
-                                    {assign "expiryDate" ""}
-                                    {if $payMethod->isCreditCard()}
-                                        {if ($payMethod->payment->isExpired())}
-                                            {assign "payMethodExpired" 1}
-                                        {/if}
-
-                                        {if $payMethod->payment->getExpiryDate()}
-                                            {assign "expiryDate" $payMethod->payment->getExpiryDate()->format('m/Y')}
-                                        {/if}
-                                    {/if}
-
-                                    <div class="paymethod-info radio-inline" data-paymethod-id="{$payMethod->id}">
-                                        <input
-                                            type="radio"
-                                            name="ccinfo"
-                                            class="existing-card"
-                                            {if $payMethodExpired}disabled{/if}
-                                            data-payment-type="{$payMethod->getType()}"
-                                            data-payment-gateway="{$payMethod->gateway_name}"
-                                            data-order-preference="{$payMethod->order_preference}"
-                                            value="{$payMethod->id}">
-                                    </div>
-
-                                    <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
-                                        <i class="{$payMethod->getFontAwesomeIcon()}"></i>
-                                    </div>
-                                    <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
-                                        {if $payMethod->isCreditCard() || $payMethod->isRemoteBankAccount()}
-                                            {$payMethod->payment->getDisplayName()}
-                                        {else}
-                                            <span class="type">
-                                                {$payMethod->payment->getAccountType()}
-                                            </span>
-                                            {substr($payMethod->payment->getAccountNumber(), -4)}
-                                        {/if}
-                                    </div>
-                                    <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
-                                        {$payMethod->getDescription()}
-                                    </div>
-                                    <div class="paymethod-info" data-paymethod-id="{$payMethod->id}">
-                                        {$expiryDate}{if $payMethodExpired}<br><small>{$LANG.clientareaexpired}</small>{/if}
-                                    </div>
-                                {/foreach}
+                                {include file="orderforms/standard_cart/includes/existing-paymethods.tpl"}
                             </div>
                         {/if}
                         <div class="row cvv-input" id="existingCardInfo">

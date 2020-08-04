@@ -58,7 +58,7 @@
                                             <p>{lang key="cartSimpleCaptcha"}</p>
                                             <div>
                                                 <img id="inputCaptchaImage" src="{$systemurl}includes/verifyimage.php" />
-                                                <input id="inputCaptcha" type="text" name="code" maxlength="5" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
+                                                <input id="inputCaptcha" type="text" name="code" maxlength="6" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                             </div>
                                         </div>
                                     </div>

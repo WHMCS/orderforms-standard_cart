@@ -1353,6 +1353,30 @@
     margin-bottom: -20px;
 }
 
+#order-standard_cart .idn-language-selector {
+    font-size: 14px;
+}
+
+#order-standard_cart .account-select-container {
+    margin: 0;
+    border-right: 1px solid #eee;
+}
+#order-standard_cart .account-select-container div {
+    padding: 0;
+}
+#order-standard_cart .account-select-container div.account {
+    background: #f6f6f6;
+    border: 1px solid #eee;
+    border-right: 0;
+    padding: 10px;
+}
+#order-standard_cart .account-select-container div.account:not(.border-bottom) {
+    border-bottom: 0;
+}
+#order-standard_cart .account-select-container div.account.active {
+    background: #fff;
+}
+
 @media (max-width: 991px) {
     #order-standard_cart .captcha-container #google-recaptcha {
         padding-left: 2.5%;

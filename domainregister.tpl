@@ -51,7 +51,7 @@
                                                 <p>{lang key="cartSimpleCaptcha"}</p>
                                                 <div>
                                                     <img id="inputCaptchaImage" src="{$systemurl}includes/verifyimage.php" align="middle" />
-                                                    <input id="inputCaptcha" type="text" name="code" maxlength="5" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
+                                                    <input id="inputCaptcha" type="text" name="code" maxlength="6" class="form-control input-sm" data-toggle="tooltip" data-placement="right" data-trigger="manual" title="{lang key='orderForm.required'}" />
                                                 </div>
                                             </div>
                                         {/if}
@@ -64,7 +64,6 @@
             </div>
 
             <div id="DomainSearchResults" class="hidden">
-
                 <div id="searchDomainInfo" class="domain-checker-result-headline">
                     <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching"><i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.searching'}...</p>
                     <div id="primaryLookupResult" class="domain-lookup-result hidden">
@@ -72,6 +71,28 @@
                         <p class="domain-unavailable domain-checker-unavailable">{lang key='orderForm.domainIsUnavailable'}</p>
                         <p class="domain-available domain-checker-available">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</p>
                         <a class="domain-contact-support btn btn-primary">{$LANG.domainContactUs}</a>
+                        <div id="idnLanguageSelector" class="form-group hidden idn-language-selector">
+                            <div class="row">
+                                <div class="col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+                                    <div class="margin-10 text-center">
+                                        {lang key='cart.idnLanguageDescription'}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8 col-lg-6 col-sm-offset-2 col-lg-offset-3">
+                                    <select name="idnlanguage" class="form-control">
+                                        <option value="">{lang key='cart.idnLanguage'}</option>
+                                        {foreach $idnLanguages as $idnLanguageKey => $idnLanguage}
+                                            <option value="{$idnLanguageKey}">{lang key='idnLanguage.'|cat:$idnLanguageKey}</option>
+                                        {/foreach}
+                                    </select>
+                                    <div class="field-error-msg">
+                                        {lang key='cart.selectIdnLanguageForRegister'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <p class="domain-price">
                             <span class="price"></span>
                             <button class="btn btn-primary btn-add-to-cart" data-whois="0" data-domain="">

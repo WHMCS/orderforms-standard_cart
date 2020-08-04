@@ -16,7 +16,7 @@
     _radio = 'radio',
     _checked = 'checked',
     _unchecked = 'un' + _checked,
-    _disabled = 'disabled',a
+    _disabled = 'disabled',
     _determinate = 'determinate',
     _indeterminate = 'in' + _determinate,
     _update = 'update',
@@ -575,14 +575,30 @@ function scrollToGatewayInputError() {
         .find('span').toggleClass('hidden');
 
     if (displayError.length) {
-        jQuery('html, body').animate(
-            {
-                scrollTop: displayError.offset().top - 50
-            },
-            500
-        );
+        if (elementOutOfViewPort(displayError[0])) {
+            jQuery('html, body').animate(
+                {
+                    scrollTop: displayError.offset().top - 50
+                },
+                500
+            );
+        }
     }
 }
+
+function elementOutOfViewPort(element) {
+    // Get element's bounding
+    var bounding = element.getBoundingClientRect();
+    // Check if it's out of the viewport on each side
+    var out = {};
+    out.top = bounding.top < 0;
+    out.left = bounding.left < 0;
+    out.bottom = bounding.bottom > (window.innerHeight || document.documentElement.clientHeight);
+    out.right = bounding.right > (window.innerWidth || document.documentElement.clientWidth);
+    out.any = out.top || out.left || out.bottom || out.right;
+
+    return out.any;
+};
 
 /**
  * WHMCS authentication module
@@ -1005,10 +1021,10 @@ jqClient: function () {
                     options.success(response);
                 }
             }
-        }, 'json').error(function(xhr, errorMsg){
-            console.log('[WHMCS] Error: ' + errorMsg);
+        }, 'json').fail(function(xhr, errorMsg){
+            console.log('[WHMCS] Fail: ' + errorMsg);
             if (typeof options.fail === 'function') {
-                options.fail(errorMsg);
+                options.fail(errorMsg, xhr);
             }
         }).always(function() {
             if (typeof options.always === 'function') {
@@ -1541,7 +1557,7 @@ function () {
     this.bindCheckAll = function ()
     {
         var huntSelector = '.btn-check-all';
-        jQuery(huntSelector).click(function (e) {
+        jQuery('body').on('click', huntSelector, function (e) {
             var btn = jQuery(e.target);
             var targetInputs = jQuery(
                 '#' + btn.data('checkbox-container') + ' input[type="checkbox"]'
@@ -1593,10 +1609,11 @@ function () {
 /**
  * reCaptcha module
  *
- * @copyright Copyright (c) WHMCS Limited 2005-2018
+ * @copyright Copyright (c) WHMCS Limited 2005-2020
  * @license http://www.whmcs.com/license/ WHMCS Eula
  */
-var recaptchaLoadComplete = false;
+var recaptchaLoadComplete = false,
+    recaptchaCount = 0;
 
 (function(module) {
     if (!WHMCS.hasModule('recaptcha')) {
@@ -1609,41 +1626,43 @@ var recaptchaLoadComplete = false;
             if (recaptchaLoadComplete) {
                 return;
             }
-            var postLoad = [];
-            var recaptchaForms = jQuery(".btn-recaptcha").parents('form');
+            var postLoad = [],
+                recaptchaForms = jQuery(".btn-recaptcha").parents('form'),
+                isInvisible = false;
             recaptchaForms.each(function (i, el){
                 if (typeof recaptchaSiteKey === 'undefined') {
                     console.log('Recaptcha site key not defined');
                     return;
                 }
-                var frm = jQuery(el);
-                var btnRecaptcha = frm.find(".btn-recaptcha");
-                var isInvisible = btnRecaptcha.hasClass('btn-recaptcha-invisible'),
-                    required = (typeof requiredText !== 'undefined') ? requiredText : 'Required';
+                recaptchaCount += 1;
+                var frm = jQuery(el),
+                    btnRecaptcha = frm.find(".btn-recaptcha"),
+                    required = (typeof requiredText !== 'undefined') ? requiredText : 'Required',
+                    recaptchaId = 'divDynamicRecaptcha' + recaptchaCount;
+
+                isInvisible = btnRecaptcha.hasClass('btn-recaptcha-invisible')
 
                 // if no recaptcha element, make one
-                var recaptchaContent = frm.find("#divDynamicRecaptcha .g-recaptcha"),
+                var recaptchaContent = frm.find('#' + recaptchaId + ' .g-recaptcha'),
                     recaptchaElement = frm.find('.recaptcha-container'),
                     appendElement = frm;
 
                 if (recaptchaElement.length) {
+                    recaptchaElement.attr('id', recaptchaElement.attr('id') + recaptchaCount);
                     appendElement = recaptchaElement;
                 }
                 if (!recaptchaContent.length) {
-                    appendElement.append('<div id="divDynamicRecaptcha" class="g-recaptcha" data-toggle="tooltip" data-placement="bottom" data-trigger="manual" title="' + required + '"></div>');
-                    recaptchaContent = appendElement.find("#divDynamicRecaptcha");
+                    appendElement.append('<div id="#' + recaptchaId + '" class="g-recaptcha"></div>');
+                    recaptchaContent = appendElement.find('#' + recaptchaId);
                 }
                 // propagate invisible recaptcha if necessary
-                if (isInvisible) {
-                    if (recaptchaContent.data('size') !== 'invisible') {
-                        recaptchaContent.attr('data-size', 'invisible');
-                    }
-                } else {
-                    recaptchaContent.hide()
+                if (!isInvisible) {
+                    recaptchaContent.data('toggle', 'tooltip')
+                        .data('placement', 'bottom')
+                        .data('trigger', 'manual')
+                        .attr('title', required)
+                        .hide();
                 }
-
-                // ensure site key is available to grecaptcha
-                recaptchaContent.attr('data-sitekey', recaptchaSiteKey);
 
 
                 // alter form to work around JS behavior on .submit() when there
@@ -1657,22 +1676,22 @@ var recaptchaLoadComplete = false;
 
                 // make callback for grecaptcha to invoke after
                 // injecting token & make it known via data-callback
-                var funcName = 'recaptchaCallback' + i;
+                var funcName = recaptchaId + 'Callback';
                 window[funcName] = function () {
                     if (isInvisible) {
                         frm.submit();
                     }
                 };
-                recaptchaContent.attr('data-callback', funcName);
 
                 // setup an on form submit event to ensure that we
                 // are allowing required field validation to occur before
                 // we do the invisible recaptcha checking
                 if (isInvisible) {
                     frm.on('submit', function (event) {
-                        if (!grecaptcha.getResponse().trim()) {
+                        var recaptchaId = frm.find('.g-recaptcha').data('recaptcha-id');
+                        if (!grecaptcha.getResponse(recaptchaId).trim()) {
                             event.preventDefault();
-                            grecaptcha.execute();
+                            grecaptcha.execute(recaptchaId);
                         }
                     });
                 } else {
@@ -1688,11 +1707,29 @@ var recaptchaLoadComplete = false;
                 }
             });
 
+            window.recaptchaLoadCallback = function() {
+                jQuery('.g-recaptcha').each(function(i, el) {
+                    var element = jQuery(el),
+                        frm = element.closest('form'),
+                        btn = frm.find('.btn-recaptcha'),
+                        idToUse = element.attr('id').substring(1);
+                    var recaptchaId = grecaptcha.render(
+                        el,
+                        {
+                            sitekey: recaptchaSiteKey,
+                            size: (btn.hasClass('btn-recaptcha-invisible')) ? 'invisible' : 'normal',
+                            callback: idToUse + 'Callback'
+                        }
+                    );
+                    element.data('recaptcha-id', recaptchaId);
+                });
+            }
+
             // fetch/invoke the grecaptcha lib
             if (recaptchaForms.length) {
-                var gUrl = "https://www.google.com/recaptcha/api.js";
+                var gUrl = "https://www.google.com/recaptcha/api.js?onload=recaptchaLoadCallback&render=explicit";
                 jQuery.getScript(gUrl, function () {
-                    for(var i = postLoad.length -1; i >= 0 ; i--){
+                    for(var i = postLoad.length - 1; i >= 0 ; i--){
                         postLoad[i]();
                     }
                 });
@@ -2054,7 +2091,15 @@ jQuery(document).ready(function(){
             sld = sldInput.val(),
             tld = '',
             pid = jQuery('#frmProductDomainPid').val(),
-            tldInput = '';
+            tldInput = '',
+            idnLanguage = jQuery('#idnLanguageSelector');
+
+        jQuery('.field-error-msg').hide();
+
+        if (!idnLanguage.hasClass('hidden')) {
+            idnLanguage.addClass('hidden');
+            idnLanguage.find('select').val('');
+        }
 
         if (domainoption == 'incart') {
             sldInput = jQuery("#" + domainoption + "sld option:selected");
@@ -2090,7 +2135,9 @@ jQuery(document).ready(function(){
         btnSearchObj.attr('disabled', 'disabled').addClass('disabled');
 
         jQuery('.domain-lookup-result').addClass('hidden');
-        jQuery('#primaryLookupResult div').hide();
+        jQuery('#primaryLookupResult div').filter(function() {
+            return $(this).closest('#idnLanguageSelector').length === 0;
+        }).hide();
         jQuery('#primaryLookupResult').find('.register-price-label').show().end()
             .find('.transfer-price-label').addClass('hidden');
 
@@ -2126,7 +2173,6 @@ jQuery(document).ready(function(){
         }
 
         if (domainoption == 'register') {
-            jQuery('.suggested-domains').hide().removeClass('hidden').fadeIn('fast');
             spotlightTlds.hide().removeClass('hidden').fadeIn('fast');
             jQuery('#resultDomainOption').val(domainoption);
             var lookup = WHMCS.http.jqClient.post(
@@ -2185,13 +2231,16 @@ jQuery(document).ready(function(){
                         error.hide();
                         pricing = domain.pricing;
                         if (domain.isAvailable && typeof pricing !== 'string') {
+                            if (domain.domainName !== domain.idnDomainName && idnLanguage.hasClass('hidden')) {
+                                idnLanguage.removeClass('hidden');
+                            }
                             if (domain.preferredTLDNotAvailable) {
                                 unavailable.show().find('strong').html(domain.originalUnavailableDomain);
                             }
                             contactSupport.hide();
                             available.show().find('strong').html(domain.domainName);
                             availablePrice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
-                                .find('button').attr('data-domain', domain.idnDomainName);
+                                .find('button').attr('data-domain', domain.domainName);
                             resultDomain.val(domain.domainName);
                             resultDomainPricing.val(Object.keys(pricing)[0]).attr('name', 'domainsregperiod[' + domain.domainName +']');
 
@@ -2239,8 +2288,6 @@ jQuery(document).ready(function(){
                             invalid.show();
                         }
                     }
-
-
                 });
             }).always(function() {
                 hasProductDomainLookupEnded(3, btnSearchObj);
@@ -2260,10 +2307,13 @@ jQuery(document).ready(function(){
                     result.find('button').addClass('hidden').end();
                     if (domain.isValidDomain) {
                         if (domain.isAvailable && typeof pricing !== 'string') {
+                            if (domain.domainName !== domain.idnDomainName && idnLanguage.hasClass('hidden')) {
+                                idnLanguage.removeClass('hidden');
+                            }
                             result
                                 .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
                                 .find('button.btn-add-to-cart')
-                                .attr('data-domain', domain.idnDomainName)
+                                .attr('data-domain', domain.domainName)
                                 .removeClass('hidden');
 
                             result.find('button.domain-contact-support').addClass('hidden').end();
@@ -2310,7 +2360,9 @@ jQuery(document).ready(function(){
                     newSuggestion.addClass('clone')
                         .find('span.domain').html(domain.sld).end()
                         .find('span.extension').html('.' + tld).end();
-
+                    if (domain.domainName !== domain.idnDomainName && idnLanguage.hasClass('hidden')) {
+                        idnLanguage.removeClass('hidden');
+                    }
                     if (typeof pricing === 'string') {
                         newSuggestion.find('button.btn-add-to-cart').remove();
                         if (pricing != '') {
@@ -2320,7 +2372,7 @@ jQuery(document).ready(function(){
                             newSuggestion.remove();
                         }
                     } else {
-                        newSuggestion.find('button.btn-add-to-cart').attr('data-domain', domain.idnDomainName).end()
+                        newSuggestion.find('button.btn-add-to-cart').attr('data-domain', domain.domainName).end()
                             .find('span.price').html(pricing[Object.keys(pricing)[0]].register).end();
                     }
 
@@ -2385,7 +2437,7 @@ jQuery(document).ready(function(){
                         transferPrice.show().find('.register-price-label').hide().end()
                             .find('.transfer-price-label').removeClass('hidden').show().end()
                             .find('span.price').html(pricing[Object.keys(pricing)[0]].transfer).end()
-                            .find('button').attr('data-domain', domain.idnDomainName);
+                            .find('button').attr('data-domain', domain.domainName);
                         resultDomain.val(domain.domainName);
                         resultDomainPricing.val(Object.keys(pricing)[0]).attr('name', 'domainsregperiod[' + domain.domainName +']');
                         btnDomainContinue.removeAttr('disabled');
@@ -2440,6 +2492,18 @@ jQuery(document).ready(function(){
         btnDomainContinue.removeClass('hidden');
     });
 
+    jQuery('#frmProductDomainSelections').on('submit', function(e) {
+        var idnLanguage = jQuery('#idnLanguageSelector'),
+            idnLanguageInput = idnLanguage.find('select');
+
+        if (!idnLanguage.hasClass('hidden') && !idnLanguageInput.val()) {
+            e.preventDefault();
+            idnLanguageInput.showInputError();
+            return false;
+        }
+        return true;
+    });
+
     jQuery("#btnAlreadyRegistered").click(function() {
         jQuery("#containerNewUserSignup").slideUp('', function() {
             jQuery("#containerExistingUserSignin").hide().removeClass('hidden').slideDown('', function() {
@@ -2473,8 +2537,117 @@ jQuery(document).ready(function(){
             jQuery("#stateselect").attr('required', 'required').removeClass('requiredAttributeRemoved');
         }
     });
+    jQuery('.account-select').on('ifChecked', function(event) {
+        var userSignupContainer = jQuery('#containerNewUserSignup'),
+            stateSelect = jQuery("#stateselect"),
+            thisValue = jQuery(this).val(),
+            btnCompleteOrder = jQuery('#btnCompleteOrder'),
+            existingPayMethods = jQuery('#existingCardsContainer');
 
-    var existingCards = jQuery('.existing-card'),
+        if (existingPayMethods.length) {
+            existingPayMethods.html('');
+        }
+        jQuery('#containerExistingAccountSelect')
+            .find('div.account.active')
+            .removeClass('active');
+        jQuery(this).closest('div.account').addClass('active');
+        if (thisValue === 'new') {
+            if (userSignupContainer.not(':visible')) {
+                userSignupContainer.hide().removeClass('hidden').slideDown('', function () {
+                    jQuery("#inputCustType").val('add');
+                    jQuery('.marketing-email-optin').slideDown();
+                });
+                if (stateSelect.hasClass('requiredAttributeRemoved')) {
+                    stateSelect.attr('required', 'required')
+                        .removeClass('requiredAttributeRemoved');
+                }
+            }
+        } else {
+            btnCompleteOrder.addClass('disabled');
+
+            if (btnCompleteOrder.hasClass('spinner-on-click')) {
+                var icon = btnCompleteOrder.find('i.fas,i.far,i.fal,i.fab');
+
+                jQuery(icon)
+                    .data('original-class', icon.attr('class'))
+                    .removeAttr('class')
+                    .addClass('fas fa-spinner fa-spin');
+            }
+
+            jQuery("#inputCustType").val('account');
+            if (userSignupContainer.is(':visible')) {
+                userSignupContainer.slideUp();
+                if (stateSelect.attr('required')) {
+                    stateSelect.removeAttr('required')
+                        .addClass('requiredAttributeRemoved');
+                }
+                jQuery('.marketing-email-optin').slideUp();
+            }
+        }
+        WHMCS.http.jqClient.jsonPost({
+            url: WHMCS.utils.getRouteUrl('/cart/account/select'),
+            data: {
+                account_id: thisValue,
+                token: csrfToken
+            },
+            success: function(data) {
+                var creditDiv = jQuery('#applyCreditContainer');
+                jQuery('#totalCartPrice').text(data.total);
+                creditDiv.find('p').first().text(data.availableCreditBalance);
+                if (!data.canUseCreditOnCheckout && creditDiv.is(':visible')) {
+                    var skipCreditOnCheckout = jQuery('#skipCreditOnCheckout');
+                    creditDiv.addClass('hidden');
+                    skipCreditOnCheckout.prop('checked', true);
+                } else if (data.canUseCreditOnCheckout) {
+                    var useCreditOnCheckout = jQuery('#useCreditOnCheckout'),
+                        spanFullCredit = jQuery('#spanFullCredit'),
+                        spanUseCredit = jQuery('#spanUseCredit');
+                    if (data.full) {
+                        spanFullCredit.removeClass('hidden').find('span').text(data.creditBalance);
+                        if (!spanUseCredit.hasClass('hidden')) {
+                            spanUseCredit.addClass('hidden');
+                        }
+                    } else {
+                        spanUseCredit.removeClass('hidden').find('span').text(data.creditBalance);
+                        if (!spanFullCredit.hasClass('hidden')) {
+                            spanFullCredit.addClass('hidden');
+                        }
+                    }
+                    useCreditOnCheckout.iCheck('check');
+                    if (creditDiv.not(':visible')) {
+                        creditDiv.removeClass('hidden');
+                    }
+                }
+                if (existingPayMethods.length) {
+                    existingPayMethods.html(data.existingCards);
+                    existingPayMethods.find('input[type="radio"]').iCheck({
+                        inheritID: true,
+                        checkboxClass: 'icheckbox_square-blue',
+                        radioClass: 'iradio_square-blue',
+                        increaseArea: '20%'
+                    });
+                    var firstVisible = jQuery('input[name="ccinfo"]:visible').first();
+                    if (firstVisible.length) {
+                        firstVisible.iCheck('check');
+                    }
+                }
+            },
+            always: function() {
+                btnCompleteOrder.removeClass('disabled');
+                if (btnCompleteOrder.hasClass('spinner-on-click')) {
+                    var icon = btnCompleteOrder.find('i.fas,i.far,i.fal,i.fab');
+
+                    if (jQuery(icon).hasClass('fa-spinner')) {
+                        jQuery(icon)
+                            .removeAttr('class')
+                            .addClass(icon.data('original-class'));
+                    }
+                }
+            }
+        });
+    });
+
+    var existingCards = jQuery(document).find('.existing-card'),
         cvvFieldContainer = jQuery('#cvv-field-container'),
         existingCardContainer = jQuery('#existingCardsContainer'),
         newCardInfo = jQuery('#newCardInfo'),
@@ -2484,7 +2657,7 @@ jQuery(document).ready(function(){
         newCardOption = jQuery('#new'),
         creditCardInputFields = jQuery('#creditCardInputFields');
 
-    existingCards.on('ifChecked', function(event) {
+    jQuery(document).on('ifChecked', '.existing-card', function(event) {
         newCardSaveSettings.slideUp().find('input').attr('disabled', 'disabled');
         if (jQuery('.payment-methods:checked').data('remote-inputs') === 1) {
             return;
@@ -2660,7 +2833,15 @@ jQuery(document).ready(function(){
             inputDomain = jQuery('#inputDomain'),
             suggestions = jQuery('#domainSuggestions'),
             reCaptchaContainer = jQuery('#divDynamicRecaptcha'),
-            captcha = jQuery('#inputCaptcha');
+            captcha = jQuery('#inputCaptcha'),
+            idnLanguage = jQuery('#idnLanguageSelector');
+
+        jQuery('.field-error-msg').hide();
+
+        if (!idnLanguage.hasClass('hidden')) {
+            idnLanguage.addClass('hidden');
+            idnLanguage.find('select').val('');
+        }
 
         domainLookupCallCount = 0;
 
@@ -2695,7 +2876,6 @@ jQuery(document).ready(function(){
         jQuery('.btn-add-to-cart').removeAttr('disabled')
             .find('span').hide().end()
             .find('span.to-add').show();
-        jQuery('.suggested-domains').hide().removeClass('hidden').fadeIn('fast');
 
         // fade in results
         if (!jQuery('#DomainSearchResults').is(":visible")) {
@@ -2744,12 +2924,15 @@ jQuery(document).ready(function(){
                     invalid.hide();
                     error.hide();
                     if (domain.isAvailable && typeof pricing !== 'string') {
+                        if (domain.domainName !== domain.idnDomainName && idnLanguage.hasClass('hidden')) {
+                            idnLanguage.removeClass('hidden');
+                        }
                         if (domain.preferredTLDNotAvailable) {
                             unavailable.show().find('strong').html(domain.originalUnavailableDomain);
                         }
                         available.show().find('strong').html(domain.domainName);
                         availablePrice.show().find('span.price').html(pricing[Object.keys(pricing)[0]].register).end()
-                            .find('button').attr('data-domain', domain.idnDomainName);
+                            .find('button').attr('data-domain', domain.domainName);
                     } else {
                         available.hide();
                         availablePrice.hide();
@@ -2820,11 +3003,14 @@ jQuery(document).ready(function(){
                 result.find('button').addClass('hidden').end();
                 if (domain.isValidDomain) {
                     if (domain.isAvailable && typeof pricing !== 'string') {
+                        if (domain.domainName !== domain.idnDomainName && idnLanguage.hasClass('hidden')) {
+                            idnLanguage.removeClass('hidden');
+                        }
                         result.find('button.unavailable').addClass('hidden').end()
                             .find('button.invalid').addClass('hidden').end()
                             .find('span.available').html(pricing[Object.keys(pricing)[0]].register).removeClass('hidden').end()
                             .find('button').not('button.unavailable').not('button.invalid')
-                            .attr('data-domain', domain.idnDomainName)
+                            .attr('data-domain', domain.domainName)
                             .removeClass('hidden');
 
                         result.find('button.domain-contact-support').addClass('hidden').end();
@@ -2883,7 +3069,10 @@ jQuery(document).ready(function(){
                         newSuggestion.remove();
                     }
                 } else {
-                    newSuggestion.find('button.btn-add-to-cart').attr('data-domain', domain.idnDomainName).end()
+                    if (domain.domainName !== domain.idnDomainName && idnLanguage.hasClass('hidden')) {
+                        idnLanguage.removeClass('hidden');
+                    }
+                    newSuggestion.find('button.btn-add-to-cart').attr('data-domain', domain.domainName).end()
                         .find('span.price').html(pricing[Object.keys(pricing)[0]].register).end();
                 }
                 if (suggestionCount <= 10) {
@@ -2922,7 +3111,14 @@ jQuery(document).ready(function(){
             isProductDomain = jQuery(this).hasClass('product-domain'),
             btnDomainContinue = jQuery('#btnDomainContinue'),
             resultDomain = jQuery('#resultDomain'),
-            resultDomainPricing = jQuery('#resultDomainPricingTerm');
+            resultDomainPricing = jQuery('#resultDomainPricingTerm'),
+            idnLanguage = jQuery('#idnLanguageSelector'),
+            idnLanguageInput = idnLanguage.find('select');
+
+        if (!idnLanguage.hasClass('hidden') && !idnLanguageInput.val()) {
+            idnLanguageInput.showInputError();
+            return;
+        }
 
         buttons.attr('disabled', 'disabled').each(function() {
             jQuery(this).css('width', jQuery(this).outerWidth());
@@ -2940,7 +3136,8 @@ jQuery(document).ready(function(){
                 domain: domain,
                 token: csrfToken,
                 whois: whois,
-                sideorder: sideOrder
+                sideorder: sideOrder,
+                idnLanguage: idnLanguageInput.val()
             },
             'json'
         ).done(function (data) {
@@ -3487,7 +3684,7 @@ function validate_captcha(form)
             jQuery('#inputCaptcha').attr('data-original-title', data.error).tooltip('show');
             if (captcha.length) {
                 jQuery('#inputCaptchaImage').replaceWith(
-                    '<img id="inputCaptchaImage" src="' + whmcsBaseUrl + 'includes/verifyimage.php" align="middle" />'
+                    '<img id="inputCaptchaImage" src="' + whmcsBaseUrl + '/includes/verifyimage.php?nocache=' + new Date().getTime() + '" align="middle" />'
                 );
             }
         } else {

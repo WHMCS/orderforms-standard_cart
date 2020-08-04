@@ -219,6 +219,30 @@
                                     {lang key='orderForm.domainInvalidCheckEntry'}
                                 </p>
                             </div>
+                            <div id="idnLanguageSelector" class="margin-10 hidden idn-language-selector idn-language">
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+                                        <div class="margin-10 text-center">
+                                            {lang key='cart.idnLanguageDescription'}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8 col-lg-6 col-sm-offset-2 col-lg-offset-3">
+                                        <div class="form-group">
+                                            <select name="idnlanguage" class="form-control">
+                                                <option value="">{lang key='cart.idnLanguage'}</option>
+                                                {foreach $idnLanguages as $idnLanguageKey => $idnLanguage}
+                                                    <option value="{$idnLanguageKey}">{lang key='idnLanguage.'|cat:$idnLanguageKey}</option>
+                                                {/foreach}
+                                            </select>
+                                            <div class="field-error-msg">
+                                                {lang key='cart.selectIdnLanguageForRegister'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="domain-price">
                                 <span class="register-price-label">{lang key='orderForm.domainPriceRegisterLabel'}</span>
                                 <span class="transfer-price-label hidden">{lang key='orderForm.domainPriceTransferLabel'}</span>
