@@ -3137,7 +3137,7 @@ jQuery(document).ready(function(){
                 token: csrfToken,
                 whois: whois,
                 sideorder: sideOrder,
-                idnLanguage: idnLanguageInput.val()
+                idnlanguage: idnLanguageInput.val()
             },
             'json'
         ).done(function (data) {
