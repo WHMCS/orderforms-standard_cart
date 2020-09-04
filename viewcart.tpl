@@ -146,10 +146,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {foreach key=addonnum item=addon from=$product.addons}
+                                    {foreach $product.addons as $addonnum => $addon}
                                         <div class="item">
                                             <div class="row">
-                                                <div class="col-sm-7">
+                                                <div class="{if $showAddonQtyOptions}col-sm-5{else}col-sm-7{/if}">
                                                     <span class="item-title">
                                                         {$addon.name}
                                                     </span>
@@ -162,6 +162,16 @@
                                                         </span>
                                                     {/if}
                                                 </div>
+                                                {if $showAddonQtyOptions}
+                                                    <div class="col-sm-2 item-qty">
+                                                        {if $addon.allowqty === 2}
+                                                            <input type="number" name="paddonqty[{$num}][{$addonnum}]" value="{$addon.qty}" class="form-control text-center" />
+                                                            <button type="submit" class="btn btn-xs">
+                                                                {$LANG.orderForm.update}
+                                                            </button>
+                                                        {/if}
+                                                    </div>
+                                                {/if}
                                                 <div class="col-sm-4 item-price">
                                                     <span>{$addon.totaltoday}</span>
                                                     <span class="cycle">{$addon.billingcyclefriendly}</span>
@@ -174,7 +184,7 @@
                                 {foreach $addons as $num => $addon}
                                     <div class="item">
                                         <div class="row">
-                                            <div class="col-sm-7">
+                                            <div class="{if $showAddonQtyOptions}col-sm-5{else}col-sm-7{/if}">
                                                 <span class="item-title">
                                                     {$addon.name}
                                                     <span class="visible-xs-inline">
@@ -198,6 +208,16 @@
                                                     </span>
                                                 {/if}
                                             </div>
+                                            {if $showAddonQtyOptions}
+                                                <div class="col-sm-2 item-qty">
+                                                    {if $addon.allowqty === 2}
+                                                        <input type="number" name="addonqty[{$num}]" value="{$addon.qty}" class="form-control text-center" />
+                                                        <button type="submit" class="btn btn-xs">
+                                                            {$LANG.orderForm.update}
+                                                        </button>
+                                                    {/if}
+                                                </div>
+                                            {/if}
                                             <div class="col-sm-4 item-price">
                                                 <span>{$addon.pricingtext}</span>
                                                 <span class="cycle">{$addon.billingcyclefriendly}</span>
@@ -275,7 +295,7 @@
                                     </div>
                                 {/foreach}
 
-                                {foreach key=num item=domain from=$renewals}
+                                {foreach $renewals as $num => $domain}
                                     <div class="item">
                                         <div class="row">
                                             <div class="col-sm-7">
@@ -306,7 +326,7 @@
                                 {foreach $upgrades as $num => $upgrade}
                                     <div class="item">
                                         <div class="row">
-                                            <div class="col-sm-7">
+                                            <div class="{if $showUpgradeQtyOptions}col-sm-5{else}col-sm-7{/if}">
                                                 <span class="item-title">
                                                     {$LANG.upgrade}
                                                 </span>
@@ -323,6 +343,16 @@
                                                     {/if}
                                                 </span>
                                             </div>
+                                            {if $showUpgradeQtyOptions}
+                                                <div class="col-sm-2 item-qty">
+                                                    {if $upgrade->allowMultipleQuantities}
+                                                        <input type="number" name="upgradeqty[{$num}]" value="{$upgrade->qty}" class="form-control text-center" min="{$upgrade->minimumQuantity}" />
+                                                        <button type="submit" class="btn btn-xs">
+                                                            {$LANG.orderForm.update}
+                                                        </button>
+                                                    {/if}
+                                                </div>
+                                            {/if}
                                             <div class="col-sm-4 item-price">
                                                 <span>{$upgrade->newRecurringAmount}</span>
                                                 <span class="cycle">{$upgrade->localisedNewCycle}</span>
