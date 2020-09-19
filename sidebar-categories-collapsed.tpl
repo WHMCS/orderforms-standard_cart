@@ -1,27 +1,27 @@
 <div class="categories-collapsed visible-xs visible-sm clearfix">
 
     <div class="pull-left form-inline">
-        <form method="get" action="{$smarty.server.PHP_SELF}">
-            <select name="gid" onchange="submit()" class="form-control">
+        <form>
+            <select name="gid" id="gidForm" onchange="javascript:redirectToCartPage()" class="form-control">
                 <optgroup label="Product Categories">
                     {foreach key=num item=productgroup from=$productgroups}
-                        <option value="{$productgroup.gid}"{if $gid eq $productgroup.gid} selected="selected"{/if}>{$productgroup.name}</option>
+                        <option value="{$productgroup.routePath}"{if $gid eq $productgroup.gid} selected="selected"{/if}>{$productgroup.name}</option>
                     {/foreach}
                 </optgroup>
                 <optgroup label="Actions">
                     {if $loggedin}
-                        <option value="addons"{if $gid eq "addons"} selected{/if}>{$LANG.cartproductaddons}</option>
+                        <option value="{$WEB_ROOT}/cart.php?gid=addons"{if $gid eq "addons"} selected{/if}>{$LANG.cartproductaddons}</option>
                         {if $renewalsenabled}
-                            <option value="renewals"{if $gid eq "renewals"} selected{/if}>{$LANG.domainrenewals}</option>
+                            <option value="{$WEB_ROOT}/cart.php?gid=renewals"{if $gid eq "renewals"} selected{/if}>{$LANG.domainrenewals}</option>
                         {/if}
                     {/if}
                     {if $registerdomainenabled}
-                        <option value="registerdomain"{if $domain eq "register"} selected{/if}>{$LANG.navregisterdomain}</option>
+                        <option value="{$WEB_ROOT}/cart.php?gid=registerdomain"{if $domain eq "register"} selected{/if}>{$LANG.navregisterdomain}</option>
                     {/if}
                     {if $transferdomainenabled}
-                        <option value="transferdomain"{if $domain eq "transfer"} selected{/if}>{$LANG.transferinadomain}</option>
+                        <option value="{$WEB_ROOT}/cart.php?gid=transferdomain"{if $domain eq "transfer"} selected{/if}>{$LANG.transferinadomain}</option>
                     {/if}
-                    <option value="viewcart"{if $action eq "view"} selected{/if}>{$LANG.viewcart}</option>
+                    <option value="{$WEB_ROOT}/cart.php?a=view"{if $action eq "view"} selected{/if}>{$LANG.viewcart}</option>
                 </optgroup>
             </select>
         </form>
@@ -41,3 +41,13 @@
     {/if}
 
 </div>
+
+<script type="text/javascript">
+    function redirectToCartPage()
+    {
+        var path = jQuery('#gidForm').val();
+        if (path) {
+            window.location.href = path;
+        }
+    }
+</script>
