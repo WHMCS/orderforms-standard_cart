@@ -314,7 +314,7 @@ jQuery(document).ready(function(){
                         error = result.find('.domain-error');
                     result.removeClass('hidden').show();
                     jQuery('.domain-lookup-primary-loader').hide();
-                    if (!data.result.error && domain.isValidDomain) {
+                    if (!domain.error && domain.isValidDomain) {
                         error.hide();
                         pricing = domain.pricing;
                         if (domain.isAvailable && typeof pricing !== 'string') {
@@ -340,22 +340,17 @@ jQuery(document).ready(function(){
                             }
                         }
                     } else {
-                        var invalidLength = invalid.find('span.domain-length-restrictions'),
-                            done = false,
+                        var done = false,
                             reg = /<br\s*\/>/,
                             errors = [];
-                        invalidLength.hide();
-                        error.hide();
-                        if (domain.minLength > 0 && domain.maxLength > 0) {
-                            invalidLength.find('.min-length').html(domain.minLength).end()
-                                .find('.max-length').html(domain.maxLength).end();
-                            invalidLength.show();
-                        } else if (data.result.error) {
-                            if (!data.result.error.match(reg)) {
-                                error.text(data.result.error);
+                        if (!domain.isValidDomain && domain.domainErrorMessage) {
+                            invalid.text(domain.domainErrorMessage);
+                        } else if (domain.error) {
+                            if (!domain.error.match(reg)) {
+                                error.text(domain.error);
                             } else {
                                 error.text('');
-                                errors = data.result.error.split(reg);
+                                errors = domain.error.split(reg);
                                 for(var i=0; i < errors.length; i++) {
                                     var errorMsg = errors[i];
                                     if (errorMsg.length) {
@@ -1004,7 +999,7 @@ jQuery(document).ready(function(){
                 jQuery('.domain-lookup-primary-loader').hide();
                 result.find('.btn-add-to-cart').removeClass('checkout');
                 result.removeClass('hidden').show();
-                if (!data.result.error && domain.isValidDomain) {
+                if (!domain.error && domain.isValidDomain) {
                     pricing = domain.pricing;
                     unavailable.hide();
                     contactSupport.hide();
@@ -1036,21 +1031,17 @@ jQuery(document).ready(function(){
                     contactSupport.hide();
                     invalid.hide();
                     error.hide();
-                    var invalidLength = invalid.find('span.domain-length-restrictions'),
-                        done = false,
+                    var done = false,
                         reg = /<br\s*\/>/,
                         errors = [];
-                    invalidLength.hide();
-                    if (domain.minLength > 0 && domain.maxLength > 0) {
-                        invalidLength.find('.min-length').html(domain.minLength).end()
-                            .find('.max-length').html(domain.maxLength).end();
-                        invalidLength.show();
-                    } else if (data.result.error) {
-                        if (!data.result.error.match(reg)) {
-                            error.text(data.result.error);
+                    if (!domain.isValidDomain && domain.domainErrorMessage) {
+                        invalid.text(domain.domainErrorMessage);
+                    } else if (domain.error) {
+                        if (!domain.error.match(reg)) {
+                            error.text(domain.error);
                         } else {
                             error.text('');
-                            errors = data.result.error.split(reg);
+                            errors = domain.error.split(reg);
                             for(var i=0; i < errors.length; i++) {
                                 var errorMsg = errors[i];
                                 if (errorMsg.length) {
@@ -1229,7 +1220,7 @@ jQuery(document).ready(function(){
             'json'
         ).done(function (data) {
             buttons.find('span.to-add').hide();
-            if (data.result == 'added') {
+            if (data.result === 'added') {
                 buttons.find('span.added').show().end();
                 if (!isProductDomain) {
                     buttons.removeAttr('disabled').addClass('checkout');
@@ -1243,7 +1234,9 @@ jQuery(document).ready(function(){
                 }
                 jQuery('#cartItemCount').html(data.cartCount);
             } else {
-                buttons.find('span.unavailable').show();
+                buttons.hide();
+                buttons.parent().children('span.available.price').hide();
+                buttons.parent().children('button.btn.unavailable').removeClass('hidden');
             }
         });
     });

@@ -124,7 +124,7 @@
                                             {if $showqtyoptions}
                                                 <div class="col-sm-2 item-qty">
                                                     {if $product.allowqty}
-                                                        <input type="number" name="qty[{$num}]" value="{$product.qty}" class="form-control text-center" />
+                                                        <input type="number" name="qty[{$num}]" value="{$product.qty}" class="form-control text-center" min="0" />
                                                         <button type="submit" class="btn btn-xs">
                                                             {$LANG.orderForm.update}
                                                         </button>
@@ -165,7 +165,7 @@
                                                 {if $showAddonQtyOptions}
                                                     <div class="col-sm-2 item-qty">
                                                         {if $addon.allowqty === 2}
-                                                            <input type="number" name="paddonqty[{$num}][{$addonnum}]" value="{$addon.qty}" class="form-control text-center" />
+                                                            <input type="number" name="paddonqty[{$num}][{$addonnum}]" value="{$addon.qty}" class="form-control text-center" min="0" />
                                                             <button type="submit" class="btn btn-xs">
                                                                 {$LANG.orderForm.update}
                                                             </button>
@@ -211,7 +211,7 @@
                                             {if $showAddonQtyOptions}
                                                 <div class="col-sm-2 item-qty">
                                                     {if $addon.allowqty === 2}
-                                                        <input type="number" name="addonqty[{$num}]" value="{$addon.qty}" class="form-control text-center" />
+                                                        <input type="number" name="addonqty[{$num}]" value="{$addon.qty}" class="form-control text-center" min="0" />
                                                         <button type="submit" class="btn btn-xs">
                                                             {$LANG.orderForm.update}
                                                         </button>

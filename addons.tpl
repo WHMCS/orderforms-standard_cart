@@ -43,11 +43,6 @@
                                     <input type="hidden" name="aid" value="{$addon.id}" />
                                     <header>
                                         <span>{$addon.name}</span>
-                                        {if $product.qty}
-                                            <span class="qty">
-                                                {$product.qty} {$LANG.orderavailable}
-                                            </span>
-                                        {/if}
                                     </header>
                                     <div class="product-desc">
                                         <p>{$addon.description}</p>

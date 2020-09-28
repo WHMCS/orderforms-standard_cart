@@ -44,7 +44,7 @@
                             <div class="product clearfix" id="product{$product@iteration}">
                                 <header>
                                     <span id="product{$product@iteration}-name">{$product.name}</span>
-                                    {if $product.qty}
+                                    {if $product.stockControlEnabled}
                                         <span class="qty">
                                             {$product.qty} {$LANG.orderavailable}
                                         </span>
