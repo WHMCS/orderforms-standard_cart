@@ -41,7 +41,7 @@
                 <div class="row row-eq-height">
                     {foreach $products as $key => $product}
                         <div class="col-md-6">
-                            <div class="product clearfix" id="product{$product@iteration}">
+                            <div class="product clearfix{if $product.isFeatured} is-featured{/if}" id="product{$product@iteration}">
                                 <header>
                                     <span id="product{$product@iteration}-name">{$product.name}</span>
                                     {if $product.stockControlEnabled}
