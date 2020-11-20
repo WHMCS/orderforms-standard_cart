@@ -3,23 +3,23 @@
     <span class="product-group">{$producttotals.productinfo.groupname}</span>
 
     <div class="clearfix">
-        <span class="pull-left">{$producttotals.productinfo.name}</span>
-        <span class="pull-right">{$producttotals.pricing.baseprice}</span>
+        <span class="pull-left float-left">{$producttotals.productinfo.name}</span>
+        <span class="pull-right float-right">{$producttotals.pricing.baseprice}</span>
     </div>
 
     {foreach $producttotals.configoptions as $configoption}
         {if $configoption}
             <div class="clearfix">
-                <span class="pull-left">&nbsp;&raquo; {$configoption.name}: {$configoption.optionname}</span>
-                <span class="pull-right">{$configoption.recurring}{if $configoption.setup} + {$configoption.setup} {$LANG.ordersetupfee}{/if}</span>
+                <span class="pull-left float-left">&nbsp;&raquo; {$configoption.name}: {$configoption.optionname}</span>
+                <span class="pull-right float-right">{$configoption.recurring}{if $configoption.setup} + {$configoption.setup} {$LANG.ordersetupfee}{/if}</span>
             </div>
         {/if}
     {/foreach}
 
     {foreach $producttotals.addons as $addon}
         <div class="clearfix">
-            <span class="pull-left">+ {$addon.name}</span>
-            <span class="pull-right">{$addon.recurring}</span>
+            <span class="pull-left float-left">+ {$addon.name}</span>
+            <span class="pull-right float-right">{$addon.recurring}</span>
         </div>
     {/foreach}
 
@@ -27,26 +27,26 @@
         <div class="summary-totals">
             {if $producttotals.pricing.setup}
                 <div class="clearfix">
-                    <span class="pull-left">{$LANG.cartsetupfees}:</span>
-                    <span class="pull-right">{$producttotals.pricing.setup}</span>
+                    <span class="pull-left float-left">{$LANG.cartsetupfees}:</span>
+                    <span class="pull-right float-right">{$producttotals.pricing.setup}</span>
                 </div>
             {/if}
             {foreach from=$producttotals.pricing.recurringexcltax key=cycle item=recurring}
                 <div class="clearfix">
-                    <span class="pull-left">{$cycle}:</span>
-                    <span class="pull-right">{$recurring}</span>
+                    <span class="pull-left float-left">{$cycle}:</span>
+                    <span class="pull-right float-right">{$recurring}</span>
                 </div>
             {/foreach}
             {if $producttotals.pricing.tax1}
                 <div class="clearfix">
-                    <span class="pull-left">{$carttotals.taxname} @ {$carttotals.taxrate}%:</span>
-                    <span class="pull-right">{$producttotals.pricing.tax1}</span>
+                    <span class="pull-left float-left">{$carttotals.taxname} @ {$carttotals.taxrate}%:</span>
+                    <span class="pull-right float-right">{$producttotals.pricing.tax1}</span>
                 </div>
             {/if}
             {if $producttotals.pricing.tax2}
                 <div class="clearfix">
-                    <span class="pull-left">{$carttotals.taxname2} @ {$carttotals.taxrate2}%:</span>
-                    <span class="pull-right">{$producttotals.pricing.tax2}</span>
+                    <span class="pull-left float-left">{$carttotals.taxname2} @ {$carttotals.taxrate2}%:</span>
+                    <span class="pull-right float-right">{$producttotals.pricing.tax2}</span>
                 </div>
             {/if}
         </div>
@@ -61,10 +61,10 @@
         <span class="product-name">{lang key='domainrenewals'}</span>
         {foreach $carttotals.renewals as $domainId => $renewal}
             <div class="clearfix" id="cartDomainRenewal{$domainId}">
-                <span class="pull-left">
+                <span class="pull-left float-left">
                     {$renewal.domain} - {$renewal.regperiod} {if $renewal.regperiod == 1}{lang key='orderForm.year'}{else}{lang key='orderForm.years'}{/if}
                 </span>
-                <span class="pull-right">
+                <span class="pull-right float-right">
                     {$renewal.priceBeforeTax}
                     <a onclick="removeItem('r','{$domainId}'); return false;" href="#" id="linkCartRemoveDomainRenewal{$domainId}">
                         <i class="fas fa-fw fa-trash-alt"></i>
@@ -73,27 +73,27 @@
             </div>
             {if $renewal.dnsmanagement}
                 <div class="clearfix">
-                    <span class="pull-left">+ {lang key='domaindnsmanagement'}</span>
+                    <span class="pull-left float-left">+ {lang key='domaindnsmanagement'}</span>
                 </div>
             {/if}
             {if $renewal.emailforwarding}
                 <div class="clearfix">
-                    <span class="pull-left">+ {lang key='domainemailforwarding'}</span>
+                    <span class="pull-left float-left">+ {lang key='domainemailforwarding'}</span>
                 </div>
             {/if}
             {if $renewal.idprotection}
                 <div class="clearfix">
-                    <span class="pull-left">+ {lang key='domainidprotection'}</span>
+                    <span class="pull-left float-left">+ {lang key='domainidprotection'}</span>
                 </div>
             {/if}
             {if $renewal.hasGracePeriodFee}
                 <div class="clearfix">
-                    <span class="pull-left">+ {lang key='domainRenewal.graceFee'}</span>
+                    <span class="pull-left float-left">+ {lang key='domainRenewal.graceFee'}</span>
                 </div>
             {/if}
             {if $renewal.hasRedemptionGracePeriodFee}
                 <div class="clearfix">
-                    <span class="pull-left">+ {lang key='domainRenewal.redemptionFee'}</span>
+                    <span class="pull-left float-left">+ {lang key='domainRenewal.redemptionFee'}</span>
                 </div>
             {/if}
 
@@ -101,20 +101,20 @@
     {/if}
     <div class="summary-totals">
         <div class="clearfix">
-            <span class="pull-left">{lang key='ordersubtotal'}:</span>
-            <span class="pull-right">{$carttotals.subtotal}</span>
+            <span class="pull-left float-left">{lang key='ordersubtotal'}:</span>
+            <span class="pull-right float-right">{$carttotals.subtotal}</span>
         </div>
         {if ($carttotals.taxrate && $carttotals.taxtotal) || ($carttotals.taxrate2 && $carttotals.taxtotal2)}
             {if $carttotals.taxrate}
                 <div class="clearfix">
-                    <span class="pull-left">{$carttotals.taxname} @ {$carttotals.taxrate}%:</span>
-                    <span class="pull-right">{$carttotals.taxtotal}</span>
+                    <span class="pull-left float-left">{$carttotals.taxname} @ {$carttotals.taxrate}%:</span>
+                    <span class="pull-right float-right">{$carttotals.taxtotal}</span>
                 </div>
             {/if}
             {if $carttotals.taxrate2}
                 <div class="clearfix">
-                    <span class="pull-left">{$carttotals.taxname2} @ {$carttotals.taxrate2}%:</span>
-                    <span class="pull-right">{$carttotals.taxtotal2}</span>
+                    <span class="pull-left float-left">{$carttotals.taxname2} @ {$carttotals.taxrate2}%:</span>
+                    <span class="pull-right float-right">{$carttotals.taxtotal2}</span>
                 </div>
             {/if}
         {/if}

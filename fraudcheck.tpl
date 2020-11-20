@@ -3,14 +3,14 @@
 <div id="order-standard_cart">
 
     <div class="header-lined">
-        <h1>
+        <h1 class="font-size-36">
             {$LANG.cartfraudcheck}
         </h1>
     </div>
 
     <div class="row">
 
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1 offset-md-1">
 
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
@@ -20,7 +20,7 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2 text-center">
+                <div class="col-sm-8 col-sm-offset-2 offset-sm-2 text-center">
 
                     <p class="margin-bottom">{$error}</p>
 

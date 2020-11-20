@@ -1,26 +1,26 @@
 {if ($linkableProviders || $hasLinkedProvidersEnabled) && $linkContext == 'linktable'}
     <table id="tableLinkedAccounts" class="table display data-driven"
            data-ajax-url="{$linkedAccountsUrl}"
-           data-on-draw-rebind-confirmation="true"
+           data-on-draw-rebind-confirmation-modal="true"
            data-lang-empty-table="{lang key='remoteAuthn.noLinkedAccounts'}"
     >
         <thead>
-        <tr class="text-center">
-            <th>{lang key='remoteAuthn.provider'}</th>
-            <th>{lang key='remoteAuthn.name'}</th>
-            <th>{lang key='remoteAuthn.emailAddress'}</th>
-            <th>{lang key='remoteAuthn.actions'}</th>
-        </tr>
+            <tr class="text-center">
+                <th>{lang key='remoteAuthn.provider'}</th>
+                <th>{lang key='remoteAuthn.name'}</th>
+                <th>{lang key='remoteAuthn.emailAddress'}</th>
+                <th>{lang key='remoteAuthn.actions'}</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td colspan="4" class="text-center">{lang key='remoteAuthn.noLinkedAccounts'}</td>
-        </tr>
+            <tr>
+                <td colspan="4" class="text-center">{lang key='remoteAuthn.noLinkedAccounts'}</td>
+            </tr>
         </tbody>
     </table>
 {elseif $linkableProviders}
 
-    <div id="providerLinkingMessages" class="hidden">
+    <div id="providerLinkingMessages" class="w-hidden">
         <p class="providerLinkingMsg-preLink-init_failed">
             <span class="provider-name"></span> {lang key='remoteAuthn.unavailable'}
         </p>
@@ -58,16 +58,16 @@
 
     {if $linkContext == 'registration'}
         <div class="sub-heading">
-            <span>{lang key='remoteAuthn.titleSignUpVerb'}</span>
+            <span class="primary-bg-color">{lang key='remoteAuthn.titleSignUpVerb'}</span>
         </div>
     {elseif $linkContext == 'checkout-existing'}
         <div class="sub-heading-borderless">
-            <span>{lang key='remoteAuthn.titleOr'}</span>
+            <span class="primary-bg-color">{lang key='remoteAuthn.titleOr'}</span>
         </div>
         <p class="small text-center text-muted">{lang key='remoteAuthn.saveTimeByLinking'}</p>
     {elseif $linkContext == 'checkout-new'}
         <div class="sub-heading">
-            <span>{lang key='remoteAuthn.titleSignUpVerb'}</span>
+            <span class="primary-bg-color">{lang key='remoteAuthn.titleSignUpVerb'}</span>
         </div>
         <p class="small text-center text-muted">{lang key='remoteAuthn.saveTimeByLinking'}</p>
     {elseif $linkContext == 'clientsecurity'}

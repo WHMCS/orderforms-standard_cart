@@ -1,6 +1,6 @@
-<div class="categories-collapsed visible-xs visible-sm clearfix">
+<div class="sidebar-collapsed">
 
-    <div class="pull-left form-inline">
+    <div class="pull-left form-inline float-left">
         <form>
             <select name="gid" id="gidForm" onchange="javascript:redirectToCartPage()" class="form-control">
                 <optgroup label="Product Categories">
@@ -28,8 +28,8 @@
     </div>
 
     {if !$loggedin && $currencies}
-        <div class="pull-right form-inline">
-            <form method="post" action="cart.php{if $action}?a={$action}{elseif $gid}?gid={$gid}{/if}">
+        <div class="pull-right form-inline float-right">
+            <form method="post" action="cart.php{if $action}?a={$action}{if $domain}&domain={$domain}{/if}{elseif $gid}?gid={$gid}{/if}">
                 <select name="currency" onchange="submit()" class="form-control">
                     <option value="">{$LANG.choosecurrency}</option>
                     {foreach from=$currencies item=listcurr}

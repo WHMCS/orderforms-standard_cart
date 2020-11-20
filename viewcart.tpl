@@ -15,27 +15,20 @@
     <div id="order-standard_cart">
 
         <div class="row">
-
-            <div class="pull-md-right col-md-9">
-
-                <div class="header-lined">
-                    <h1>{$LANG.cartreviewcheckout}</h1>
-                </div>
-
-            </div>
-
-            <div class="col-md-3 pull-md-left sidebar hidden-xs hidden-sm">
+            <div class="cart-sidebar">
 
                 {include file="orderforms/standard_cart/sidebar-categories.tpl"}
 
             </div>
-
-            <div class="col-md-9 pull-md-right">
+            <div class="cart-body">
+                <div class="header-lined">
+                    <h1 class="font-size-36">{$LANG.cartreviewcheckout}</h1>
+                </div>
 
                 {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="secondary-cart-body">
 
                         {if $promoerrormessage}
                             <div class="alert alert-warning text-center" role="alert">
@@ -73,15 +66,15 @@
 
                             <div class="view-cart-items-header">
                                 <div class="row">
-                                    <div class="{if $showqtyoptions}col-sm-5{else}col-sm-7{/if} col-xs-7">
+                                    <div class="{if $showqtyoptions}col-sm-5{else}col-sm-7{/if} col-xs-7 col-7">
                                         {$LANG.orderForm.productOptions}
                                     </div>
                                     {if $showqtyoptions}
-                                        <div class="col-sm-2 hidden-xs text-center">
+                                        <div class="col-sm-2 hidden-xs text-center d-none d-sm-block">
                                             {$LANG.orderForm.qty}
                                         </div>
                                     {/if}
-                                    <div class="col-sm-4 col-xs-5 text-right">
+                                    <div class="col-sm-4 col-xs-5 col-5 text-right">
                                         {$LANG.orderForm.priceCycle}
                                     </div>
                                 </div>
@@ -98,7 +91,7 @@
                                                         <i class="fas fa-pencil-alt"></i>
                                                         {$LANG.orderForm.edit}
                                                     </a>
-                                                    <span class="visible-xs-inline">
+                                                    <span class="visible-xs-inline d-inline d-sm-none">
                                                         <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('p','{$num}')">
                                                             <i class="fas fa-times"></i>
                                                             {$LANG.orderForm.remove}
@@ -115,9 +108,9 @@
                                                 {/if}
                                                 {if $product.configoptions}
                                                     <small>
-                                                    {foreach key=confnum item=configoption from=$product.configoptions}
-                                                        &nbsp;&raquo; {$configoption.name}: {if $configoption.type eq 1 || $configoption.type eq 2}{$configoption.option}{elseif $configoption.type eq 3}{if $configoption.qty}{$configoption.option}{else}{$LANG.no}{/if}{elseif $configoption.type eq 4}{$configoption.qty} x {$configoption.option}{/if}<br />
-                                                    {/foreach}
+                                                        {foreach key=confnum item=configoption from=$product.configoptions}
+                                                            &nbsp;&raquo; {$configoption.name}: {if $configoption.type eq 1 || $configoption.type eq 2}{$configoption.option}{elseif $configoption.type eq 3}{if $configoption.qty}{$configoption.option}{else}{$LANG.no}{/if}{elseif $configoption.type eq 4}{$configoption.qty} x {$configoption.option}{/if}<br />
+                                                        {/foreach}
                                                     </small>
                                                 {/if}
                                             </div>
@@ -139,7 +132,7 @@
                                                 {/if}
                                                 {if $product.proratadate}<br />({$LANG.orderprorata} {$product.proratadate}){/if}
                                             </div>
-                                            <div class="col-sm-1 hidden-xs">
+                                            <div class="col-sm-1 hidden-xs d-none d-sm-block">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('p','{$num}')">
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -187,7 +180,7 @@
                                             <div class="{if $showAddonQtyOptions}col-sm-5{else}col-sm-7{/if}">
                                                 <span class="item-title">
                                                     {$addon.name}
-                                                    <span class="visible-xs-inline">
+                                                    <span class="visible-xs-inline d-inline d-sm-none">
                                                         <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('a','{$num}')">
                                                             <i class="fas fa-times"></i>
                                                             {$LANG.orderForm.remove}
@@ -222,7 +215,7 @@
                                                 <span>{$addon.pricingtext}</span>
                                                 <span class="cycle">{$addon.billingcyclefriendly}</span>
                                             </div>
-                                            <div class="col-sm-1 hidden-xs">
+                                            <div class="col-sm-1 hidden-xs d-none d-sm-block">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('a','{$num}')">
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -241,7 +234,7 @@
                                                         <i class="fas fa-pencil-alt"></i>
                                                         {$LANG.orderForm.edit}
                                                     </a>
-                                                    <span class="visible-xs-inline">
+                                                    <span class="visible-xs-inline d-inline d-sm-none">
                                                         <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('d','{$num}')">
                                                             <i class="fas fa-times"></i>
                                                             {$LANG.orderForm.remove}
@@ -267,13 +260,13 @@
                                                 {else}
                                                     <span name="{$domain.domain}Price">{$domain.price}</span>
                                                     <div class="dropdown">
-                                                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="{$domain.domain}Pricing" name="{$domain.domain}Pricing" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        <button class="btn btn-default btn-default btn-xs dropdown-toggle" type="button" id="{$domain.domain}Pricing" name="{$domain.domain}Pricing" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             {$domain.regperiod} {$domain.yearsLanguage}
                                                             <span class="caret"></span>
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="{$domain.domain}Pricing">
                                                             {foreach $domain.pricing as $years => $price}
-                                                                <li>
+                                                                <li class="dropdown-item">
                                                                     <a href="#" onclick="selectDomainPeriodInCart('{$domain.domain}', '{$price.register}', {$years}, '{if $years == 1}{lang key='orderForm.year'}{else}{lang key='orderForm.years'}{/if}');return false;">
                                                                         {$years} {if $years == 1}{lang key='orderForm.year'}{else}{lang key='orderForm.years'}{/if} @ {$price.register}
                                                                     </a>
@@ -286,7 +279,7 @@
                                                     </span>
                                                 {/if}
                                             </div>
-                                            <div class="col-sm-1 hidden-xs">
+                                            <div class="col-sm-1 hidden-xs d-none d-sm-block">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('d','{$num}')">
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -316,7 +309,7 @@
                                             <div class="col-sm-1">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('r','{$num}')">
                                                     <i class="fas fa-times"></i>
-                                                    <span class="visible-xs">{$LANG.orderForm.remove}</span>
+                                                    <span class="visible-xs d-block d-sm-none">{$LANG.orderForm.remove}</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -360,7 +353,7 @@
                                             <div class="col-sm-1">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('u','{$num}')">
                                                     <i class="fas fa-times"></i>
-                                                    <span class="visible-xs">{$LANG.orderForm.remove}</span>
+                                                    <span class="visible-xs d-block d-sm-none">{$LANG.orderForm.remove}</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -415,9 +408,17 @@
 
                         <div class="view-cart-tabs">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#applyPromo" aria-controls="applyPromo" role="tab" data-toggle="tab">{$LANG.orderForm.applyPromoCode}</a></li>
+                                <li role="presentation" class="nav-item active">
+                                    <a href="#applyPromo" class="nav-link active" aria-controls="applyPromo" role="tab" data-toggle="tab">
+                                        {$LANG.orderForm.applyPromoCode}
+                                    </a>
+                                </li>
                                 {if $taxenabled && !$loggedin}
-                                    <li role="presentation"><a href="#calcTaxes" aria-controls="calcTaxes" role="tab" data-toggle="tab">{$LANG.orderForm.estimateTaxes}</a></li>
+                                    <li role="presentation" class="nav-item">
+                                        <a href="#calcTaxes" class="nav-link" aria-controls="calcTaxes" role="tab" data-toggle="tab">
+                                            {$LANG.orderForm.estimateTaxes}
+                                        </a>
+                                    </li>
                                 {/if}
                             </ul>
                             <div class="tab-content">
@@ -427,7 +428,7 @@
                                             {$promotioncode} - {$promotiondescription}
                                         </div>
                                         <div class="text-center">
-                                            <a href="{$smarty.server.PHP_SELF}?a=removepromo" class="btn btn-default btn-sm">
+                                            <a href="{$smarty.server.PHP_SELF}?a=removepromo" class="btn btn-default btn-xs">
                                                 {$LANG.orderForm.removePromotionCode}
                                             </a>
                                         </div>
@@ -437,9 +438,9 @@
                                                 <label for="cardno" class="field-icon">
                                                     <i class="fas fa-ticket-alt"></i>
                                                 </label>
-                                                <input type="text" name="promocode" id="inputPromotionCode" class="field" placeholder="{lang key="orderPromoCodePlaceholder"}" required="required">
+                                                <input type="text" name="promocode" id="inputPromotionCode" class="field form-control" placeholder="{lang key="orderPromoCodePlaceholder"}" required="required">
                                             </div>
-                                            <button type="submit" name="validatepromo" class="btn btn-block" value="{$LANG.orderpromovalidatebutton}">
+                                            <button type="submit" name="validatepromo" class="btn btn-block btn-default" value="{$LANG.orderpromovalidatebutton}">
                                                 {$LANG.orderpromovalidatebutton}
                                             </button>
                                         </form>
@@ -448,30 +449,28 @@
                                 <div role="tabpanel" class="tab-pane" id="calcTaxes">
 
                                     <form method="post" action="cart.php?a=setstateandcountry">
-                                        <div class="form-horizontal">
-                                            <div class="form-group">
-                                                <label for="inputState" class="col-sm-4 control-label">{$LANG.orderForm.state}</label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" name="state" id="inputState" value="{$clientsdetails.state}" class="form-control"{if $loggedin} disabled="disabled"{/if} />
-                                                </div>
+                                        <div class="form-group row">
+                                            <label for="inputState" class="pt-sm-2 col-sm-4 control-label text-sm-right">{$LANG.orderForm.state}</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" name="state" id="inputState" value="{$clientsdetails.state}" class="form-control"{if $loggedin} disabled="disabled"{/if} />
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputCountry" class="col-sm-4 control-label">{$LANG.orderForm.country}</label>
-                                                <div class="col-sm-7">
-                                                    <select name="country" id="inputCountry" class="form-control">
-                                                        {foreach $countries as $countrycode => $countrylabel}
-                                                            <option value="{$countrycode}"{if (!$country && $countrycode == $defaultcountry) || $countrycode eq $country} selected{/if}>
-                                                                {$countrylabel}
-                                                            </option>
-                                                        {/foreach}
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputCountry" class="pt-sm-2 col-sm-4 control-label text-sm-right">{$LANG.orderForm.country}</label>
+                                            <div class="col-sm-7">
+                                                <select name="country" id="inputCountry" class="form-control">
+                                                    {foreach $countries as $countrycode => $countrylabel}
+                                                        <option value="{$countrycode}"{if (!$country && $countrycode == $defaultcountry) || $countrycode eq $country} selected{/if}>
+                                                            {$countrylabel}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
                                             </div>
-                                            <div class="form-group text-center">
-                                                <button type="submit" class="btn">
-                                                    {$LANG.orderForm.updateTotals}
-                                                </button>
-                                            </div>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button type="submit" class="btn btn-default">
+                                                {$LANG.orderForm.updateTotals}
+                                            </button>
                                         </div>
                                     </form>
 
@@ -480,44 +479,44 @@
                         </div>
 
                     </div>
-                    <div class="col-md-4" id="scrollingPanelContainer">
+                    <div class="secondary-cart-sidebar" id="scrollingPanelContainer">
 
                         <div class="order-summary" id="orderSummary">
-                            <div class="loader" id="orderSummaryLoader" style="display: none;">
+                            <div class="loader w-hidden" id="orderSummaryLoader">
                                 <i class="fas fa-fw fa-sync fa-spin"></i>
                             </div>
-                            <h2>{$LANG.ordersummary}</h2>
+                            <h2 class="font-size-30">{$LANG.ordersummary}</h2>
                             <div class="summary-container">
 
                                 <div class="subtotal clearfix">
-                                    <span class="pull-left">{$LANG.ordersubtotal}</span>
-                                    <span id="subtotal" class="pull-right">{$subtotal}</span>
+                                    <span class="pull-left float-left">{$LANG.ordersubtotal}</span>
+                                    <span id="subtotal" class="pull-right float-right">{$subtotal}</span>
                                 </div>
                                 {if $promotioncode || $taxrate || $taxrate2}
                                     <div class="bordered-totals">
                                         {if $promotioncode}
                                             <div class="clearfix">
-                                                <span class="pull-left">{$promotiondescription}</span>
-                                                <span id="discount" class="pull-right">{$discount}</span>
+                                                <span class="pull-left float-left">{$promotiondescription}</span>
+                                                <span id="discount" class="pull-right float-right">{$discount}</span>
                                             </div>
                                         {/if}
                                         {if $taxrate}
                                             <div class="clearfix">
-                                                <span class="pull-left">{$taxname} @ {$taxrate}%</span>
-                                                <span id="taxTotal1" class="pull-right">{$taxtotal}</span>
+                                                <span class="pull-left float-left">{$taxname} @ {$taxrate}%</span>
+                                                <span id="taxTotal1" class="pull-right float-right">{$taxtotal}</span>
                                             </div>
                                         {/if}
                                         {if $taxrate2}
                                             <div class="clearfix">
-                                                <span class="pull-left">{$taxname2} @ {$taxrate2}%</span>
-                                                <span id="taxTotal2" class="pull-right">{$taxtotal2}</span>
+                                                <span class="pull-left float-left">{$taxname2} @ {$taxrate2}%</span>
+                                                <span id="taxTotal2" class="pull-right float-right">{$taxtotal2}</span>
                                             </div>
                                         {/if}
                                     </div>
                                 {/if}
                                 <div class="recurring-totals clearfix">
-                                    <span class="pull-left">{$LANG.orderForm.totals}</span>
-                                    <span id="recurring" class="pull-right recurring-charges">
+                                    <span class="pull-left float-left">{$LANG.orderForm.totals}</span>
+                                    <span id="recurring" class="pull-right float-right recurring-charges">
                                         <span id="recurringMonthly" {if !$totalrecurringmonthly}style="display:none;"{/if}>
                                             <span class="cost">{$totalrecurringmonthly}</span> {$LANG.orderpaymenttermmonthly}<br />
                                         </span>
@@ -577,21 +576,21 @@
             <div class="modal fade modal-remove-item" id="modalRemoveItem" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="{$LANG.orderForm.close}">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title">
-                                <i class="fas fa-times fa-3x"></i>
-                                <span>{$LANG.orderForm.removeItem}</span>
-                            </h4>
-                        </div>
                         <div class="modal-body">
-                            {$LANG.cartremoveitemconfirm}
+                            <div class="float-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="{lang key='orderForm.close'}">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <h4 class="modal-title margin-bottom mb-3">
+                                <i class="fas fa-times fa-3x"></i>
+                                <span>{lang key='orderForm.removeItem'}</span>
+                            </h4>
+                            {lang key='cartremoveitemconfirm'}
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">{$LANG.no}</button>
-                            <button type="submit" class="btn btn-primary">{$LANG.yes}</button>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{lang key='no'}</button>
+                            <button type="submit" class="btn btn-primary">{lang key='yes'}</button>
                         </div>
                     </div>
                 </div>
@@ -603,19 +602,19 @@
             <div class="modal fade modal-remove-item" id="modalEmptyCart" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="{$LANG.orderForm.close}">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title">
+                        <div class="modal-body">
+                            <div class="float-right">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="{$LANG.orderForm.close}">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <h4 class="modal-title margin-bottom mb-3">
                                 <i class="fas fa-trash-alt fa-3x"></i>
                                 <span>{$LANG.emptycart}</span>
                             </h4>
-                        </div>
-                        <div class="modal-body">
                             {$LANG.cartemptyconfirm}
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer justify-content-center">
                             <button type="button" class="btn btn-default" data-dismiss="modal">{$LANG.no}</button>
                             <button type="submit" class="btn btn-primary">{$LANG.yes}</button>
                         </div>

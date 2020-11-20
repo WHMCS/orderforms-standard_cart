@@ -29,7 +29,7 @@
                 {if count($searchResults.pricing) == 1}
                     <p class="margin-bottom">{$LANG.orderForm.domainAddedToCart}</p>
                     <button type="button" class="btn btn-default btn-lg margin-bottom">
-                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                        <span class="far fa-shopping-cart"></span>
                         {$searchResults.shortestPeriod.register}
                     </button>
                 {else}
@@ -37,7 +37,7 @@
                     <div class="btn-group btn-group-lg margin-bottom">
                         <button type="button" class="btn btn-default btn-sm">
                             <span name="{$searchResults.domainName}-selected-price">
-                                <b class="glyphicon glyphicon-shopping-cart"></b>
+                                <b class="far fa-shopping-cart"></b>
                                 {$searchResults.shortestPeriod.period} {$LANG.orderyears} @ {$searchResults.shortestPeriod.register}
                             </span>
                         </button>
@@ -51,7 +51,7 @@
                             {foreach $searchResults.pricing as $years => $price}
                                 <li>
                                     <a href="#" onclick="selectDomainPricing('{$searchResults.domainName}', '{$price.register}', {$years}, '{$LANG.orderyears}');return false;">
-                                        <b class="glyphicon glyphicon-shopping-cart"></b>
+                                        <b class="far fa-shopping-cart"></b>
                                         {$years} {$LANG.orderyears} @ {$price.register}
                                     </a>
                                 </li>
@@ -110,7 +110,7 @@
     {if $searchResults.suggestions}
 
         <div class="sub-heading">
-            <span>{$LANG.cartotherdomainsuggestions}</span>
+            <span class="primary-bg-color">{$LANG.cartotherdomainsuggestions}</span>
         </div>
 
         <div class="row domain-suggestions">
@@ -121,13 +121,13 @@
                         <input type="checkbox" name="domains[]" value="{$result.domainName}" id="domainSuggestion{$num}" class="suggested-domains" />
                         {$result.domainName}
                     </label>
-                    <div class="pull-right">
+                    <div class="pull-right float-right">
                         {if count($result.pricing) > 1}
                             <div class="btn-group domain-suggestion-pricing">
                         {/if}
                         <button type="button" class="btn btn-default btn-sm" onclick="selectDomainPricing('{$result.domainName}', '{$result.shortestPeriod.register}', {$result.shortestPeriod.period}, '{$LANG.orderyears}', '{$num}')">
                             <span name="{$result.domainName}-selected-price">
-                                <b class="glyphicon glyphicon-shopping-cart"></b>
+                                <b class="far fa-shopping-cart"></b>
                                 {$result.shortestPeriod.period} {$LANG.orderyears} @ {$result.shortestPeriod.register}
                             </span>
                         </button>
@@ -142,7 +142,7 @@
                                 {foreach $result.pricing as $years => $price}
                                     <li>
                                         <a href="#" onclick="selectDomainPricing('{$result.domainName}', '{$price.register}', {$years}, '{$LANG.orderyears}', '{$num}');return false;">
-                                            <b class="glyphicon glyphicon-shopping-cart"></b>
+                                            <b class="far fa-shopping-cart"></b>
                                             {$years} {$LANG.orderyears} @ {$price.register}
                                         </a>
                                     </li>

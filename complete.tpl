@@ -3,29 +3,19 @@
 <div id="order-standard_cart">
 
     <div class="row">
-
-        <div class="pull-md-right col-md-9">
-
-            <div class="header-lined">
-                <h1>{$LANG.orderconfirmation}</h1>
-            </div>
-
-        </div>
-
-        <div class="col-md-3 pull-md-left sidebar hidden-xs hidden-sm">
-
+        <div class="cart-sidebar">
             {include file="orderforms/standard_cart/sidebar-categories.tpl"}
-
         </div>
-
-        <div class="col-md-9 pull-md-right">
-
+        <div class="cart-body">
+            <div class="header-lined">
+                <h1 class="font-size-36">{$LANG.orderconfirmation}</h1>
+            </div>
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
             <p>{$LANG.orderreceived}</p>
 
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2">
+                <div class="col-sm-8 col-sm-offset-2 offset-sm-2">
                     <div class="alert alert-info order-confirmation">
                         {$LANG.ordernumberis} <span>{$ordernumber}</span>
                     </div>
@@ -69,7 +59,6 @@
                     &nbsp;<i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
-
         </div>
     </div>
 </div>
