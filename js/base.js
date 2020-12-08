@@ -620,6 +620,45 @@ jQuery(document).ready(function(){
             jQuery("#stateselect").attr('required', 'required').removeClass('requiredAttributeRemoved');
         }
     });
+
+    jQuery("#btnExistingLogin").click(function() {
+        var inputLoginEmail = jQuery('#inputLoginEmail').val(),
+            inputLoginPassword = jQuery('#inputLoginPassword').val(),
+            existingLoginMessage = jQuery('#existingLoginMessage'),
+            btnExistingLogin = jQuery('#btnExistingLogin');
+
+        btnExistingLogin.prop('disabled', true)
+            .addClass('disabled')
+            .find('span').toggle();
+
+        WHMCS.http.jqClient.jsonPost({
+            url: WHMCS.utils.getRouteUrl('/login/cart'),
+            data: {
+                username: inputLoginEmail,
+                password: inputLoginPassword,
+                token: csrfToken
+            },
+            success: function (data) {
+                if (!data.redirectUrl) {
+                    location.reload(true);
+                } else {
+                    window.location.href = data.redirectUrl;
+                }
+            },
+            error: function (error) {
+                if (error) {
+                    existingLoginMessage.slideUp('fast')
+                        .toggle()
+                        .html(error)
+                        .slideDown('fast');
+                    btnExistingLogin.prop('disabled', false)
+                        .removeClass('disabled')
+                        .find('span').toggle();
+                }
+            }
+        });
+    });
+
     jQuery('.account-select').on('ifChecked', function(event) {
         var userSignupContainer = jQuery('#containerNewUserSignup'),
             stateSelect = jQuery("#stateselect"),
@@ -1211,10 +1250,6 @@ jQuery(document).ready(function(){
         }
         buttons.find('span.to-add').hide();
         buttons.find('span.loading').show();
-
-        buttons.attr('disabled', 'disabled').each(function() {
-            jQuery(this).css('width', jQuery(this).outerWidth());
-        });
 
         var sideOrder =
             ((jQuery(this).parents('.spotlight-tlds').length > 0)

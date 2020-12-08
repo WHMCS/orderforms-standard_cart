@@ -107,9 +107,11 @@
                 {/if}
 
                 <div id="containerExistingUserSignin"{if $loggedin || $custtype neq "existing"} class="w-hidden{/if}">
-
                     <div class="sub-heading">
                         <span class="primary-bg-color">{$LANG.orderForm.existingCustomerLogin}</span>
+                    </div>
+
+                    <div class="alert alert-danger w-hidden" id="existingLoginMessage">
                     </div>
 
                     <div class="row">
@@ -129,6 +131,13 @@
                                 <input type="password" name="loginpassword" id="inputLoginPassword" class="field form-control" placeholder="{$LANG.clientareapassword}">
                             </div>
                         </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" id="btnExistingLogin" class="btn btn-primary btn-md">
+                            <span id="existingLoginButton">{lang key='login'}</span>
+                            <span id="existingLoginPleaseWait" class="w-hidden">{lang key='pleasewait'}</span>
+                        </button>
                     </div>
 
                     {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-existing"}

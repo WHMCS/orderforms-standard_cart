@@ -24,7 +24,7 @@
                             <div class="col-md-8 col-md-offset-2 offset-md-2 col-xs-10 col-xs-offset-1 col-10 offset-1">
                                 <div class="input-group input-group-lg input-group-box">
                                     <input type="text" name="domain" class="form-control" placeholder="{$LANG.findyourdomain}" value="{$lookupTerm}" id="inputDomain" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.domainOrKeyword'}" />
-                                    <span class="input-group-btn input-group-prepend">
+                                    <span class="input-group-btn input-group-append">
                                         <button type="submit" id="btnCheckAvailability" class="btn btn-primary domain-check-availability{$captcha->getButtonClass($captchaForm)}">{$LANG.search}</button>
                                     </span>
                                 </div>
@@ -333,8 +333,15 @@
 <script>
 jQuery(document).ready(function() {
     jQuery('.tld-filters a:first-child').click();
-{if $lookupTerm && !$captchaError}
+{if $lookupTerm && !$captchaError && !$invalid}
     jQuery('#btnCheckAvailability').click();
+{/if}
+{if $invalid}
+    jQuery('#primaryLookupSearching').toggle();
+    jQuery('#primaryLookupResult').children().toggle();
+    jQuery('#primaryLookupResult').toggle();
+    jQuery('#DomainSearchResults').toggle();
+    jQuery('.domain-invalid').toggle();
 {/if}
 });
 </script>
