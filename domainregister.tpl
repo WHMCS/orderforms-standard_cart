@@ -333,8 +333,15 @@
 <script>
 jQuery(document).ready(function() {
     jQuery('.tld-filters a:first-child').click();
-{if $lookupTerm && !$captchaError}
+{if $lookupTerm && !$captchaError && !$invalid}
     jQuery('#btnCheckAvailability').click();
+{/if}
+{if $invalid}
+    jQuery('#primaryLookupSearching').toggle();
+    jQuery('#primaryLookupResult').children().toggle();
+    jQuery('#primaryLookupResult').toggle();
+    jQuery('#DomainSearchResults').toggle();
+    jQuery('.domain-invalid').toggle();
 {/if}
 });
 </script>
