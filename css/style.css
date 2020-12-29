@@ -1463,8 +1463,13 @@ a.domain-tld-pricing-category {
     padding: 0;
 }
 #order-standard_cart .mc-promo .body li {
-    float: left;
     width: 50%;
+}
+#order-standard_cart .mc-promo .body li.left {
+    float: left;
+}
+#order-standard_cart .mc-promo .body li.right {
+    float: right;
 }
 #order-standard_cart .mc-promo .price {
     padding: 4px 0;

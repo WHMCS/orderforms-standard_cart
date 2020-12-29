@@ -2158,7 +2158,7 @@ jQuery(document).ready(function(){
         }
 
         jQuery('.domain-lookup-loader').show();
-        suggestions.find('div').hide().end()
+        suggestions.find('div:not(.actions)').hide().end()
             .find('.clone').remove();
         jQuery('div.panel-footer.more-suggestions').hide()
             .find('a').show().end()
@@ -3310,7 +3310,44 @@ jQuery(document).ready(function(){
     jQuery('#frmDomainChecker input[type=text]:visible').first().focus();
     jQuery('#frmDomainTransfer input[type=text]:visible').first().focus();
 
-    jQuery('.mc-promo .btn-add').click(function(e) {
+    jQuery('.checkout .mc-promo .btn-add').click(function(e) {
+        var self = jQuery(this),
+            productKey = self.data('product-key'),
+            upSellBox = jQuery('#promo_' + productKey);
+
+        self.attr('disabled', 'disabled')
+            .find('span.arrow i').removeClass('fa-chevron-right').addClass('fa-spinner fa-spin');
+        WHMCS.http.jqClient.post(
+            window.location.pathname,
+            {
+                'a': 'addUpSell',
+                'product_key': productKey,
+                'checkoutModal': true,
+                'token': csrfToken
+            },
+            function (data) {
+                if (typeof data.modal !== 'undefined') {
+                    openModal(
+                        data.modal,
+                        '',
+                        data.modalTitle,
+                        '',
+                        '',
+                        data.modalSubmit,
+                        data.modelSubmitId
+                    );
+                    return;
+                }
+                if (data.done) {
+                    jQuery('#totalCartPrice').text(data.newTotal);
+                    upSellBox.fadeOut();
+                }
+            },
+            'json'
+        );
+    });
+
+    jQuery('.viewcart .mc-promo .btn-add').click(function(e) {
         var self = jQuery(this);
         self.attr('disabled', 'disabled')
             .find('span.arrow i').removeClass('fa-chevron-right').addClass('fa-spinner fa-spin');
@@ -3338,6 +3375,21 @@ jQuery(document).ready(function(){
             },
             'json'
         );
+    });
+
+    jQuery(document).on('click', '#btnAddUpSellCheckout', function(e) {
+        var upsellModalForm = jQuery('#upsellModalForm');
+        WHMCS.http.jqClient.post(
+            'cart.php',
+            upsellModalForm.serialize(),
+            function (data) {
+                if (data.done){
+                    jQuery('#totalCartPrice').text(data.newTotal);
+                }
+            },
+            'json'
+        );
+        return false;
     });
 
     jQuery(document).on('click', '#btnAddUpSell', function(e) {

@@ -294,22 +294,24 @@
                             <div id="suggestionsLoader" class="card-body panel-body domain-lookup-loader domain-lookup-suggestions-loader">
                                 <i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
                             </div>
-                            <ul id="domainSuggestions" class="domain-lookup-result list-group w-hidden">
-                                <li class="domain-suggestion list-group-item w-hidden">
+                            <div id="domainSuggestions" class="domain-lookup-result list-group w-hidden">
+                                <div class="domain-suggestion list-group-item w-hidden">
                                     <span class="domain"></span><span class="extension"></span>
-                                    <button type="button" class="btn btn-add-to-cart product-domain" data-whois="1" data-domain="">
-                                        <span class="to-add">{$LANG.addtocart}</span>
-                                        <span class="loading">
-                                            <i class="fas fa-spinner fa-spin"></i> {lang key='loading'}
-                                        </span>
-                                        <span class="added">{lang key='domaincheckeradded'}</span>
-                                        <span class="unavailable">{$LANG.domaincheckertaken}</span>
-                                    </button>
-                                    <button type="button" class="btn btn-primary domain-contact-support w-hidden">Contact Support to Purchase</button>
-                                    <span class="price"></span>
-                                    <span class="promo w-hidden"></span>
-                                </li>
-                            </ul>
+                                    <div class="actions">
+                                        <button type="button" class="btn btn-add-to-cart product-domain" data-whois="1" data-domain="">
+                                            <span class="to-add">{$LANG.addtocart}</span>
+                                            <span class="loading">
+                                                <i class="fas fa-spinner fa-spin"></i> {lang key='loading'}
+                                            </span>
+                                            <span class="added">{lang key='domaincheckeradded'}</span>
+                                            <span class="unavailable">{$LANG.domaincheckertaken}</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary domain-contact-support w-hidden">Contact Support to Purchase</button>
+                                        <span class="price"></span>
+                                        <span class="promo w-hidden"></span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="panel-footer card-footer more-suggestions text-center w-hidden">
                                 <a id="moreSuggestions" href="#" onclick="loadMoreSuggestions();return false;">{lang key='domainsmoresuggestions'}</a>
                                 <span id="noMoreSuggestions" class="no-more small w-hidden">{lang key='domaincheckernomoresuggestions'}</span>

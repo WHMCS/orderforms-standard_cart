@@ -1,4 +1,4 @@
-<div class="mc-promo {$promotion->getClass()}">
+<div class="mc-promo {$promotion->getClass()}" id="promo_{$product->productKey}">
     <div class="header">
         <div class="cta">
             <div class="price">
@@ -31,8 +31,11 @@
     <div class="body clearfix">
         {if $promotion->hasFeatures()}
             <ul>
-                {foreach $promotion->getFeatures() as $feature}
-                    <li><i class="fas fa-check"></i> {$feature}</li>
+                {assign "promotionFeatures" $promotion->getFeatures()}
+                {foreach $promotionFeatures as $key=>$feature}
+                    <li class="{if $key < ($promotionFeatures|@count / 2)}left{else}right{/if}">
+                        <i class="fas fa-check"></i> {$feature}
+                    </li>
                 {/foreach}
             </ul>
         {/if}
