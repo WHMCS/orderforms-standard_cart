@@ -1283,9 +1283,9 @@ jQuery(document).ready(function(){
                 }
                 jQuery('#cartItemCount').html(data.cartCount);
             } else {
-                buttons.hide();
-                buttons.parent().children('span.available.price').hide();
-                buttons.parent().children('button.btn.unavailable').show();
+                buttons.find('span.available.price').hide();
+                buttons.find('span.unavailable').show();
+                buttons.attr('disabled', 'disabled');
             }
         });
     });

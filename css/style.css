@@ -1281,7 +1281,6 @@ a.domain-tld-pricing-category {
     }
     .suggested-domains .list-group-item .btn {
         float: none;
-        display: block;
         width: 100%;
     }
 }

@@ -278,7 +278,7 @@
                                                         <span class="added">{lang key='domaincheckeradded'}</span>
                                                         <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                                     </button>
-                                                    <button type="button" class="btn btn-primary domain-contact-support w-hidden">Contact Support to Purchase</button>
+                                                    <button type="button" class="btn btn-primary domain-contact-support w-hidden">{lang key='domainChecker.contactSupport'}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -306,7 +306,7 @@
                                             <span class="added">{lang key='domaincheckeradded'}</span>
                                             <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                         </button>
-                                        <button type="button" class="btn btn-primary domain-contact-support w-hidden">Contact Support to Purchase</button>
+                                        <button type="button" class="btn btn-primary domain-contact-support w-hidden">{lang key='domainChecker.contactSupport'}</button>
                                         <span class="price"></span>
                                         <span class="promo w-hidden"></span>
                                     </div>

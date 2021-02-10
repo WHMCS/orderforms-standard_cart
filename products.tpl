@@ -2,7 +2,7 @@
 
 <div id="order-standard_cart">
     <div class="row">
-        <div class="cart-sidebar">
+        <div class="cart-sidebar sidebar">
             {include file="orderforms/standard_cart/sidebar-categories.tpl"}
         </div>
         <div class="cart-body">
