@@ -36,7 +36,7 @@
                     </button>
                 </div>
 
-                <p>{lang key='orderForm.enterPersonalDetails'}</p>
+                <p class="text-sm-left overflow-hidden">{lang key='orderForm.enterPersonalDetails'}</p>
             </div>
 
             {if $errormessage}
@@ -272,14 +272,14 @@
 
                     {if $customfields}
                         <div class="sub-heading">
-                            <span class="primary-bg-color">{$LANG.orderadditionalrequiredinfo}</span>
+                            <span class="primary-bg-color">{$LANG.orderadditionalrequiredinfo}<br><i><small>{lang key='orderForm.requiredField'}</small></i></span>
                         </div>
                         <div class="field-container">
                             <div class="row">
                                 {foreach $customfields as $customfield}
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="customfield{$customfield.id}">{$customfield.name}</label>
+                                            <label for="customfield{$customfield.id}">{$customfield.name} {$customfield.required}</label>
                                             {$customfield.input}
                                             {if $customfield.description}
                                                 <span class="field-help-text">
@@ -740,3 +740,6 @@
 </div>
 
 <script type="text/javascript" src="{$BASE_PATH_JS}/jquery.payment.js"></script>
+<script>
+    var hideCvcOnCheckoutForExistingCard = '{if $canUseCreditOnCheckout && $applyCredit && ($creditBalance->toNumeric() >= $total->toNumeric())}1{else}0{/if}';
+</script>

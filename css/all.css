@@ -92,7 +92,8 @@
     margin: 0 0 30px 0;
 }
 
-#order-standard_cart label {
+#order-standard_cart label,
+#order-standard_cart p.domain-renewal-desc {
     margin-right: 10px;
     font-weight: 300;
     font-size: 13px;
@@ -132,9 +133,7 @@
 
 #order-standard_cart .sidebar-collapsed {
     margin-top: 20px;
-    margin-bottom: 20px;
     padding: 4px;
-    background-color: #f8f8f8;
     border-radius: 4px;
 }
 @media only screen and (min-width: 1200px) {
@@ -146,10 +145,6 @@
     display: block;
     clear: both;
     content: "";
-}
-#order-standard_cart .sidebar-collapsed select {
-    border: 0;
-    color: #222;
 }
 
 /*
@@ -220,7 +215,6 @@
 
 #order-standard_cart .products .product div.product-desc {
     float: left;
-    width: 60%;
     padding: 8px 14px;
     font-size: 0.8em;
 }

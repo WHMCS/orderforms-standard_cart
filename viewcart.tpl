@@ -149,11 +149,6 @@
                                                     <span class="item-group">
                                                         {$LANG.orderaddon}
                                                     </span>
-                                                    {if $addon.setup}
-                                                        <span class="item-setup">
-                                                            {$addon.setup} {$LANG.ordersetupfee}
-                                                        </span>
-                                                    {/if}
                                                 </div>
                                                 {if $showAddonQtyOptions}
                                                     <div class="col-sm-2 item-qty">
@@ -168,6 +163,8 @@
                                                 <div class="col-sm-4 item-price">
                                                     <span>{$addon.totaltoday}</span>
                                                     <span class="cycle">{$addon.billingcyclefriendly}</span>
+                                                    {if $addon.setup}{$addon.setup->toPrefixed()} {$LANG.ordersetupfee}{/if}
+                                                    {if $addon.isProrated}<br />({$LANG.orderprorata} {$addon.prorataDate}){/if}
                                                 </div>
                                             </div>
                                         </div>
@@ -195,11 +192,6 @@
                                                         {$addon.domainname}
                                                     </span>
                                                 {/if}
-                                                {if $addon.setup}
-                                                    <span class="item-setup">
-                                                        {$addon.setup} {$LANG.ordersetupfee}
-                                                    </span>
-                                                {/if}
                                             </div>
                                             {if $showAddonQtyOptions}
                                                 <div class="col-sm-2 item-qty">
@@ -212,8 +204,10 @@
                                                 </div>
                                             {/if}
                                             <div class="col-sm-4 item-price">
-                                                <span>{$addon.pricingtext}</span>
+                                                <span>{$addon.totaltoday}</span>
                                                 <span class="cycle">{$addon.billingcyclefriendly}</span>
+                                                {if $addon.setup}{$addon.setup->toPrefixed()} {$LANG.ordersetupfee}{/if}
+                                                {if $addon.isProrated}<br />({$LANG.orderprorata} {$addon.prorataDate}){/if}
                                             </div>
                                             <div class="col-sm-1 hidden-xs d-none d-sm-block">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('a','{$num}')">

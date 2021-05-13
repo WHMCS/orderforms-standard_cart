@@ -63,42 +63,8 @@
 
     {if $panel->getExtra('mobileSelect') and $panel->hasChildren()}
         {* Mobile Select only supports dropdown menus *}
-        <div class="panel card hidden-lg hidden-md d-md-none{if $panel->getClass()}{$panel->getClass()}{else}panel-default{/if}"{if $panel->getAttribute('id')} id="{$panel->getAttribute('id')}"{/if}>
-            <div class="m-0 panel-heading card-header">
-                <h3 class="panel-title">
-                    {if $panel->hasIcon()}
-                        <i class="{$panel->getIcon()}"></i>&nbsp;
-                    {/if}
-
-                    {$panel->getLabel()}
-
-                    {if $panel->hasBadge()}
-                        &nbsp;<span class="badge">{$panel->getBadge()}</span>
-                    {/if}
-                </h3>
-            </div>
-
-            <div class="panel-body card-body">
-                <form role="form">
-                    <select class="form-control custom-select" onchange="selectChangeNavigate(this)">
-                        {foreach $panel->getChildren() as $child}
-                            <option menuItemName="{$child->getName()}" value="{$child->getUri()}" class="list-group-item" {if $child->isCurrent()}selected="selected"{/if}>
-                                {$child->getLabel()}
-
-                                {if $child->hasBadge()}
-                                    ({$child->getBadge()})
-                                {/if}
-                            </option>
-                        {/foreach}
-                    </select>
-                </form>
-            </div>
-
-            {if $panel->hasFooterHtml()}
-                <div class="panel-footer card-footer">
-                    {$panel->getFooterHtml()}
-                </div>
-            {/if}
+        <div class="panel card hidden-lg hidden-md d-md-none{if $panel->getClass()}{$panel->getClass()}{else} panel-default{/if}"{if $panel->getAttribute('id')} id="{$panel->getAttribute('id')}"{/if}>
+            {include file="orderforms/standard_cart/sidebar-categories-selector.tpl"}
         </div>
     {/if}
 {/foreach}

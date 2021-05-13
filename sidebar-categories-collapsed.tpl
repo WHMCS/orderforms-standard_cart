@@ -1,31 +1,10 @@
 <div class="sidebar-collapsed">
 
-    <div class="pull-left form-inline float-left">
-        <form>
-            <select name="gid" id="gidForm" onchange="javascript:redirectToCartPage()" class="form-control">
-                <optgroup label="Product Categories">
-                    {foreach key=num item=productgroup from=$productgroups}
-                        <option value="{$productgroup.routePath}"{if $gid eq $productgroup.gid} selected="selected"{/if}>{$productgroup.name}</option>
-                    {/foreach}
-                </optgroup>
-                <optgroup label="Actions">
-                    {if $loggedin}
-                        <option value="{$WEB_ROOT}/cart.php?gid=addons"{if $gid eq "addons"} selected{/if}>{$LANG.cartproductaddons}</option>
-                        {if $renewalsenabled}
-                            <option value="{$WEB_ROOT}/cart.php?gid=renewals"{if $gid eq "renewals"} selected{/if}>{$LANG.domainrenewals}</option>
-                        {/if}
-                    {/if}
-                    {if $registerdomainenabled}
-                        <option value="{$WEB_ROOT}/cart.php?gid=registerdomain"{if $domain eq "register"} selected{/if}>{$LANG.navregisterdomain}</option>
-                    {/if}
-                    {if $transferdomainenabled}
-                        <option value="{$WEB_ROOT}/cart.php?gid=transferdomain"{if $domain eq "transfer"} selected{/if}>{$LANG.transferinadomain}</option>
-                    {/if}
-                    <option value="{$WEB_ROOT}/cart.php?a=view"{if $action eq "view"} selected{/if}>{$LANG.viewcart}</option>
-                </optgroup>
-            </select>
-        </form>
-    </div>
+    {foreach $secondarySidebar as $panel}
+        <div class="panel card{if $panel->getClass()}{$panel->getClass()}{else} panel-default{/if}">
+            {include file="orderforms/standard_cart/sidebar-categories-selector.tpl"}
+        </div>
+    {/foreach}
 
     {if !$loggedin && $currencies}
         <div class="pull-right form-inline float-right">
@@ -41,13 +20,3 @@
     {/if}
 
 </div>
-
-<script type="text/javascript">
-    function redirectToCartPage()
-    {
-        var path = jQuery('#gidForm').val();
-        if (path) {
-            window.location.href = path;
-        }
-    }
-</script>

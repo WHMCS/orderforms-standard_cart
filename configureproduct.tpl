@@ -262,14 +262,14 @@ var _localLang = {
 
                         {if $customfields}
 
-                            <div class="sub-heading">
-                                <span class="primary-bg-color">{$LANG.orderadditionalrequiredinfo}</span>
+                            <div class="sub-heading pb-1">
+                                <span class="primary-bg-color">{$LANG.orderadditionalrequiredinfo}<br><i><small>{lang key='orderForm.requiredField'}</small></i></span>
                             </div>
 
                             <div class="field-container">
                                 {foreach $customfields as $customfield}
                                     <div class="form-group">
-                                        <label for="customfield{$customfield.id}">{$customfield.name}</label>
+                                        <label for="customfield{$customfield.id}">{$customfield.name} {$customfield.required}</label>
                                         {$customfield.input}
                                         {if $customfield.description}
                                             <span class="field-help-text">

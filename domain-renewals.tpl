@@ -45,7 +45,11 @@
                                     <div class="pull-right float-right">
                                         {if !$renewalData.eligibleForRenewal}
                                             <span class="label label-info">
-                                                {lang key='domainRenewal.unavailable'}
+                                                {if $renewalData.freeDomainRenewal}
+                                                    {lang key='domainRenewal.freeWithService'}
+                                                {else}
+                                                    {lang key='domainRenewal.unavailable'}
+                                                {/if}
                                             </span>
                                         {elseif ($renewalData.pastGracePeriod && $renewalData.pastRedemptionGracePeriod)}
                                             <span class="label label-info">
@@ -73,6 +77,9 @@
                                     <h3 class="font-size-24">{$renewalData.domain}</h3>
 
                                     <p>{lang key='clientareadomainexpirydate'}: {$renewalData.expiryDate->format('j M Y')} ({$renewalData.expiryDate->diffForHumans()})</p>
+                                    {if $renewalData.freeDomainRenewal}
+                                        <p class="domain-renewal-desc">{lang key='domainRenewal.freeWithServiceDesc'}</p>
+                                    {/if}
 
                                     {if ($renewalData.pastGracePeriod && $renewalData.pastRedemptionGracePeriod) || !count($renewalData.renewalOptions)}
                                     {else}
