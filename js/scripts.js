@@ -2902,6 +2902,15 @@ jQuery(document).ready(function(){
     jQuery('#frmDomainChecker').submit(function (e) {
         e.preventDefault();
 
+        if (
+            typeof recaptchaValidationComplete !== 'undefined'
+            && typeof recaptchaType !== 'undefined'
+            && recaptchaType === 'invisible'
+            && recaptchaValidationComplete === false
+        ) {
+            return;
+        }
+
         var frmDomain = jQuery('#frmDomainChecker'),
             inputDomain = jQuery('#inputDomain'),
             suggestions = jQuery('#domainSuggestions'),
@@ -3234,6 +3243,15 @@ jQuery(document).ready(function(){
 
     jQuery('#frmDomainTransfer').submit(function (e) {
         e.preventDefault();
+
+        if (
+            typeof recaptchaValidationComplete !== 'undefined'
+            && typeof recaptchaType !== 'undefined'
+            && recaptchaType === 'invisible'
+            && recaptchaValidationComplete === false
+        ) {
+            return;
+        }
 
         var frmDomain = jQuery('#frmDomainTransfer'),
         transferButton = jQuery('#btnTransferDomain'),
