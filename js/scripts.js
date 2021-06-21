@@ -2515,7 +2515,7 @@ jQuery(document).ready(function(){
         var idnLanguage = jQuery('#idnLanguageSelector'),
             idnLanguageInput = idnLanguage.find('select');
 
-        if (!idnLanguage.not(':visible') && !idnLanguageInput.val()) {
+        if (idnLanguage.is(':visible') && !idnLanguageInput.val()) {
             e.preventDefault();
             idnLanguageInput.showInputError();
             return false;
