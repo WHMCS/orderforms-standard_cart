@@ -15,7 +15,8 @@ if (typeof localTrans === 'undefined') {
 
 var domainLookupCallCount,
     checkoutForm,
-    furtherSuggestions;
+    furtherSuggestions,
+    hideCvcOnCheckoutForExistingCard = 0;
 
 jQuery(document).ready(function(){
 
@@ -731,9 +732,9 @@ jQuery(document).ready(function(){
                         spanUseCredit = jQuery('#spanUseCredit');
                     if (data.full) {
                         hideCvcOnCheckoutForExistingCard = '1';
-                        spanFullCredit.show().find('span').text(data.creditBalance);
+                        spanFullCredit.show().find('span').text(data.total);
                         if (spanUseCredit.is(':visible')) {
-                            spanUseCredit.slideDown();
+                            spanUseCredit.slideUp();
                         }
                     } else {
                         hideCvcOnCheckoutForExistingCard = '0';
@@ -1502,17 +1503,19 @@ jQuery(document).ready(function(){
         needRefresh = true;
     });
 
-    var useFullCreditOnCheckout = jQuery('#iCheck-useFullCreditOnCheckout'),
+    var useCreditOnCheckout = jQuery('#iCheck-useCreditOnCheckout'),
         skipCreditOnCheckout = jQuery('#iCheck-skipCreditOnCheckout');
 
-    useFullCreditOnCheckout.on('ifChecked', function() {
-        var radio = jQuery('#useFullCreditOnCheckout'),
+    useCreditOnCheckout.on('ifChecked', function() {
+        var radio = jQuery('#useCreditOnCheckout'),
             selectedPaymentMethod = jQuery('input[name="paymentmethod"]:checked'),
+            selectedCC = jQuery('input[name="ccinfo"]:checked'),
             isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
             firstNonCcGateway = jQuery('input[name="paymentmethod"]')
             .not(jQuery('input.is-credit-card[name="paymentmethod"]'))
             .first(),
             container = jQuery('#paymentGatewaysContainer'),
+            existingCardInfo = jQuery('#existingCardInfo'),
             ccInputFields = jQuery('#creditCardInputFields');
         if (radio.prop('checked')) {
             if (isCcSelected && firstNonCcGateway.length !== 0) {
@@ -1523,24 +1526,38 @@ jQuery(document).ready(function(){
                 ccInputFields.slideDown();
                 container.slideDown();
             }
+            if (isCcSelected && selectedCC.val() !== 'new') {
+                if (jQuery('#spanFullCredit').is(':visible')) {
+                    hideCvcOnCheckoutForExistingCard = '1';
+                    existingCardInfo.hide().find('input').attr('disabled', 'disabled');
+                } else {
+                    existingCardInfo.show().find('input').removeAttr('disabled');
+                }
+            }
         }
     });
 
     skipCreditOnCheckout.on('ifChecked', function() {
         var selectedPaymentMethod = jQuery('input[name="paymentmethod"]:checked'),
+            selectedCC = jQuery('input[name="ccinfo"]:checked'),
             isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
+            existingCardInfo = jQuery('#existingCardInfo'),
             container = jQuery('#paymentGatewaysContainer');
         if (!container.is(":visible")) {
             container.slideDown();
-            if (isCcSelected) {
-                jQuery('#creditCardInputFields').slideDown();
+        }
+        if (isCcSelected) {
+            hideCvcOnCheckoutForExistingCard = '0';
+            if (selectedCC.val() !== 'new') {
+                existingCardInfo.show().find('input').removeAttr('disabled');
             }
+            jQuery('#creditCardInputFields').slideDown();
         }
     });
 
-    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useFullCreditOnCheckout.length) {
+    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useCreditOnCheckout.length) {
         skipCreditOnCheckout.iCheck('check');
-        useFullCreditOnCheckout.iCheck('check');
+        useCreditOnCheckout.iCheck('check');
     }
 
     jQuery('#domainRenewals').find('span.added').hide().end().find('span.to-add').find('i').hide();
@@ -1665,7 +1682,7 @@ function validateCheckoutCreditCardInput(e)
                 submit = false;
             }
         }
-        if (!jQuery.payment.validateCardCVC(cvvField.val(), cardType)) {
+        if (cvvField.is(':visible') && !jQuery.payment.validateCardCVC(cvvField.val(), cardType)) {
             cvvField.showInputError();
             submit = false;
         }

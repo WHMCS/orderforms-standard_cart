@@ -34,10 +34,11 @@
             <div class="products" id="products">
                 <div class="row row-eq-height">
                     {foreach $products as $key => $product}
+                        {$idPrefix = ($product.bid) ? ("bundle"|cat:$product.bid) : ("product"|cat:$product.pid)}
                     <div class="col-md-6">
-                        <div class="product clearfix" id="product{$product@iteration}">
+                        <div class="product clearfix" id="{$idPrefix}">
                             <header>
-                                <span id="product{$product@iteration}-name">{$product.name}</span>
+                                <span id="{$idPrefix}-name">{$product.name}</span>
                                 {if $product.stockControlEnabled}
                                     <span class="qty">
                                             {$product.qty} {$LANG.orderavailable}
@@ -46,13 +47,13 @@
                             </header>
                             <div class="product-desc">
                                 {if $product.featuresdesc}
-                                    <p id="product{$product@iteration}-description">
+                                    <p id="{$idPrefix}-description">
                                         {$product.featuresdesc}
                                     </p>
                                 {/if}
                                 <ul>
                                     {foreach $product.features as $feature => $value}
-                                        <li id="product{$product@iteration}-feature{$value@iteration}">
+                                        <li id="{$idPrefix}-feature{$value@iteration}">
                                             <span class="feature-value">{$value}</span>
                                             {$feature}
                                         </li>
@@ -60,7 +61,7 @@
                                 </ul>
                             </div>
                             <footer>
-                                <div class="product-pricing" id="product{$product@iteration}-price">
+                                <div class="product-pricing" id="{$idPrefix}-price">
                                     {if $product.bid}
                                         {$LANG.bundledeal}<br />
                                         {if $product.displayprice}
@@ -92,7 +93,7 @@
                                         {/if}
                                     {/if}
                                 </div>
-                                <a href="{$WEB_ROOT}/cart.php?a=add&{if $product.bid}bid={$product.bid}{else}pid={$product.pid}{/if}" class="btn btn-success btn-sm" id="product{$product@iteration}-order-button">
+                                <a href="{$product.productUrl}" class="btn btn-success btn-sm" id="{$idPrefix}-order-button">
                                     <i class="fas fa-shopping-cart"></i>
                                     {$LANG.ordernowbutton}
                                 </a>

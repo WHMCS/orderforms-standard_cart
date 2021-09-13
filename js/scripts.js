@@ -1,5 +1,5 @@
 /*!
- * iCheck v1.0.2, http://git.io/arlzeA
+ * iCheck v1.0.3, http://git.io/arlzeA
  * ===================================
  * Powerful jQuery and Zepto plugin for checkboxes and radio buttons customization
  *
@@ -28,7 +28,7 @@
     _callback = 'trigger',
     _label = 'label',
     _cursor = 'cursor',
-    _mobile = /ipad|iphone|ipod|android|blackberry|windows phone|opera mini|silk/i.test(navigator.userAgent);
+    _mobile = /ip(hone|od|ad)|android|blackberry|windows phone|opera mini|silk/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
   // Plugin init
   $.fn[_iCheck] = function(options, fire) {
@@ -503,7 +503,7 @@
         input[_callback]('ifToggled');
       }
 
-      input[_callback]('ifChanged')[_callback]('if' + capitalize(callback));
+      input[_callback]('change')[_callback]('ifChanged')[_callback]('if' + capitalize(callback));
     }
   }
 })(window.jQuery || window.Zepto);
@@ -1176,58 +1176,53 @@ dataTable: function () {
                     ordering: true,
                     info: false,
                     autoWidth: true,
+                    columns: [],
+                    lengthMenu: [10, 25, 50, 100, 500, 1000],
                     language: {
-                        emptyTable: (el.data('lang-empty-table')) ? el.data('lang-empty-table') : "No records found"
+                        emptyTable: (el.data('langEmptyTable')) ? el.data('langEmptyTable') : "No records found"
                     }
                 };
             }
-            var ajaxUrl = el.data('ajax-url');
-            if (typeof ajaxUrl !== 'undefined') {
-                options.ajax = {
-                    url: ajaxUrl
-                };
-            }
-            var dom = el.data('dom');
-            if (typeof dom !== 'undefined') {
-                options.dom = dom;
-            }
-            var searching = el.data('searching');
-            if (typeof searching !== 'undefined') {
-                options.searching = searching;
-            }
-            var responsive = el.data('responsive');
-            if (typeof responsive !== 'undefined') {
-                options.responsive = responsive;
-            }
-            var ordering = el.data('ordering');
-            if (typeof ordering !== 'undefined') {
-                options["ordering"] = ordering;
-            }
-            var order = el.data('order');
-            if (typeof order !== 'undefined' && order) {
-                options["order"] = order;
-            }
-            var colCss = el.data('columns');
-            if (typeof colCss !== 'undefined' && colCss) {
-                options["columns"] = colCss;
-            }
-            var autoWidth = el.data('auto-width');
-            if (typeof autoWidth !== 'undefined') {
-                options["autoWidth"] = autoWidth;
-            }
-            var paging = el.data('paging');
-            if (typeof paging !== 'undefined') {
-                options["paging"] = paging;
-            }
-            var lengthChange = el.data('length-change');
-            if (typeof lengthChange !== 'undefined') {
-                options["lengthChange"] = lengthChange;
-            }
-            var pageLength = el.data('page-length');
-            if (typeof pageLength !== 'undefined') {
-                options["pageLength"] = pageLength;
-            }
-
+            jQuery.each(el.data(), function (key, value) {
+                if (typeof value === 'undefined') {
+                    return;
+                }
+                if (key === 'ajaxUrl') {
+                    options.ajax = {
+                        url: value
+                    };
+                    return;
+                }
+                if (key === 'lengthChange') {
+                    options.lengthChange = value;
+                    return;
+                }
+                if (key === 'pageLength') {
+                    options.pageLength = value;
+                    return;
+                }
+                if (key === 'langEmptyTable') {
+                    if (typeof options.language === "undefined") {
+                        options.language = {};
+                    }
+                    options.language.emptyTable = value;
+                    return
+                }
+                if (key === 'langZeroRecords') {
+                    if (typeof options.language === "undefined") {
+                        options.language = {};
+                    }
+                    options.language.zeroRecords = value;
+                    return
+                }
+                options.key = value;
+            });
+            jQuery.each(el.find('th'), function() {
+                if (typeof options.columns === "undefined") {
+                    options.columns = [];
+                }
+                options.columns.push({data:jQuery(this).data('name')});
+            });
             self.tables[id] = self.initTable(el, options);
         } else if (typeof options !== 'undefined') {
             var oldTable = self.tables[id];
@@ -1951,7 +1946,8 @@ if (typeof localTrans === 'undefined') {
 
 var domainLookupCallCount,
     checkoutForm,
-    furtherSuggestions;
+    furtherSuggestions,
+    hideCvcOnCheckoutForExistingCard = 0;
 
 jQuery(document).ready(function(){
 
@@ -2667,9 +2663,9 @@ jQuery(document).ready(function(){
                         spanUseCredit = jQuery('#spanUseCredit');
                     if (data.full) {
                         hideCvcOnCheckoutForExistingCard = '1';
-                        spanFullCredit.show().find('span').text(data.creditBalance);
+                        spanFullCredit.show().find('span').text(data.total);
                         if (spanUseCredit.is(':visible')) {
-                            spanUseCredit.slideDown();
+                            spanUseCredit.slideUp();
                         }
                     } else {
                         hideCvcOnCheckoutForExistingCard = '0';
@@ -3438,17 +3434,19 @@ jQuery(document).ready(function(){
         needRefresh = true;
     });
 
-    var useFullCreditOnCheckout = jQuery('#iCheck-useFullCreditOnCheckout'),
+    var useCreditOnCheckout = jQuery('#iCheck-useCreditOnCheckout'),
         skipCreditOnCheckout = jQuery('#iCheck-skipCreditOnCheckout');
 
-    useFullCreditOnCheckout.on('ifChecked', function() {
-        var radio = jQuery('#useFullCreditOnCheckout'),
+    useCreditOnCheckout.on('ifChecked', function() {
+        var radio = jQuery('#useCreditOnCheckout'),
             selectedPaymentMethod = jQuery('input[name="paymentmethod"]:checked'),
+            selectedCC = jQuery('input[name="ccinfo"]:checked'),
             isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
             firstNonCcGateway = jQuery('input[name="paymentmethod"]')
             .not(jQuery('input.is-credit-card[name="paymentmethod"]'))
             .first(),
             container = jQuery('#paymentGatewaysContainer'),
+            existingCardInfo = jQuery('#existingCardInfo'),
             ccInputFields = jQuery('#creditCardInputFields');
         if (radio.prop('checked')) {
             if (isCcSelected && firstNonCcGateway.length !== 0) {
@@ -3459,24 +3457,38 @@ jQuery(document).ready(function(){
                 ccInputFields.slideDown();
                 container.slideDown();
             }
+            if (isCcSelected && selectedCC.val() !== 'new') {
+                if (jQuery('#spanFullCredit').is(':visible')) {
+                    hideCvcOnCheckoutForExistingCard = '1';
+                    existingCardInfo.hide().find('input').attr('disabled', 'disabled');
+                } else {
+                    existingCardInfo.show().find('input').removeAttr('disabled');
+                }
+            }
         }
     });
 
     skipCreditOnCheckout.on('ifChecked', function() {
         var selectedPaymentMethod = jQuery('input[name="paymentmethod"]:checked'),
+            selectedCC = jQuery('input[name="ccinfo"]:checked'),
             isCcSelected = selectedPaymentMethod.hasClass('is-credit-card'),
+            existingCardInfo = jQuery('#existingCardInfo'),
             container = jQuery('#paymentGatewaysContainer');
         if (!container.is(":visible")) {
             container.slideDown();
-            if (isCcSelected) {
-                jQuery('#creditCardInputFields').slideDown();
+        }
+        if (isCcSelected) {
+            hideCvcOnCheckoutForExistingCard = '0';
+            if (selectedCC.val() !== 'new') {
+                existingCardInfo.show().find('input').removeAttr('disabled');
             }
+            jQuery('#creditCardInputFields').slideDown();
         }
     });
 
-    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useFullCreditOnCheckout.length) {
+    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useCreditOnCheckout.length) {
         skipCreditOnCheckout.iCheck('check');
-        useFullCreditOnCheckout.iCheck('check');
+        useCreditOnCheckout.iCheck('check');
     }
 
     jQuery('#domainRenewals').find('span.added').hide().end().find('span.to-add').find('i').hide();
@@ -3601,7 +3613,7 @@ function validateCheckoutCreditCardInput(e)
                 submit = false;
             }
         }
-        if (!jQuery.payment.validateCardCVC(cvvField.val(), cardType)) {
+        if (cvvField.is(':visible') && !jQuery.payment.validateCardCVC(cvvField.val(), cardType)) {
             cvvField.showInputError();
             submit = false;
         }
