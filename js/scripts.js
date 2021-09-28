@@ -2028,7 +2028,7 @@ jQuery(document).ready(function(){
 
         var btnOriginalText = jQuery(button).html();
         jQuery(button).find('i').removeClass('fa-arrow-circle-right').addClass('fa-spinner fa-spin');
-        WHMCS.http.jqClient.post("cart.php", 'ajax=1&a=confproduct&' + jQuery("#frmConfigureProduct").serialize(),
+        WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'ajax=1&a=confproduct&' + jQuery("#frmConfigureProduct").serialize(),
             function(data) {
                 if (data) {
                     jQuery("#btnCompleteProductConfig").html(btnOriginalText);
@@ -2039,7 +2039,7 @@ jQuery(document).ready(function(){
                         jQuery('html, body').scrollTop(jQuery("#containerProductValidationErrors").offset().top - 15);
                     }
                 } else {
-                    window.location = 'cart.php?a=confdomains';
+                    window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
                 }
             }
         );
@@ -2486,7 +2486,7 @@ jQuery(document).ready(function(){
                 }
                 jQuery.each(data.result, function(index, result) {
                     if (result.status === true) {
-                        window.location = 'cart.php?a=confproduct&i=' + result.num;
+                        window.location = whmcsBaseUrl + '/cart.php?a=confproduct&i=' + result.num;
                     } else {
                         jQuery('.domain-lookup-primary-loader').hide();
                         if (typeof result === 'string') {
@@ -3178,7 +3178,7 @@ jQuery(document).ready(function(){
 
     jQuery('.btn-add-to-cart').on('click', function() {
         if (jQuery(this).hasClass('checkout')) {
-            window.location = 'cart.php?a=confdomains';
+            window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
             return;
         }
         var domain = jQuery(this).attr('data-domain'),
@@ -3294,7 +3294,7 @@ jQuery(document).ready(function(){
             var result = data.result;
 
             if (result == 'added') {
-                window.location = 'cart.php?a=confdomains';
+                window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
                 redirect = true;
             } else {
                 if (result.isRegistered == true) {
@@ -3418,7 +3418,7 @@ jQuery(document).ready(function(){
     jQuery(document).on('click', '#btnAddUpSellCheckout', function(e) {
         var upsellModalForm = jQuery('#upsellModalForm');
         WHMCS.http.jqClient.post(
-            'cart.php',
+            whmcsBaseUrl + '/cart.php',
             upsellModalForm.serialize(),
             function (data) {
                 if (data.done){
@@ -3447,18 +3447,29 @@ jQuery(document).ready(function(){
             .first(),
             container = jQuery('#paymentGatewaysContainer'),
             existingCardInfo = jQuery('#existingCardInfo'),
-            ccInputFields = jQuery('#creditCardInputFields');
+            ccInputFields = jQuery('#creditCardInputFields'),
+            spanFullCredit = jQuery('#spanFullCredit'),
+            shouldHideContainer = true;
         if (radio.prop('checked')) {
+            if (spanFullCredit.is(':hidden')) {
+                shouldHideContainer = false;
+            }
             if (isCcSelected && firstNonCcGateway.length !== 0) {
                 firstNonCcGateway.iCheck('check');
                 ccInputFields.slideUp();
-                container.slideUp();
-            } else if (isCcSelected && !container.is(":visible")) {
+                if (shouldHideContainer) {
+                    container.slideUp();
+                }
+            } else if (!isCcSelected && container.is(':visible')) {
+                if (shouldHideContainer) {
+                    container.slideUp();
+                }
+            } else if ((!shouldHideContainer || isCcSelected) && !container.is(":visible")) {
                 ccInputFields.slideDown();
                 container.slideDown();
             }
             if (isCcSelected && selectedCC.val() !== 'new') {
-                if (jQuery('#spanFullCredit').is(':visible')) {
+                if (spanFullCredit.is(':visible')) {
                     hideCvcOnCheckoutForExistingCard = '1';
                     existingCardInfo.hide().find('input').attr('disabled', 'disabled');
                 } else {
@@ -3498,7 +3509,7 @@ jQuery(document).ready(function(){
             period = jQuery('#renewalPricing' + domainId).val();
 
         if (self.hasClass('checkout')) {
-            window.location = 'cart.php?a=view';
+            window.location = whmcsBaseUrl + '/cart.php?a=view';
             return;
         }
 
@@ -3656,7 +3667,7 @@ function removeItem(type, num) {
 
 function updateConfigurableOptions(i, billingCycle) {
 
-    WHMCS.http.jqClient.post("cart.php", 'a=cyclechange&ajax=1&i='+i+'&billingcycle='+billingCycle,
+    WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'a=cyclechange&ajax=1&i='+i+'&billingcycle='+billingCycle,
         function(data) {
             jQuery("#productConfigurableOptions").html(jQuery(data).find('#productConfigurableOptions').html());
             jQuery('input').iCheck({
@@ -3679,7 +3690,7 @@ function recalctotals() {
     var thisRequestId = Math.floor((Math.random() * 1000000) + 1);
     window.lastSliderUpdateRequestId = thisRequestId;
 
-    var post = WHMCS.http.jqClient.post("cart.php", 'ajax=1&a=confproduct&calctotal=true&'+jQuery("#frmConfigureProduct").serialize());
+    var post = WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'ajax=1&a=confproduct&calctotal=true&'+jQuery("#frmConfigureProduct").serialize());
     post.done(
         function(data) {
             if (thisRequestId == window.lastSliderUpdateRequestId) {
