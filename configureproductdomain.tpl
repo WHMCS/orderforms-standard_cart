@@ -117,15 +117,15 @@
                             </label>
                             <div class="domain-input-group clearfix" id="domainowndomain">
                                 <div class="row">
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-8 col-sm-offset-1 offset-sm-1">
                                         <div class="row domains-row">
-                                            <div class="col-xs-2 col-2 text-right">
-                                                <p class="form-control-static">
-                                                    {lang key='orderForm.www'}
-                                                </p>
-                                            </div>
-                                            <div class="col-xs-7 col-7">
-                                                <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
+                                            <div class="col-xs-9 col-9">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon input-group-prepend">
+                                                        <span class="input-group-text">{$LANG.orderForm.www}</span>
+                                                    </div>
+                                                    <input type="text" id="owndomainsld" value="{$sld}" placeholder="{$LANG.yourdomainplaceholder}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.enterDomain'}" />
+                                                </div>
                                             </div>
                                             <div class="col-xs-3 col-3">
                                                 <input type="text" id="owndomaintld" value="{$tld|substr:1}" placeholder="{$LANG.yourtldplaceholder}" class="form-control" autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual" title="{lang key='orderForm.required'}" />
