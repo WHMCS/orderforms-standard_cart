@@ -20,7 +20,7 @@
             </div>
             <br />
 
-            <form method="post" action="cart.php" id="frmDomainTransfer">
+            <form method="post" action="{$WEB_ROOT}/cart.php" id="frmDomainTransfer">
                 <input type="hidden" name="a" value="addDomainTransfer">
 
                 <div class="row">

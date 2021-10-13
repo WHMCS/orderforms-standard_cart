@@ -87,7 +87,7 @@
                                             <div class="{if $showqtyoptions}col-sm-5{else}col-sm-7{/if}">
                                                 <span class="item-title">
                                                     {$product.productinfo.name}
-                                                    <a href="{$smarty.server.PHP_SELF}?a=confproduct&i={$num}" class="btn btn-link btn-xs">
+                                                    <a href="{$WEB_ROOT}/cart.php?a=confproduct&i={$num}" class="btn btn-link btn-xs">
                                                         <i class="fas fa-pencil-alt"></i>
                                                         {$LANG.orderForm.edit}
                                                     </a>
@@ -224,7 +224,7 @@
                                             <div class="col-sm-7">
                                                 <span class="item-title">
                                                     {if $domain.type eq "register"}{$LANG.orderdomainregistration}{else}{$LANG.orderdomaintransfer}{/if}
-                                                    <a href="{$smarty.server.PHP_SELF}?a=confdomains" class="btn btn-link btn-xs">
+                                                    <a href="{$WEB_ROOT}/cart.php?a=confdomains" class="btn btn-link btn-xs">
                                                         <i class="fas fa-pencil-alt"></i>
                                                         {$LANG.orderForm.edit}
                                                     </a>
@@ -422,12 +422,12 @@
                                             {$promotioncode} - {$promotiondescription}
                                         </div>
                                         <div class="text-center">
-                                            <a href="{$smarty.server.PHP_SELF}?a=removepromo" class="btn btn-default btn-xs">
+                                            <a href="{$WEB_ROOT}/cart.php?a=removepromo" class="btn btn-default btn-xs">
                                                 {$LANG.orderForm.removePromotionCode}
                                             </a>
                                         </div>
                                     {else}
-                                        <form method="post" action="cart.php?a=view">
+                                        <form method="post" action="{$WEB_ROOT}/cart.php?a=view">
                                             <div class="form-group prepend-icon ">
                                                 <label for="cardno" class="field-icon">
                                                     <i class="fas fa-ticket-alt"></i>
@@ -442,7 +442,7 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="calcTaxes">
 
-                                    <form method="post" action="cart.php?a=setstateandcountry">
+                                    <form method="post" action="{$WEB_ROOT}/cart.php?a=setstateandcountry">
                                         <div class="form-group row">
                                             <label for="inputState" class="pt-sm-2 col-sm-4 control-label text-sm-right">{$LANG.orderForm.state}</label>
                                             <div class="col-sm-7">
@@ -547,11 +547,11 @@
                                 </div>
 
                                 <div class="text-right">
-                                    <a href="cart.php?a=checkout&e=false" class="btn btn-success btn-lg btn-checkout{if $cartitems == 0} disabled{/if}" id="checkout">
+                                    <a href="{$WEB_ROOT}/cart.php?a=checkout&e=false" class="btn btn-success btn-lg btn-checkout{if $cartitems == 0} disabled{/if}" id="checkout">
                                         {$LANG.orderForm.checkout}
                                         <i class="fas fa-arrow-right"></i>
                                     </a><br />
-                                    <a href="cart.php" class="btn btn-link btn-continue-shopping" id="continueShopping">
+                                    <a href="{$WEB_ROOT}/cart.php" class="btn btn-link btn-continue-shopping" id="continueShopping">
                                         {$LANG.orderForm.continueShopping}
                                     </a>
                                 </div>
@@ -563,7 +563,7 @@
             </div>
         </div>
 
-        <form method="post" action="cart.php">
+        <form method="post" action="{$WEB_ROOT}/cart.php">
             <input type="hidden" name="a" value="remove" />
             <input type="hidden" name="r" value="" id="inputRemoveItemType" />
             <input type="hidden" name="i" value="" id="inputRemoveItemRef" />
@@ -591,7 +591,7 @@
             </div>
         </form>
 
-        <form method="post" action="cart.php">
+        <form method="post" action="{$WEB_ROOT}/cart.php">
             <input type="hidden" name="a" value="empty" />
             <div class="modal fade modal-remove-item" id="modalEmptyCart" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">

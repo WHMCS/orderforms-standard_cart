@@ -45,7 +45,7 @@
                         <p class="margin-bottom">{$error}</p>
 
                         <p>
-                            <a href="submitticket.php" class="btn btn-default">
+                            <a href="{$WEB_ROOT}/submitticket.php" class="btn btn-default">
                                 {$LANG.orderForm.submitTicket}
                                 &nbsp;<i class="fas fa-arrow-right"></i>
                             </a>

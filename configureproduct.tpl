@@ -321,7 +321,7 @@ var _localLang = {
 
                         <div class="alert alert-warning info-text-sm">
                             <i class="fas fa-question-circle"></i>
-                            {$LANG.orderForm.haveQuestionsContact} <a href="contact.php" target="_blank" class="alert-link">{$LANG.orderForm.haveQuestionsClickHere}</a>
+                            {$LANG.orderForm.haveQuestionsContact} <a href="{$WEB_ROOT}/contact.php" target="_blank" class="alert-link">{$LANG.orderForm.haveQuestionsClickHere}</a>
                         </div>
 
                     </div>

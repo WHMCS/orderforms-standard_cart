@@ -18,7 +18,7 @@
 
             <div class="domain-checker-container">
                 <div class="domain-checker-bg clearfix">
-                    <form method="post" action="cart.php" id="frmDomainChecker">
+                    <form method="post" action="{$WEB_ROOT}/cart.php" id="frmDomainChecker">
                         <input type="hidden" name="a" value="checkDomain">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 offset-md-2 col-xs-10 col-xs-offset-1 col-10 offset-1">
@@ -302,7 +302,7 @@
 
                         <p>{lang key='orderForm.packagesForBudget'}</p>
 
-                        <a href="cart.php" class="btn btn-warning">
+                        <a href="{$WEB_ROOT}/cart.php" class="btn btn-warning">
                             {lang key='orderForm.exploreNow'}
                         </a>
                     </div>
@@ -317,7 +317,7 @@
                                 <p class="font-bold text-primary">{lang key='orderForm.transferExtend'}*</p>
                             </div>
 
-                            <a href="cart.php?a=add&domain=transfer" class="btn btn-primary">
+                            <a href="{$WEB_ROOT}/cart.php?a=add&domain=transfer" class="btn btn-primary">
                                 {lang key='orderForm.transferDomain'}
                             </a>
 

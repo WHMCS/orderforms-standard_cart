@@ -51,7 +51,7 @@ var _localLang = {
                             <div class="form-group">
                                 <label>{$LANG.hosting}</label>
                                 <br />
-                                {if $domain.hosting}<span style="color:#009900;">[{$LANG.cartdomainshashosting}]</span>{else}<a href="cart.php" style="color:#cc0000;">[{$LANG.cartdomainsnohosting}]</a>{/if}
+                                {if $domain.hosting}<span style="color:#009900;">[{$LANG.cartdomainshashosting}]</span>{else}<a href="{$WEB_ROOT}/cart.php" style="color:#cc0000;">[{$LANG.cartdomainsnohosting}]</a>{/if}
                             </div>
                         </div>
                         {if $domain.eppenabled}

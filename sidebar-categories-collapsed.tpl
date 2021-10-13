@@ -8,7 +8,7 @@
 
     {if !$loggedin && $currencies}
         <div class="pull-right form-inline float-right">
-            <form method="post" action="cart.php{if $action}?a={$action}{if $domain}&domain={$domain}{/if}{elseif $gid}?gid={$gid}{/if}">
+            <form method="post" action="{$WEB_ROOT}/cart.php{if $action}?a={$action}{if $domain}&domain={$domain}{/if}{elseif $gid}?gid={$gid}{/if}">
                 <select name="currency" onchange="submit()" class="form-control">
                     <option value="">{$LANG.choosecurrency}</option>
                     {foreach from=$currencies item=listcurr}

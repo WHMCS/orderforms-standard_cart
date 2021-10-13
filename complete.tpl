@@ -36,7 +36,7 @@
                 <div class="alert alert-warning text-center">
                     {$LANG.ordercompletebutnotpaid}
                     <br /><br />
-                    <a href="viewinvoice.php?id={$invoiceid}" target="_blank" class="alert-link">
+                    <a href="{$WEB_ROOT}/viewinvoice.php?id={$invoiceid}" target="_blank" class="alert-link">
                         {$LANG.invoicenumber}{$invoiceid}
                     </a>
                 </div>
@@ -54,7 +54,7 @@
             {/if}
 
             <div class="text-center">
-                <a href="clientarea.php" class="btn btn-default">
+                <a href="{$WEB_ROOT}/clientarea.php" class="btn btn-default">
                     {$LANG.orderForm.continueToClientArea}
                     &nbsp;<i class="fas fa-arrow-circle-right"></i>
                 </a>

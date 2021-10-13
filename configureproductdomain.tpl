@@ -183,7 +183,7 @@
             </form>
 
             <div class="clearfix"></div>
-            <form method="post" action="cart.php?a=add&pid={$pid}&domainselect=1" id="frmProductDomainSelections">
+            <form method="post" action="{$WEB_ROOT}/cart.php?a=add&pid={$pid}&domainselect=1" id="frmProductDomainSelections">
 
                 <div id="DomainSearchResults" class="w-hidden">
 

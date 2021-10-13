@@ -23,7 +23,7 @@
                     {$LANG.domainRenewal.noDomains}
                 </div>
                 <p class="text-center">
-                    <a href="clientarea.php" class="btn btn-default">
+                    <a href="{$WEB_ROOT}/clientarea.php" class="btn btn-default">
                         <i class="fas fa-arrow-circle-left"></i>
                         {$LANG.orderForm.returnToClientArea}
                     </a>
