@@ -3497,7 +3497,13 @@ jQuery(document).ready(function(){
         }
     });
 
-    if (jQuery('#applyCreditContainer').data('apply-credit') === 1 && useCreditOnCheckout.length) {
+    var applyCreditContainer = jQuery('#applyCreditContainer');
+
+    if (
+        applyCreditContainer.is(':visible')
+        && applyCreditContainer.data('apply-credit') === 1
+        && useCreditOnCheckout.length
+    ) {
         skipCreditOnCheckout.iCheck('check');
         useCreditOnCheckout.iCheck('check');
     }
@@ -3581,7 +3587,7 @@ jQuery(document).ready(function(){
     }
 
     jQuery(".payment-methods:checked").trigger('ifChecked');
-    if (existingCardContainer.is(':visible')) {
+    if (existingCardContainer.is(':visible') && existingCardContainer.find('input.existing-card').length > 0) {
         newCardInfo.slideUp();
     }
 });
