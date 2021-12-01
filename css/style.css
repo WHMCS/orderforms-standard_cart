@@ -1001,6 +1001,11 @@ a.domain-tld-pricing-category {
 .domain-pricing .tld-pricing-header .col-sm-2 {
     height: 56px;
 }
+.domain-pricing .tld-pricing-header .tld-column {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: 4px 4px 0 0;
+}
 .domain-pricing .tld-pricing-header .col-xs-2,
 .domain-pricing .tld-pricing-header .col-sm-2,
 .domain-pricing .tld-pricing-header .col-xs-4,

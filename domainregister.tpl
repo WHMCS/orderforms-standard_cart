@@ -224,7 +224,7 @@
 
                 <div class="bg-white">
                     <div class="row no-gutters tld-pricing-header text-center">
-                        <div class="col-md-4">{lang key='orderdomain'}</div>
+                        <div class="col-md-4 tld-column">{lang key='orderdomain'}</div>
                         <div class="col-md-8">
                             <div class="row no-gutters">
                                 <div class="col-xs-4 col-4">{lang key='pricing.register'}</div>

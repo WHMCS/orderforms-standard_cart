@@ -557,6 +557,9 @@ jQuery(document).ready(function() {
                 .removeAttr('class')
                 .addClass('fas fa-spinner fa-spin');
         }
+    })
+    .on('click', '#openTicketSubmit.disabled', function () {
+        return false;
     });
 });
 
