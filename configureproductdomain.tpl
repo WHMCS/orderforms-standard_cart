@@ -275,10 +275,15 @@
                                                     <span class="available price w-hidden">{$data.register}</span>
                                                     <button type="button" class="btn btn-add-to-cart product-domain w-hidden" data-whois="0" data-domain="">
                                                         <span class="to-add">{lang key='orderForm.add'}</span>
-                                                        <span class="added">{lang key='domaincheckeradded'}</span>
+                                                        <span class="loading">
+                                                            <i class="fas fa-spinner fa-spin"></i> {lang key='loading'}
+                                                        </span>
+                                                        <span class="added"><i class="far fa-shopping-cart"></i> {lang key='domaincheckeradded'}</span>
                                                         <span class="unavailable">{$LANG.domaincheckertaken}</span>
                                                     </button>
-                                                    <button type="button" class="btn btn-primary domain-contact-support w-hidden">{lang key='domainChecker.contactSupport'}</button>
+                                                    <button type="button" class="btn btn-primary domain-contact-support w-hidden">
+                                                        {lang key='domainChecker.contactSupport'}
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

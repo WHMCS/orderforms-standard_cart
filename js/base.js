@@ -1273,7 +1273,7 @@ jQuery(document).ready(function(){
             (jQuery(this).parents('.suggested-domains').length > 0)) ? 1 : 0;
 
         var addToCart = WHMCS.http.jqClient.post(
-            window.location.pathname,
+            whmcsBaseUrl + '/cart.php',
             {
                 a: 'addToCart',
                 domain: domain,

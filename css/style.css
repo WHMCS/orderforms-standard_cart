@@ -1144,7 +1144,7 @@ a.domain-tld-pricing-category {
 }
 .spotlight-tld .unavailable,
 .spotlight-tld .invalid {
-    margin: 19px 0;
+    margin: 32px 0;
     background-color: #eee;
     border-color: #ddd;
     color: #bbb;
