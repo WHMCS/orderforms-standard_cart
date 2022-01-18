@@ -1499,10 +1499,6 @@ jQuery(document).ready(function(){
         return false;
     });
 
-    jQuery(document).on('click', '#btnAddUpSell', function(e) {
-        needRefresh = true;
-    });
-
     var useCreditOnCheckout = jQuery('#iCheck-useCreditOnCheckout'),
         skipCreditOnCheckout = jQuery('#iCheck-skipCreditOnCheckout');
 

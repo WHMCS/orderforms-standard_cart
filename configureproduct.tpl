@@ -121,7 +121,7 @@ var _localLang = {
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="inputHostname">{$LANG.serverhostname}</label>
-                                            <input type="text" name="hostname" class="form-control" id="inputHostname" value="{$server.hostname}" placeholder="servername.yourdomain.com">
+                                            <input type="text" name="hostname" class="form-control" id="inputHostname" value="{$server.hostname}" placeholder="servername.example.com">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
