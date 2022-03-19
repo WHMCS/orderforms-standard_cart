@@ -3824,7 +3824,7 @@ function loadMoreSuggestions()
             suggestions.find('div.domain-suggestion.clone:hidden:first').slideDown();
             furtherSuggestions = suggestions.find('div.domain-suggestion.clone:hidden').length;
         } else {
-            jQuery('div.more-suggestions').find('a').addClass('hidden').end().find('span.no-more').removeClass('hidden');
+            jQuery('div.more-suggestions').find('a').addClass('w-hidden').end().find('span.no-more').removeClass('w-hidden').show();
             return;
         }
     }
