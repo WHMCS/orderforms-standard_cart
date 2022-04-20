@@ -112,7 +112,8 @@
  * Responsive Categories
  */
 
-#order-standard_cart .cart-sidebar h3 {
+#order-standard_cart .cart-sidebar h3,
+#order-standard_cart .sidebar-collapsed h3 {
     margin: 0;
     font-size: 16px;
 }
@@ -215,8 +216,18 @@
 
 #order-standard_cart .products .product div.product-desc {
     float: left;
+    width: 60%;
     padding: 8px 14px;
     font-size: 0.8em;
+}
+
+#order-standard_cart .products .product div.product-desc-full-width {
+    width: auto;
+}
+
+#order-standard_cart .products .product select {
+    width: 100%;
+    text-overflow: ellipsis;
 }
 
 #order-standard_cart .products .product span.feature-value {
@@ -769,7 +780,9 @@
     padding-left: 20px;
     font-size: 0.8em;
 }
-#order-standard_cart .view-cart-tabs .nav-tabs > li.active > a {
+#order-standard_cart .view-cart-tabs .nav-tabs a[aria-selected="true"],
+#order-standard_cart .view-cart-tabs .nav-tabs a[aria-expanded="true"] {
+    border-color: #dee2e6 #dee2e6 #f8f8f8;
     background-color: #f8f8f8;
 }
 #order-standard_cart .view-cart-tabs .tab-content {

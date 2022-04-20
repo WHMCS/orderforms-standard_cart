@@ -353,3 +353,5 @@ var _localLang = {
 </div>
 
 <script>recalctotals();</script>
+
+{include file="orderforms/standard_cart/recommendations-modal.tpl"}

@@ -59,6 +59,10 @@
                     &nbsp;<i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
+
+            {if $hasRecommendations}
+                {include file="orderforms/standard_cart/includes/product-recommendations.tpl"}
+            {/if}
         </div>
     </div>
 </div>

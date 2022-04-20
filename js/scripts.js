@@ -1932,6 +1932,123 @@ function () {
 
 WHMCS.utils.validateBaseUrl();
 
+jQuery(document).ready(function() {
+    jQuery('#main-body').on('click', '.product-recommendations .product-recommendation .header', function(e) {
+        if (jQuery(e.target).is('.btn, .btn span, .btn .fa')) {
+            return;
+        }
+        e.preventDefault();
+        if (jQuery('.fa-square', this).length > 0) {
+            return;
+        }
+        jQuery(this).parent().find('.rotate').toggleClass('down');
+        jQuery(this).parent().find('.body').slideToggle('fast');
+    }).on('click', '.product-recommendations .product-recommendation .btn-add', function() {
+        jQuery(this).attr('disabled', 'disabled')
+            .find('span.arrow i')
+            .removeClass('fa-chevron-right')
+            .addClass('fa-spinner fa-spin');
+    }).on('click', '.order-button, .order-btn, .btn-order-now', function(e) {
+        if (jQuery(this).data('hasRecommendations') == 1) {
+            e.preventDefault();
+            var href = jQuery(this).attr('href');
+            jQuery('i', this).removeClass().addClass('fas fa-spinner fa-spin');
+            displayRecommendations(
+                href,
+                'addproductajax=1',
+                true
+            ).done(function() {
+                window.location = href;
+            });
+        }
+    });
+    setRecommendationColors();
+    if (document.URL.includes('cart.php?a=checkout') || document.URL.includes('cart.php?a=view')) {
+        if (jQuery('#recommendationsModal .product-recommendation:not(.clonable)').length > 0) {
+            jQuery('#recommendationsModal').modal('toggle');
+        }
+    }
+});
+
+function modifyLuminance(hex, lum) {
+    var rgb = "#",
+        c,
+        i;
+    hex = hex.replace(/[^0-9a-f]/gi, '');
+    if (hex.length < 6) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    lum = lum || 0;
+    for (i = 0; i < 3; i++) {
+        c = parseInt(hex.substr((i * 2), 2), 16);
+        c = Math.round(Math.min(Math.max(0, (c + (c * lum))), 255)).toString(16);
+        rgb += ("00" + c).substr(c.length);
+    }
+    return rgb;
+}
+
+function setRecommendationColors() {
+    var shadeColor,
+        defaultColor = '#9abb3a';
+    jQuery('.product-recommendations .product-recommendation').each(function() {
+        var element = jQuery(this),
+            primaryColor = element.data('color');
+        if (!(primaryColor.length > 0) || (primaryColor.match(/^#[0-9A-Fa-f]{3,6}$/gi) == undefined)) {
+            primaryColor = defaultColor;
+        }
+        shadeColor = modifyLuminance(primaryColor, -0.15);
+        element.css('border-color', primaryColor);
+        jQuery('.btn-add', element).css('background-color', primaryColor);
+        jQuery('.expander', element).css('color', primaryColor);
+        jQuery('.price', element).css('color', shadeColor);
+        jQuery('.arrow', element).css('background-color', shadeColor);
+    });
+}
+
+function displayRecommendations(postUrl, postData, postForce) {
+    var deferredObject = jQuery.Deferred(),
+        hasRecommendations = jQuery('#divProductHasRecommendations').data('value'),
+        modal = jQuery('#recommendationsModal'),
+        shoppingCartBtn = jQuery('.cart-btn .badge');
+    if (postForce || hasRecommendations) {
+        jQuery('.cart-body button[type="submit"] i')
+            .removeClass('fa-arrow-circle-right')
+            .addClass('fa-spinner fa-spin');
+        WHMCS.http.jqClient.jsonPost({
+            url: postUrl,
+            data: postData,
+            success: function(data) {
+                if (data.success && data.href) {
+                    modal.on('hide.bs.modal', function() {
+                        window.location = data.href;
+                        return false;
+                    });
+                    jQuery('#btnContinueRecommendationsModal', modal)
+                        .attr('href', data.href)
+                        .click(function () {
+                            jQuery('span', this).removeClass('w-hidden hidden');
+                        });
+                    jQuery('.modal-body', modal).html('').html(data.html);
+                    setRecommendationColors();
+                    modal.modal('show');
+                    jQuery('i.fa-spinner.fa-spin:visible').removeClass('fa-spinner fa-spin').addClass('fa-check-circle');
+                    shoppingCartBtn.text(data.count);
+                } else if (!data.success && data.href) {
+                    window.location = data.href;
+                } else {
+                    deferredObject.resolve(false);
+                }
+            },
+            error: function() {
+                deferredObject.resolve(false);
+            }
+        });
+    } else {
+        deferredObject.resolve(false);
+    }
+    return deferredObject.promise();
+}
+
 if (typeof localTrans === 'undefined') {
     localTrans = function (phraseId, fallback)
     {
@@ -2027,25 +2144,35 @@ jQuery(document).ready(function(){
     jQuery("#frmConfigureProduct").submit(function(e) {
         e.preventDefault();
 
-        var button = jQuery('#btnCompleteProductConfig');
+        var button = jQuery('#btnCompleteProductConfig'),
+            btnOriginalText = jQuery(button).html(),
+            postUrl = whmcsBaseUrl + '/cart.php',
+            postData = 'a=confproduct&' + jQuery("#frmConfigureProduct").serialize();
 
-        var btnOriginalText = jQuery(button).html();
         jQuery(button).find('i').removeClass('fa-arrow-circle-right').addClass('fa-spinner fa-spin');
-        WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'ajax=1&a=confproduct&' + jQuery("#frmConfigureProduct").serialize(),
-            function(data) {
-                if (data) {
-                    jQuery("#btnCompleteProductConfig").html(btnOriginalText);
-                    jQuery("#containerProductValidationErrorsList").html(data);
-                    jQuery("#containerProductValidationErrors").show();
-                    // scroll to error container if below it
-                    if (jQuery(window).scrollTop() > jQuery("#containerProductValidationErrors").offset().top) {
-                        jQuery('html, body').scrollTop(jQuery("#containerProductValidationErrors").offset().top - 15);
+        displayRecommendations(
+            postUrl,
+            'addproductajax=1&' + postData,
+            false
+        ).done(function() {
+            WHMCS.http.jqClient.post(
+                postUrl,
+                'ajax=1&' + postData,
+                function(data) {
+                    if (data) {
+                        jQuery("#btnCompleteProductConfig").html(btnOriginalText);
+                        jQuery("#containerProductValidationErrorsList").html(data);
+                        jQuery("#containerProductValidationErrors").show();
+                        // scroll to error container if below it
+                        if (jQuery(window).scrollTop() > jQuery("#containerProductValidationErrors").offset().top) {
+                            jQuery('html, body').scrollTop(jQuery("#containerProductValidationErrors").offset().top - 15);
+                        }
+                    } else {
+                        window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
                     }
-                } else {
-                    window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
                 }
-            }
-        );
+            );
+        });
     });
 
     jQuery("#productConfigurableOptions").on('ifChecked', 'input', function() {
@@ -2489,7 +2616,13 @@ jQuery(document).ready(function(){
                 }
                 jQuery.each(data.result, function(index, result) {
                     if (result.status === true) {
-                        window.location = whmcsBaseUrl + '/cart.php?a=confproduct&i=' + result.num;
+                        displayRecommendations(
+                            whmcsBaseUrl + '/cart.php',
+                            'addproductajax=1&a=confproduct&i=' + result.num,
+                            false
+                        ).done(function() {
+                            window.location = whmcsBaseUrl + '/cart.php?a=confproduct&i=' + result.num;
+                        });
                     } else {
                         jQuery('.domain-lookup-primary-loader').hide();
                         if (typeof result === 'string') {
@@ -2512,14 +2645,24 @@ jQuery(document).ready(function(){
 
     jQuery('#frmProductDomainSelections').on('submit', function(e) {
         var idnLanguage = jQuery('#idnLanguageSelector'),
-            idnLanguageInput = idnLanguage.find('select');
+            idnLanguageInput = idnLanguage.find('select'),
+            form = jQuery(this);
 
         if (idnLanguage.is(':visible') && !idnLanguageInput.val()) {
             e.preventDefault();
             idnLanguageInput.showInputError();
             return false;
         }
-        return true;
+
+        e.preventDefault();
+        displayRecommendations(
+            form.attr('action'),
+            'addproductajax=1&' + form.serialize(),
+            false
+        ).done(function() {
+            form.unbind().submit();
+            form.submit();
+        });
     });
 
     jQuery("#btnAlreadyRegistered").click(function() {

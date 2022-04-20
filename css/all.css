@@ -112,7 +112,8 @@
  * Responsive Categories
  */
 
-#order-standard_cart .cart-sidebar h3 {
+#order-standard_cart .cart-sidebar h3,
+#order-standard_cart .sidebar-collapsed h3 {
     margin: 0;
     font-size: 16px;
 }
@@ -215,8 +216,18 @@
 
 #order-standard_cart .products .product div.product-desc {
     float: left;
+    width: 60%;
     padding: 8px 14px;
     font-size: 0.8em;
+}
+
+#order-standard_cart .products .product div.product-desc-full-width {
+    width: auto;
+}
+
+#order-standard_cart .products .product select {
+    width: 100%;
+    text-overflow: ellipsis;
 }
 
 #order-standard_cart .products .product span.feature-value {
@@ -769,7 +780,9 @@
     padding-left: 20px;
     font-size: 0.8em;
 }
-#order-standard_cart .view-cart-tabs .nav-tabs > li.active > a {
+#order-standard_cart .view-cart-tabs .nav-tabs a[aria-selected="true"],
+#order-standard_cart .view-cart-tabs .nav-tabs a[aria-expanded="true"] {
+    border-color: #dee2e6 #dee2e6 #f8f8f8;
     background-color: #f8f8f8;
 }
 #order-standard_cart .view-cart-tabs .tab-content {
@@ -1726,6 +1739,131 @@ a.domain-tld-pricing-category {
     font-size: 12px;
 }
 
+#recommendationsModal .product-added-panel .panel-body {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+#recommendationsModal .product-added-panel .panel-body > span:first-child {
+    flex-basis: 100%;
+    margin-bottom: 0.5rem;
+}
+#recommendationsModal .product-added-panel .panel-body > div {
+    display: flex;
+    flex-direction: column;
+}
+#recommendationsModal .product-added-panel .product-name,
+#recommendationsModal .product-added-panel .price {
+    font-weight: bolder;
+}
+#recommendationsModal .product-added-panel .product-price,
+#recommendationsModal .product-added-panel .product-cycle {
+    text-align: right;
+}
+#recommendationsModal .modal-header {
+    background-color: initial;
+    border-bottom: 0;
+    padding: 1rem 1rem 0 1rem;
+}
+#recommendationsModal .modal-footer {
+    justify-content: center;
+    border: 0;
+}
+.product-recommendations-container {
+    max-height: 600px;
+    overflow-y: auto;
+    margin-top: 20px;
+    margin-bottom: 30px
+}
+.product-recommendations {
+    margin: 20px auto 30px;
+    max-width: 575px;
+    border-color: #7b7b7b;
+}
+.product-recommendations .product-recommendation {
+    margin: 0 0 10px 0;
+    background-color: #fff;
+    border: 1px dashed #ccc;
+    border-bottom: 4px solid #9abb3a;
+}
+.product-recommendations .product-recommendation .cta {
+    float: right;
+    padding: 3px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+.product-recommendations .product-recommendation .headline {
+    padding-top: 8px;
+    font-size: 1em;
+}
+.product-recommendations .product-recommendation .tagline {
+    font-size: 0.9em;
+    font-weight: 300;
+}
+.product-recommendations .product-recommendation .header {
+    border-bottom: 0;
+    overflow: hidden;
+    cursor: pointer;
+}
+.product-recommendations .product-recommendation .header.header-static {
+    cursor: default;
+}
+.product-recommendations .product-recommendation .body {
+    padding: 10px 15px;
+    border-top: 10px solid #eaeaea;
+    background-color: #f8f8f8;
+    font-size: 0.85em;
+    display: none;
+}
+.product-recommendations .product-recommendation .price {
+    padding: 4px 0;
+    font-size: 1em;
+    color: #83a032;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+.product-recommendations .product-recommendation .btn-add {
+    padding: 0;
+    background-color: #9abb3a;
+    color: #fff;
+    font-size: 0.9em;
+}
+.product-recommendations .product-recommendation .arrow {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #83a032;
+}
+.product-recommendations .product-recommendation .text {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.9em;
+}
+.product-recommendations .product-recommendation .expander {
+    float: left;
+    width: 28px;
+    font-size: 1.5em;
+    color: #9abb3a;
+    text-align: right;
+    line-height: 60px;
+    transition: all 2s linear;
+    margin-right: 15px;
+}
+.product-recommendations .product-recommendation .expander .fa-square {
+    font-size: 0.7em;
+}
+.product-recommendations .product-recommendation .rotate {
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+.product-recommendations .product-recommendation .rotate.down {
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    transform:rotate(90deg);
+}
 /* iCheck plugin Square skin, blue
 ----------------------------------- */
 .icheckbox_square-blue,

@@ -93,25 +93,35 @@ jQuery(document).ready(function(){
     jQuery("#frmConfigureProduct").submit(function(e) {
         e.preventDefault();
 
-        var button = jQuery('#btnCompleteProductConfig');
+        var button = jQuery('#btnCompleteProductConfig'),
+            btnOriginalText = jQuery(button).html(),
+            postUrl = whmcsBaseUrl + '/cart.php',
+            postData = 'a=confproduct&' + jQuery("#frmConfigureProduct").serialize();
 
-        var btnOriginalText = jQuery(button).html();
         jQuery(button).find('i').removeClass('fa-arrow-circle-right').addClass('fa-spinner fa-spin');
-        WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'ajax=1&a=confproduct&' + jQuery("#frmConfigureProduct").serialize(),
-            function(data) {
-                if (data) {
-                    jQuery("#btnCompleteProductConfig").html(btnOriginalText);
-                    jQuery("#containerProductValidationErrorsList").html(data);
-                    jQuery("#containerProductValidationErrors").show();
-                    // scroll to error container if below it
-                    if (jQuery(window).scrollTop() > jQuery("#containerProductValidationErrors").offset().top) {
-                        jQuery('html, body').scrollTop(jQuery("#containerProductValidationErrors").offset().top - 15);
+        displayRecommendations(
+            postUrl,
+            'addproductajax=1&' + postData,
+            false
+        ).done(function() {
+            WHMCS.http.jqClient.post(
+                postUrl,
+                'ajax=1&' + postData,
+                function(data) {
+                    if (data) {
+                        jQuery("#btnCompleteProductConfig").html(btnOriginalText);
+                        jQuery("#containerProductValidationErrorsList").html(data);
+                        jQuery("#containerProductValidationErrors").show();
+                        // scroll to error container if below it
+                        if (jQuery(window).scrollTop() > jQuery("#containerProductValidationErrors").offset().top) {
+                            jQuery('html, body').scrollTop(jQuery("#containerProductValidationErrors").offset().top - 15);
+                        }
+                    } else {
+                        window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
                     }
-                } else {
-                    window.location = whmcsBaseUrl + '/cart.php?a=confdomains';
                 }
-            }
-        );
+            );
+        });
     });
 
     jQuery("#productConfigurableOptions").on('ifChecked', 'input', function() {
@@ -555,7 +565,13 @@ jQuery(document).ready(function(){
                 }
                 jQuery.each(data.result, function(index, result) {
                     if (result.status === true) {
-                        window.location = whmcsBaseUrl + '/cart.php?a=confproduct&i=' + result.num;
+                        displayRecommendations(
+                            whmcsBaseUrl + '/cart.php',
+                            'addproductajax=1&a=confproduct&i=' + result.num,
+                            false
+                        ).done(function() {
+                            window.location = whmcsBaseUrl + '/cart.php?a=confproduct&i=' + result.num;
+                        });
                     } else {
                         jQuery('.domain-lookup-primary-loader').hide();
                         if (typeof result === 'string') {
@@ -578,14 +594,24 @@ jQuery(document).ready(function(){
 
     jQuery('#frmProductDomainSelections').on('submit', function(e) {
         var idnLanguage = jQuery('#idnLanguageSelector'),
-            idnLanguageInput = idnLanguage.find('select');
+            idnLanguageInput = idnLanguage.find('select'),
+            form = jQuery(this);
 
         if (idnLanguage.is(':visible') && !idnLanguageInput.val()) {
             e.preventDefault();
             idnLanguageInput.showInputError();
             return false;
         }
-        return true;
+
+        e.preventDefault();
+        displayRecommendations(
+            form.attr('action'),
+            'addproductajax=1&' + form.serialize(),
+            false
+        ).done(function() {
+            form.unbind().submit();
+            form.submit();
+        });
     });
 
     jQuery("#btnAlreadyRegistered").click(function() {

@@ -13,7 +13,6 @@
     window.langPasswordModerate = "{$LANG.pwstrengthmoderate}";
     window.langPasswordStrong = "{$LANG.pwstrengthstrong}";
 </script>
-
 <div id="order-standard_cart">
 
     <div class="row">
@@ -743,3 +742,4 @@
 <script>
     var hideCvcOnCheckoutForExistingCard = '{if $canUseCreditOnCheckout && $applyCredit && ($creditBalance->toNumeric() >= $total->toNumeric())}1{else}0{/if}';
 </script>
+{include file="orderforms/standard_cart/recommendations-modal.tpl"}

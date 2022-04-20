@@ -93,7 +93,7 @@
                                         {/if}
                                     {/if}
                                 </div>
-                                <a href="{$product.productUrl}" class="btn btn-success btn-sm" id="{$idPrefix}-order-button">
+                                <a href="{$product.productUrl}" class="btn btn-success btn-sm btn-order-now" id="{$idPrefix}-order-button"{if $product.hasRecommendations} data-has-recommendations="1"{/if}>
                                     <i class="fas fa-shopping-cart"></i>
                                     {$LANG.ordernowbutton}
                                 </a>
@@ -110,3 +110,5 @@
         </div>
     </div>
 </div>
+
+{include file="orderforms/standard_cart/recommendations-modal.tpl"}

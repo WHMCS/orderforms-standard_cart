@@ -403,13 +403,13 @@
                         <div class="view-cart-tabs">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="nav-item active">
-                                    <a href="#applyPromo" class="nav-link active" aria-controls="applyPromo" role="tab" data-toggle="tab">
+                                    <a href="#applyPromo" class="nav-link active" aria-controls="applyPromo" role="tab" data-toggle="tab"{if $template == 'twenty-one'} aria-selected="true"{else} aria-expanded="true"{/if}>
                                         {$LANG.orderForm.applyPromoCode}
                                     </a>
                                 </li>
                                 {if $taxenabled && !$loggedin}
                                     <li role="presentation" class="nav-item">
-                                        <a href="#calcTaxes" class="nav-link" aria-controls="calcTaxes" role="tab" data-toggle="tab">
+                                        <a href="#calcTaxes" class="nav-link" aria-controls="calcTaxes" role="tab" data-toggle="tab"{if $template == 'twenty-one'} aria-selected="false"{else} aria-expanded="false"{/if}>
                                             {$LANG.orderForm.estimateTaxes}
                                         </a>
                                     </li>
@@ -617,4 +617,5 @@
             </div>
         </form>
     </div>
+    {include file="orderforms/standard_cart/recommendations-modal.tpl"}
 {/if}

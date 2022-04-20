@@ -37,10 +37,10 @@
                                 <header class="col-12">
                                     <span>{$addon.name}</span>
                                 </header>
-                                <div class="product-desc">
+                                <div class="product-desc product-desc-full-width">
                                     <p>{$addon.description|nl2br}</p>
-                                    <div class="input-group">
-                                        <select name="productid" id="inputProductId{$num}" class="form-control">
+                                    <div class="form-group">
+                                        <select name="productid" id="inputProductId{$num}" class="field form-control">
                                             {foreach $addon.productids as $product}
                                                 <option value="{$product.id}">
                                                     {$product.product}{if $product.domain} - {$product.domain}{/if}
