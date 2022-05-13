@@ -1763,10 +1763,16 @@ function removeItem(type, num) {
 }
 
 function updateConfigurableOptions(i, billingCycle) {
-
     WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'a=cyclechange&ajax=1&i='+i+'&billingcycle='+billingCycle,
         function(data) {
-            jQuery("#productConfigurableOptions").html(jQuery(data).find('#productConfigurableOptions').html());
+            var co = jQuery('#productConfigurableOptions'),
+                add = jQuery('#productAddonsContainer');
+            if (co.length) {
+                co.html(jQuery(data).find('#productConfigurableOptions').html());
+            }
+            if (add.length) {
+                add.html(jQuery(data).find('#productAddonsContainer').html());
+            }
             jQuery('input').iCheck({
                 inheritID: true,
                 checkboxClass: 'icheckbox_square-blue',
@@ -1776,7 +1782,6 @@ function updateConfigurableOptions(i, billingCycle) {
         }
     );
     recalctotals();
-
 }
 
 function recalctotals() {

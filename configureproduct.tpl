@@ -45,7 +45,7 @@ var _localLang = {
                                 <div class="form-group">
                                     <label for="inputBillingcycle">{$LANG.cartchoosecycle}</label>
                                     <br>
-                                    <select name="billingcycle" id="inputBillingcycle" class="form-control select-inline custom-select" onchange="{if $configurableoptions}updateConfigurableOptions({$i}, this.value);{else}recalctotals();{/if}">
+                                    <select name="billingcycle" id="inputBillingcycle" class="form-control select-inline custom-select" onchange="updateConfigurableOptions({$i}, this.value); return false">
                                         {if $pricing.monthly}
                                             <option value="monthly"{if $billingcycle eq "monthly"} selected{/if}>
                                                 {$pricing.monthly}
@@ -284,39 +284,40 @@ var _localLang = {
 
                         {if $addons || count($addonsPromoOutput) > 0}
 
-                            <div class="sub-heading">
-                                <span class="primary-bg-color">{$LANG.cartavailableaddons}</span>
-                            </div>
-
-                            {foreach $addonsPromoOutput as $output}
-                                <div>
-                                    {$output}
+                            <div id="productAddonsContainer">
+                                <div class="sub-heading">
+                                    <span class="primary-bg-color">{$LANG.cartavailableaddons}</span>
                                 </div>
-                            {/foreach}
 
-                            <div class="row addon-products">
-                                {foreach $addons as $addon}
-                                    <div class="col-sm-{if count($addons) > 1}6{else}12{/if}">
-                                        <div class="panel card panel-default panel-addon{if $addon.status} panel-addon-selected{/if}">
-                                            <div class="panel-body card-body">
-                                                <label>
-                                                    <input type="checkbox" name="addons[{$addon.id}]"{if $addon.status} checked{/if} />
-                                                    {$addon.name}
-                                                </label><br />
-                                                {$addon.description}
-                                            </div>
-                                            <div class="panel-price">
-                                                {$addon.pricing}
-                                            </div>
-                                            <div class="panel-add">
-                                                <i class="fas fa-plus"></i>
-                                                {$LANG.addtocart}
-                                            </div>
-                                        </div>
+                                {foreach $addonsPromoOutput as $output}
+                                    <div>
+                                        {$output}
                                     </div>
                                 {/foreach}
-                            </div>
 
+                                <div class="row addon-products">
+                                    {foreach $addons as $addon}
+                                        <div class="col-sm-{if count($addons) > 1}6{else}12{/if}">
+                                            <div class="panel card panel-default panel-addon{if $addon.status} panel-addon-selected{/if}">
+                                                <div class="panel-body card-body">
+                                                    <label>
+                                                        <input type="checkbox" name="addons[{$addon.id}]"{if $addon.status} checked{/if} />
+                                                        {$addon.name}
+                                                    </label><br />
+                                                    {$addon.description}
+                                                </div>
+                                                <div class="panel-price">
+                                                    {$addon.pricing}
+                                                </div>
+                                                <div class="panel-add">
+                                                    <i class="fas fa-plus"></i>
+                                                    {$LANG.addtocart}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
                         {/if}
 
                         <div class="alert alert-warning info-text-sm">

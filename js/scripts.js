@@ -1970,25 +1970,26 @@ jQuery(document).ready(function() {
     }
 });
 
-function modifyLuminance(hex, lum) {
-    var rgb = "#",
-        c,
-        i;
-    hex = hex.replace(/[^0-9a-f]/gi, '');
-    if (hex.length < 6) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+function getRecommendationColors(hex, percentage) {
+    var primary = tinycolor(hex),
+        secondary,
+        text = tinycolor('fff'),
+        brightness = Math.round(Math.min(primary.getBrightness()/255) * 100),
+        baseBrightnessPercent = 25;
+    if (brightness < baseBrightnessPercent) {
+        primary.lighten(baseBrightnessPercent - brightness);
+    } else if (brightness > (100 - baseBrightnessPercent)) {
+        primary.darken(brightness - (100 - baseBrightnessPercent));
     }
-    lum = lum || 0;
-    for (i = 0; i < 3; i++) {
-        c = parseInt(hex.substr((i * 2), 2), 16);
-        c = Math.round(Math.min(Math.max(0, (c + (c * lum))), 255)).toString(16);
-        rgb += ("00" + c).substr(c.length);
+    secondary = primary.clone().darken(percentage);
+    if (secondary.isLight()) {
+        text = tinycolor('000');
     }
-    return rgb;
-}
+    return [primary.toHexString(), secondary.toHexString(), text.toHexString()];
+};
 
 function setRecommendationColors() {
-    var shadeColor,
+    var colors,
         defaultColor = '#9abb3a';
     jQuery('.product-recommendations .product-recommendation').each(function() {
         var element = jQuery(this),
@@ -1996,12 +1997,13 @@ function setRecommendationColors() {
         if (!(primaryColor.length > 0) || (primaryColor.match(/^#[0-9A-Fa-f]{3,6}$/gi) == undefined)) {
             primaryColor = defaultColor;
         }
-        shadeColor = modifyLuminance(primaryColor, -0.15);
-        element.css('border-color', primaryColor);
-        jQuery('.btn-add', element).css('background-color', primaryColor);
-        jQuery('.expander', element).css('color', primaryColor);
-        jQuery('.price', element).css('color', shadeColor);
-        jQuery('.arrow', element).css('background-color', shadeColor);
+        colors = getRecommendationColors(primaryColor, 15);
+        element.css('border-color', colors[0]);
+        jQuery('.btn-add', element).css('background-color', colors[0]);
+        jQuery('.expander', element).css('color', colors[0]);
+        jQuery('.price', element).css('color', colors[1]);
+        jQuery('.text', element).css({'color': colors[2]});
+        jQuery('.arrow', element).css({'background-color': colors[1], 'color': colors[2]});
     });
 }
 
@@ -3814,10 +3816,16 @@ function removeItem(type, num) {
 }
 
 function updateConfigurableOptions(i, billingCycle) {
-
     WHMCS.http.jqClient.post(whmcsBaseUrl + '/cart.php', 'a=cyclechange&ajax=1&i='+i+'&billingcycle='+billingCycle,
         function(data) {
-            jQuery("#productConfigurableOptions").html(jQuery(data).find('#productConfigurableOptions').html());
+            var co = jQuery('#productConfigurableOptions'),
+                add = jQuery('#productAddonsContainer');
+            if (co.length) {
+                co.html(jQuery(data).find('#productConfigurableOptions').html());
+            }
+            if (add.length) {
+                add.html(jQuery(data).find('#productAddonsContainer').html());
+            }
             jQuery('input').iCheck({
                 inheritID: true,
                 checkboxClass: 'icheckbox_square-blue',
@@ -3827,7 +3835,6 @@ function updateConfigurableOptions(i, billingCycle) {
         }
     );
     recalctotals();
-
 }
 
 function recalctotals() {
