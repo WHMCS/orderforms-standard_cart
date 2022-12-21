@@ -1336,10 +1336,13 @@ toolTip: function () {
         return tip;
     };
 
-    this.hideTip = function (btn) {
+    this.hideTip = function (btn, timeout) {
+        if (!timeout) {
+            timeout = 2000;
+        }
         return setTimeout(function() {
             btn.data('bs.tooltip').hide()
-        }, 2000);
+        }, timeout);
     }
 },
 
@@ -3226,7 +3229,7 @@ jQuery(document).ready(function(){
                     pricing = domain.pricing,
                     result = jQuery('#spotlight' + tld + ' .domain-lookup-result');
                 jQuery('.domain-lookup-spotlight-loader').hide();
-                result.find('button').hide();
+                result.find('button').removeClass('checkout').hide();
                 if (domain.isValidDomain) {
                     if (domain.isAvailable && typeof pricing !== 'string') {
                         if (domain.domainName !== domain.idnDomainName && idnLanguage.not(':visible')) {
