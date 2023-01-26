@@ -61,7 +61,8 @@
                     <div id="primaryLookupResult" class="domain-lookup-result w-hidden">
                         <p class="domain-invalid domain-checker-invalid">{lang key='orderForm.domainLetterOrNumber'}<span class="domain-length-restrictions">{lang key='orderForm.domainLengthRequirements'}</span></p>
                         <p class="domain-unavailable domain-checker-unavailable">{lang key='orderForm.domainIsUnavailable'}</p>
-                        <p class="domain-available domain-checker-available">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</p>
+                        <p class="domain-tld-unavailable domain-checker-unavailable">{lang key='orderForm.domainHasUnavailableTld'}</p>
+                        <p class="domain-available domain-checker-available">{$LANG.domainavailablemessage}</p>
                         <a class="domain-contact-support btn btn-primary">{$LANG.domainContactUs}</a>
                         <div id="idnLanguageSelector" class="form-group idn-language-selector w-hidden">
                             <div class="row">

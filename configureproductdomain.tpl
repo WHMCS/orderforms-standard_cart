@@ -196,7 +196,7 @@
                         </p>
                         <div id="primaryLookupResult" class="domain-lookup-result domain-lookup-primary-results w-hidden">
                             <div class="domain-unavailable domain-checker-unavailable headline">{lang key='orderForm.domainIsUnavailable'}</div>
-                            <div class="domain-available domain-checker-available headline">{$LANG.domainavailable1} <strong></strong> {$LANG.domainavailable2}</div>
+                            <div class="domain-available domain-checker-available headline">{$LANG.domainavailablemessage}</div>
                             <div class="btn btn-primary domain-contact-support headline">{$LANG.domainContactUs}</div>
                             <div class="transfer-eligible">
                                 <p class="domain-checker-available headline">{lang key='orderForm.transferEligible'}</p>

@@ -1569,6 +1569,20 @@ a.domain-tld-pricing-category {
     color: #555;
 }
 
+#order-standard_cart .mc-promo.nordvpn {
+    border-color: #4687FF;
+}
+#order-standard_cart .mc-promo.nordvpn .btn-add {
+    background-color: #4687FF;
+}
+#order-standard_cart .mc-promo.nordvpn .arrow {
+    background-color: #4687FF;
+}
+#order-standard_cart .mc-promo.nordvpn .expander,
+#order-standard_cart .mc-promo.nordvpn .price {
+    color: #4687FF;
+}
+
 #order-standard_cart .mc-promo.marketgoo {
     border-color: #3090e0;
 }
