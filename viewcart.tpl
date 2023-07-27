@@ -282,7 +282,35 @@
                                     </div>
                                 {/foreach}
 
-                                {foreach $renewals as $num => $domain}
+                                {foreach $renewalsByType['services'] as $num => $service}
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                            <span class="item-title">
+                                                {lang key='renewService.titleAltSingular'}
+                                            </span>
+                                                <span class="item-group">
+                                                {$service.name}
+                                            </span>
+                                                <span class="item-domain">
+                                                {$service.domainName}
+                                            </span>
+                                            </div>
+                                            <div class="col-sm-4 item-price">
+                                                <span>{$service.recurringBeforeTax}</span>
+                                                <span class="cycle">{$service.billingCycle}</span>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('r','{$num}','service')">
+                                                    <i class="fas fa-times"></i>
+                                                    <span class="visible-xs d-block d-sm-none">{lang key='orderForm.remove'}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+
+                                {foreach $renewalsByType['domains'] as $num => $domain}
                                     <div class="item">
                                         <div class="row">
                                             <div class="col-sm-7">
@@ -301,7 +329,7 @@
                                                 <span class="cycle">{$domain.regperiod} {$LANG.orderyears}</span>
                                             </div>
                                             <div class="col-sm-1">
-                                                <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('r','{$num}')">
+                                                <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('r','{$num}','domain')">
                                                     <i class="fas fa-times"></i>
                                                     <span class="visible-xs d-block d-sm-none">{$LANG.orderForm.remove}</span>
                                                 </button>
@@ -567,6 +595,7 @@
             <input type="hidden" name="a" value="remove" />
             <input type="hidden" name="r" value="" id="inputRemoveItemType" />
             <input type="hidden" name="i" value="" id="inputRemoveItemRef" />
+            <input type="hidden" name="rt" value="" id="inputRemoveItemRenewalType">
             <div class="modal fade modal-remove-item" id="modalRemoveItem" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">

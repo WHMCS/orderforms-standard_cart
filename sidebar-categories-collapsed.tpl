@@ -12,7 +12,7 @@
                 <select name="currency" onchange="submit()" class="form-control">
                     <option value="">{$LANG.choosecurrency}</option>
                     {foreach from=$currencies item=listcurr}
-                        <option value="{$listcurr.id}"{if $listcurr.id == $currency.id} selected{/if}>{$listcurr.code}</option>
+                        <option value="{$listcurr.id}"{if $listcurr.id == $activeCurrency.id} selected{/if}>{$listcurr.code}</option>
                     {/foreach}
                 </select>
             </form>

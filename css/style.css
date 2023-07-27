@@ -93,7 +93,8 @@
 }
 
 #order-standard_cart label,
-#order-standard_cart p.domain-renewal-desc {
+#order-standard_cart p.domain-renewal-desc,
+.service-renewals .div-renewal-period-label {
     margin-right: 10px;
     font-weight: 300;
     font-size: 13px;
@@ -1341,7 +1342,8 @@ a.domain-tld-pricing-category {
  * Domain Renewals
  */
 
-.form-control.domain-renewals-filter {
+.form-control.domain-renewals-filter,
+.form-control.service-renewals-filter {
     background: url(../../../../assets/img/search.png) #fff no-repeat 8px 5px !important;
     padding: 7px 10px 7px 45px !important;
     height: auto !important;
@@ -1349,24 +1351,38 @@ a.domain-tld-pricing-category {
     font-size: 13px !important;
     border-radius: 2px !important;
 }
+.form-control.service-renewals-filter {
+    width: 100% !important;
+}
+@media (min-width: 768px) {
+    .form-control.service-renewals-filter {
+        width: 270px !important;
+        float: right !important;
+    }
+}
 
-.domain-renewals {
+.domain-renewals,
+.service-renewals {
     margin: 10px 0;
     border-top: 1px solid #ccc;
     background-color: #f8f8f8;
 }
-.domain-renewals .domain-renewal {
+.domain-renewals .domain-renewal,
+.service-renewals .service-renewal {
     margin: 0;
     padding: 15px;
     border-bottom: 1px solid #ccc;
 }
-.domain-renewals .domain-renewal:nth-child(even) {
+.domain-renewals .domain-renewal:nth-child(even),
+.service-renewals .service-renewal:nth-child(even){
     background-color: #f4f4f4;
 }
-.domain-renewals .domain-renewal h3 {
+.domain-renewals .domain-renewal h3,
+.service-renewals .service-renewal h3{
     margin: 0;
 }
-.domain-renewals .domain-renewal .label {
+.domain-renewals .domain-renewal .label,
+.service-renewals .service-renewal .label {
     border-radius: 3px;
 }
 .order-summary i.fa-trash {

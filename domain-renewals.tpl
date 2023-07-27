@@ -8,7 +8,7 @@
         <div class="cart-body">
             <div class="header-lined">
                 <h1 class="font-size-36">
-                    {if $totalResults > 1}{lang key='domainrenewals'}{else}{lang key='domainrenewal'}{/if}
+                    {if $totalResults > 1}{lang key='navrenewdomains'}{else}{lang key='domainrenew'}{/if}
                     {if $totalResults > 5}
                         <div class="pull-right float-right">
                             <input id="domainRenewalFilter" type="search" class="domain-renewals-filter form-control input-inline-100" placeholder="{lang key='searchenterdomain'}">

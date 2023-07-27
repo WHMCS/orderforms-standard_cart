@@ -3687,11 +3687,27 @@ jQuery(document).ready(function(){
         useCreditOnCheckout.iCheck('check');
     }
 
-    jQuery('#domainRenewals').find('span.added').hide().end().find('span.to-add').find('i').hide();
+    jQuery('#domainRenewals, #serviceRenewals').find('span.added').hide().end().find('span.to-add').find('i').hide();
     jQuery('.btn-add-renewal-to-cart').on('click', function() {
-        var self = jQuery(this),
-            domainId = self.data('domain-id'),
-            period = jQuery('#renewalPricing' + domainId).val();
+        var self = jQuery(this);
+        var selfOuterWidth = self.outerWidth();
+        var postUrl;
+        var postData;
+
+        if (jQuery('#serviceRenewals').length >= 1) {
+            postUrl = WHMCS.utils.getRouteUrl('/cart/service/' + self.data('service-id') + '/product/renew');
+            postData = {
+                token: csrfToken
+            };
+        } else {
+            var domainId = self.data('domain-id');
+            postUrl = WHMCS.utils.getRouteUrl('/cart/domain/renew/add');
+            postData = {
+                domainId: domainId,
+                period: jQuery('#renewalPricing' + domainId).val(),
+                token: csrfToken
+            };
+        }
 
         if (self.hasClass('checkout')) {
             window.location = whmcsBaseUrl + '/cart.php?a=view';
@@ -3699,22 +3715,19 @@ jQuery(document).ready(function(){
         }
 
         self.attr('disabled', 'disabled').each(function() {
-            jQuery(this).find('i').fadeIn('fast').end().css('width', jQuery(this).outerWidth());
+            self.find('i').fadeIn('fast').end();
         });
 
         WHMCS.http.jqClient.post(
-            WHMCS.utils.getRouteUrl('/cart/domain/renew/add'),
-            {
-                domainId: domainId,
-                period: period,
-                token: csrfToken
-            },
+            postUrl,
+            postData,
             null,
             'json'
         ).done(function (data) {
             self.find('span.to-add').hide();
             if (data.result === 'added') {
-                self.find('span.added').show().end().find('i').fadeOut('fast').css('width', self.outerWidth());
+                self.find('span.added').show().end().find('i').fadeOut('fast')
+                self.css('width', selfOuterWidth);
             }
             recalculateRenewalTotals();
         });
@@ -3722,19 +3735,23 @@ jQuery(document).ready(function(){
     jQuery(document).on('submit', '#removeRenewalForm', function(e) {
         e.preventDefault();
 
+        var buttonId = '#renewDomain';
+        if (jQuery('#serviceRenewals').length >= 1) {
+            buttonId = '#renewService';
+        }
+
         WHMCS.http.jqClient.post(
             whmcsBaseUrl + '/cart.php',
             jQuery(this).serialize() + '&ajax=1'
         ).done(function(data) {
-            var domainId = data.i,
-                button = jQuery('#renewDomain' + domainId);
+            var domainId = data.i;
+            var button = jQuery(buttonId + domainId);
 
             button.attr('disabled', 'disabled').each(function() {
                 jQuery(this).find('span.added').hide().end()
                     .removeClass('checkout').find('span.to-add').show().end().removeAttr('disabled');
-                jQuery(this).css('width', jQuery(this).outerWidth());
+                jQuery(this).css('width', '');
             });
-
         }).always(function () {
             jQuery('#modalRemoveItem').modal('hide');
             recalculateRenewalTotals();
@@ -3757,6 +3774,20 @@ jQuery(document).ready(function(){
         var inputText = jQuery(this).val().toLowerCase();
         jQuery('#domainRenewals').find('div.domain-renewal').filter(function() {
             jQuery(this).toggle(jQuery(this).data('domain').toLowerCase().indexOf(inputText) > -1);
+        });
+    });
+
+    jQuery('#serviceRenewalFilter').on('keyup', function() {
+        var inputText = jQuery(this).val().toLowerCase();
+        jQuery('#serviceRenewals').find('div.service-renewal').filter(function() {
+            var isInputMatched = false;
+            jQuery.each(jQuery(this).data(), function(key, value) {
+                if (String(value).toLowerCase().indexOf(inputText) > -1) {
+                    isInputMatched = true;
+                    return false;
+                }
+            });
+            jQuery(this).toggle(isInputMatched);
         });
     });
 
@@ -3844,7 +3875,10 @@ function domainGotoNextStep() {
     jQuery("#frmProductDomainSelections").submit();
 }
 
-function removeItem(type, num) {
+function removeItem(type, num, renewalType = null) {
+    if (renewalType !== null) {
+        jQuery('#inputRemoveItemRenewalType').val(renewalType);
+    }
     jQuery('#inputRemoveItemType').val(type);
     jQuery('#inputRemoveItemRef').val(num);
     jQuery('#modalRemoveItem').modal('show');
@@ -3896,15 +3930,19 @@ function recalctotals() {
 }
 
 function recalculateRenewalTotals() {
+    var routePath = '/cart/domain/renew/calculate';
+    if (jQuery('#serviceRenewals').length >= 1) {
+        routePath = '/cart/service/renew/calculate';
+    }
+
     if (!jQuery("#orderSummaryLoader").is(":visible")) {
         jQuery("#orderSummaryLoader").fadeIn('fast');
     }
 
     var thisRequestId = Math.floor((Math.random() * 1000000) + 1);
     window.lastSliderUpdateRequestId = thisRequestId;
-
     WHMCS.http.jqClient.get(
-        WHMCS.utils.getRouteUrl('/cart/domain/renew/calculate')
+        WHMCS.utils.getRouteUrl(routePath)
     ).done(function(data) {
         if (thisRequestId === window.lastSliderUpdateRequestId) {
             jQuery("#producttotal").html(data.body);
