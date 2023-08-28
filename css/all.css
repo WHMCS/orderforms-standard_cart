@@ -1385,6 +1385,13 @@ a.domain-tld-pricing-category {
 .service-renewals .service-renewal .label {
     border-radius: 3px;
 }
+.service-renewals .div-renewal-ineligible {
+    font-weight: bold;
+    color: #666;
+}
+.service-renewals .div-renewal-ineligible i {
+    margin-right: 4px;
+}
 .order-summary i.fa-trash {
     opacity: 0.5;
 }
