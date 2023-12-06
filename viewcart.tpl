@@ -286,15 +286,15 @@
                                     <div class="item">
                                         <div class="row">
                                             <div class="col-sm-7">
-                                            <span class="item-title">
-                                                {lang key='renewService.titleAltSingular'}
-                                            </span>
+                                                <span class="item-title">
+                                                    {lang key='renewService.titleAltSingular'}
+                                                </span>
                                                 <span class="item-group">
-                                                {$service.name}
-                                            </span>
+                                                    {$service.name}
+                                                </span>
                                                 <span class="item-domain">
-                                                {$service.domainName}
-                                            </span>
+                                                    {$service.domainName}
+                                                </span>
                                             </div>
                                             <div class="col-sm-4 item-price">
                                                 <span>{$service.recurringBeforeTax}</span>
@@ -302,6 +302,34 @@
                                             </div>
                                             <div class="col-sm-1">
                                                 <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('r','{$num}','service')">
+                                                    <i class="fas fa-times"></i>
+                                                    <span class="visible-xs d-block d-sm-none">{lang key='orderForm.remove'}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+
+                                {foreach $renewalsByType['addons'] as $num => $service}
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-sm-7">
+                                                <span class="item-title">
+                                                    {lang key='renewServiceAddon.titleAltSingular'}
+                                                </span>
+                                                <span class="item-group">
+                                                    {$service.name}
+                                                </span>
+                                                <span class="item-domain">
+                                                    {$service.domainName}
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-4 item-price">
+                                                <span>{$service.recurringBeforeTax}</span>
+                                                <span class="cycle">{$service.billingCycle}</span>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="button" class="btn btn-link btn-xs btn-remove-from-cart" onclick="removeItem('r','{$num}','addon')">
                                                     <i class="fas fa-times"></i>
                                                     <span class="visible-xs d-block d-sm-none">{lang key='orderForm.remove'}</span>
                                                 </button>

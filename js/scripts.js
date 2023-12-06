@@ -3695,7 +3695,12 @@ jQuery(document).ready(function(){
         var postData;
 
         if (jQuery('#serviceRenewals').length >= 1) {
-            postUrl = WHMCS.utils.getRouteUrl('/cart/service/' + self.data('service-id') + '/product/renew');
+            var serviceId = self.data('service-id');
+            if (serviceId.toString().startsWith('a-')) {
+                postUrl = WHMCS.utils.getRouteUrl('/cart/service/' + serviceId.substr(2) + '/addon/renew');
+            } else {
+                postUrl = WHMCS.utils.getRouteUrl('/cart/service/' + serviceId + '/product/renew');
+            }
             postData = {
                 token: csrfToken
             };
@@ -3770,25 +3775,64 @@ jQuery(document).ready(function(){
         });
     });
 
-    jQuery('#domainRenewalFilter').on('keyup', function() {
+    jQuery('#domainRenewalFilter').on('input', function() {
         var inputText = jQuery(this).val().toLowerCase();
         jQuery('#domainRenewals').find('div.domain-renewal').filter(function() {
             jQuery(this).toggle(jQuery(this).data('domain').toLowerCase().indexOf(inputText) > -1);
         });
     });
 
-    jQuery('#serviceRenewalFilter').on('keyup', function() {
+    jQuery('#serviceRenewalFilter').on('input', function() {
         var inputText = jQuery(this).val().toLowerCase();
-        jQuery('#serviceRenewals').find('div.service-renewal').filter(function() {
+        var hasMatchingInputs = function matchInputs(element, input) {
             var isInputMatched = false;
-            jQuery.each(jQuery(this).data(), function(key, value) {
-                if (String(value).toLowerCase().indexOf(inputText) > -1) {
+            if (inputText.length > 0) {
+                jQuery('#hideShowServiceRenewalButton').find('span.to-show').hide().end()
+                    .find('span.to-hide').show().end().removeAttr('disabled');
+            }
+            jQuery.each(element.data(), function(key, value) {
+                if (String(value).toLowerCase().indexOf(input) > -1) {
                     isInputMatched = true;
                     return false;
                 }
             });
-            jQuery(this).toggle(isInputMatched);
+            element.toggle(isInputMatched);
+            return isInputMatched;
+        }
+
+        jQuery('#serviceRenewals').find('.service-renewal').filter(function() {
+            var serviceRenewals = jQuery(this);
+            var addonRenewals = serviceRenewals.find('.addon-renewals');
+            var hasMatchingAddonItem = false;
+
+            if (addonRenewals.length > 0) {
+                addonRenewals.find('.service-renewal').filter(function() {
+                    hasMatchingAddonItem = hasMatchingInputs(jQuery(this), inputText);
+                });
+            }
+            if (hasMatchingAddonItem) {
+                serviceRenewals.toggle(true);
+            } else {
+                hasMatchingInputs(serviceRenewals, inputText);
+            }
+            addonRenewals.toggle(hasMatchingAddonItem);
         });
+    });
+
+    // Hide/show Non-Renewable Services and Service Addons
+    jQuery(this).find('span.to-hide').hide().end()
+        .find('span.to-show').show().end().removeAttr('disabled');
+    hideNoneRenewableServices();
+    jQuery('#hideShowServiceRenewalButton').on('click', function() {
+        if (jQuery(this).find('span.to-show').is(":hidden")) {
+            jQuery(this).find('span.to-hide').hide().end()
+                .find('span.to-show').show().end().removeAttr('disabled');
+            hideNoneRenewableServices();
+        } else {
+            jQuery(this).find('span.to-show').hide().end()
+                .find('span.to-hide').show().end().removeAttr('disabled');
+            showNoneRenewableServices();
+        }
     });
 
     checkoutForm = jQuery('#frmCheckout');
@@ -4100,4 +4144,40 @@ function selectPreferredCard()
         select = preferred;
     }
     select.iCheck('check');
+}
+
+function showNoneRenewableServices()
+{
+    jQuery('.service-renewal, .addon-renewals').each(function () {
+        if (jQuery(this).attr('data-is-renewable') === 'false') {
+            jQuery(this).show();
+        }
+    });
+}
+
+function hideNoneRenewableServices()
+{
+    jQuery('.service-renewal, .addon-renewals').each(function (i, element) {
+        var isRenewable = jQuery(this).attr('data-is-renewable');
+        if (isRenewable === 'false') {
+            if (hasRenewableServiceAddon(element)) {
+                jQuery(this).show();
+            } else {
+                jQuery(this).hide();
+            }
+        } else if (isRenewable === 'true' ) {
+            jQuery(this).show();
+        }
+    });
+}
+
+function hasRenewableServiceAddon(data)
+{
+    var hasService = false;
+    jQuery(data).find('div.service-renewal').each(function (i, element) {
+        if (jQuery(element).attr('data-is-renewable') === 'true') {
+            return hasService = true;
+        }
+    });
+    return hasService;
 }

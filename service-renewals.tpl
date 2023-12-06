@@ -16,6 +16,14 @@
                     </h1>
                 </div>
                 <div class="col-md-6">
+                    <button id="hideShowServiceRenewalButton" class="btn btn-sm btn-default service-renewals-quick-filter">
+                        <span class="to-hide">
+                            {lang key='renewService.hideShowServices.hide'}
+                        </span>
+                        <span class="to-show">
+                            {lang key='renewService.hideShowServices.show'}
+                        </span>
+                    </button>
                     {if $totalResults > 5}
                         <input id="serviceRenewalFilter" type="search" class="service-renewals-filter form-control" placeholder="{lang key='renewService.searchPlaceholder'}">
                     {/if}
@@ -44,72 +52,7 @@
                             </div>
                         {/if}
                         <div id="serviceRenewals" class="service-renewals">
-                            {foreach $renewableServices as $renewableService}
-                                <div class="service-renewal" data-product-name="{$renewableService.product.name}" data-service-id="{$renewableService.serviceId}" data-service-domain="{$renewableService.domain}">
-                                    <div class="pull-right float-right">
-                                        <span class="label label-warning">
-                                            {lang key='renewService.renewingIn' days=$renewableService.nextDueDate->diffInDays()}
-                                        </span>
-                                    </div>
-                                    <h3 class="font-size-24">
-                                        {$renewableService.product.name}
-                                    </h3>
-                                    <h4 class="font-size-22">
-                                        {$renewableService.domain}
-                                    </h4>
-                                    <p>
-                                        {lang key='renewService.serviceNextDueDateExtended' nextDueDate=$renewableService.nextDueDate->toClientDateFormat() nextDueDateFormatted=$renewableService.nextDueDate->diffForHumans()}
-                                    </p>
-                                    <div class="clearfix">
-                                        <div class="pull-left float-left">
-                                            <div class="div-renewal-period-label">
-                                                {lang key='renewService.renewalPeriodLabel'}
-                                            </div>
-                                            <div>
-                                                {lang key='renewService.renewalPeriod' nextDueDate=$renewableService.nextDueDate->toClientDateFormat() nextPayUntilDate=$renewableService.nextPayUntilDate->toClientDateFormat() renewalPrice=$renewableService.price}
-                                            </div>
-                                        </div>
-                                        <button id="renewService{$renewableService.serviceId}" class="btn btn-default btn-add-renewal-to-cart pull-right float-right" data-service-id="{$renewableService.serviceId}">
-                                            <span class="to-add">
-                                                <i class="fas fa-fw fa-spinner fa-spin"></i>
-                                                {lang key='addtocart'}
-                                            </span>
-                                            <span class="added">
-                                                {lang key='domaincheckeradded'}
-                                            </span>
-                                        </button>
-                                    </div>
-                                </div>
-                            {/foreach}
-                            {foreach $nonRenewableServices as $nonRenewableService}
-                                <div class="service-renewal" data-product-name="{$nonRenewableService.product.name}" data-service-id="{$nonRenewableService.serviceId}" data-service-domain="{$nonRenewableService.domain}">
-                                    <div class="pull-right float-right">
-                                        <span class="label label-info">
-                                            {lang key='renewService.renewalUnavailable'}
-                                        </span>
-                                    </div>
-                                    <h3 class="font-size-24">
-                                        {$nonRenewableService.product.name}
-                                    </h3>
-                                    <h4 class="font-size-22">
-                                        {$nonRenewableService.domain}
-                                    </h4>
-                                    <p>
-                                        {if is_null($nonRenewableService.nextDueDate)}
-                                            {lang key='renewService.serviceNextDueDateBasic' nextDueDate={lang key='na'}}
-                                        {else}
-                                            {lang key='renewService.serviceNextDueDateExtended' nextDueDate=$nonRenewableService.nextDueDate->toClientDateFormat() nextDueDateFormatted=$nonRenewableService.nextDueDate->diffForHumans()}
-                                        {/if}
-                                    </p>
-                                    <div class="clearfix">
-                                        <div class="pull-left float-left">
-                                            <div class="div-renewal-ineligible">
-                                                <i class="fas fa-info-circle"></i>{$nonRenewableService.reason}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {/foreach}
+                            {include file="orderforms/standard_cart/service-renewal-item.tpl" renewableItems=$renewableServices prefix=''}
                         </div>
                     </div>
                     <div class="secondary-cart-sidebar" id="scrollingPanelContainer">

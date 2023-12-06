@@ -1351,11 +1351,16 @@ a.domain-tld-pricing-category {
     font-size: 13px !important;
     border-radius: 2px !important;
 }
+.service-renewals-quick-filter {
+    margin-bottom: 5px;
+    width: 100%;
+}
 .form-control.service-renewals-filter {
     width: 100% !important;
 }
 @media (min-width: 768px) {
-    .form-control.service-renewals-filter {
+    .form-control.service-renewals-filter,
+    .service-renewals-quick-filter {
         width: 270px !important;
         float: right !important;
     }
@@ -1365,6 +1370,10 @@ a.domain-tld-pricing-category {
 .service-renewals {
     margin: 10px 0;
     border-top: 1px solid #ccc;
+}
+.domain-renewals,
+.service-renewals,
+.addon-renewals .service-renewal {
     background-color: #f8f8f8;
 }
 .domain-renewals .domain-renewal,
@@ -1374,7 +1383,8 @@ a.domain-tld-pricing-category {
     border-bottom: 1px solid #ccc;
 }
 .domain-renewals .domain-renewal:nth-child(even),
-.service-renewals .service-renewal:nth-child(even){
+.service-renewals .service-renewal:nth-child(even),
+.addon-renewals .service-renewal:nth-child(even) {
     background-color: #f4f4f4;
 }
 .domain-renewals .domain-renewal h3,
@@ -1391,6 +1401,15 @@ a.domain-tld-pricing-category {
 }
 .service-renewals .div-renewal-ineligible i {
     margin-right: 4px;
+}
+.addon-renewals {
+    margin-top: 15px;
+}
+.addon-renewals > div {
+    border: 1px solid #ccc;
+}
+.addon-renewals div > .service-renewal:last-child {
+    border-bottom: 0;
 }
 .order-summary i.fa-trash {
     opacity: 0.5;
