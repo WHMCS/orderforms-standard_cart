@@ -553,6 +553,8 @@
 
                     <div class="clearfix"></div>
 
+                    <div id="paymentGatewayInput"></div>
+
                     <div class="cc-input-container{if $selectedgatewaytype neq "CC"} w-hidden{/if}" id="creditCardInputFields">
                         {if $client}
                             <div id="existingCardsContainer" class="existing-cc-grid">

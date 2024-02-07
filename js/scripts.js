@@ -2914,11 +2914,28 @@ jQuery(document).ready(function(){
         existingCardInfo.slideUp().find('input').attr('disabled', 'disabled');
     });
 
-    jQuery(".payment-methods").on('ifChecked', function(event) {
-        var existingCards = jQuery(document).find('.existing-card');
+    var whmcsPaymentModuleMetadata = {
+        _source: 'checkout',
+    };
+    jQuery(".payment-methods").each(function () {
+        var element = jQuery(this);
+        WHMCS.payment.event.gatewayInit(whmcsPaymentModuleMetadata, element.val());
+        WHMCS.payment.event.gatewayOptionInit(whmcsPaymentModuleMetadata, element.val(), element);
+    })
+    .on('ifChecked', function(event) {
+        WHMCS.payment.event.gatewayUnselected(whmcsPaymentModuleMetadata);
+        var element = jQuery(this);
+        var afterDefaultOnSelectOptions = {
+            complete: function () {
+                WHMCS.payment.event.gatewaySelected(whmcsPaymentModuleMetadata, element.val(), element);
+            }
+        };
 
+        var existingCards = jQuery(document).find('.existing-card');
         if (!existingCards.length) {
-            existingCardInfo.slideUp().find('input').attr('disabled', 'disabled');
+            existingCardInfo.slideUp()
+                .find('input')
+                .attr('disabled', 'disabled');
         }
 
         if (jQuery(this).hasClass('is-credit-card')) {
@@ -3006,10 +3023,12 @@ jQuery(document).ready(function(){
             }
 
             if (!creditCardInputFields.is(":visible")) {
-                creditCardInputFields.slideDown();
+                creditCardInputFields.slideDown(afterDefaultOnSelectOptions);
+            } else {
+                afterDefaultOnSelectOptions.complete();
             }
         } else {
-            creditCardInputFields.slideUp();
+            creditCardInputFields.slideUp(afterDefaultOnSelectOptions);
         }
     });
 
@@ -3837,7 +3856,14 @@ jQuery(document).ready(function(){
 
     checkoutForm = jQuery('#frmCheckout');
     if (checkoutForm.length) {
-        checkoutForm.on('submit', validateCheckoutCreditCardInput);
+        checkoutForm.on('submit', function (events) {
+            validateCheckoutCreditCardInput(events);
+            WHMCS.payment.event.checkoutFormSubmit(
+                whmcsPaymentModuleMetadata,
+                WHMCS.payment.event.previouslySelected.module,
+                jQuery(this)
+            );
+        });
     }
 
     jQuery(".payment-methods:checked").trigger('ifChecked');
