@@ -868,6 +868,7 @@ jQuery(document).ready(function(){
     })
     .on('ifChecked', function(event) {
         WHMCS.payment.event.gatewayUnselected(whmcsPaymentModuleMetadata);
+        WHMCS.payment.display.errorClear();
         var element = jQuery(this);
         var afterDefaultOnSelectOptions = {
             complete: function () {
@@ -1800,10 +1801,10 @@ jQuery(document).ready(function(){
 
     checkoutForm = jQuery('#frmCheckout');
     if (checkoutForm.length) {
-        checkoutForm.on('submit', function (events) {
-            validateCheckoutCreditCardInput(events);
+        checkoutForm.on('submit', validateCheckoutCreditCardInput);
+        checkoutForm.on('submit.paymentjs', function (event) {
             WHMCS.payment.event.checkoutFormSubmit(
-                whmcsPaymentModuleMetadata,
+                {...whmcsPaymentModuleMetadata, ...{event: event}},
                 WHMCS.payment.event.previouslySelected.module,
                 jQuery(this)
             );
