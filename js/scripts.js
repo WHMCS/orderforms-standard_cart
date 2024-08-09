@@ -1816,7 +1816,7 @@ function () {
         if (typeof window.whmcsBaseUrl === 'undefined') {
             console.log('Warning: The WHMCS Base URL definition is missing '
                 + 'from your active template. Please refer to '
-                + 'https://docs.whmcs.com/WHMCS_Base_URL_Template_Variable '
+                + 'https://go.whmcs.com/1961/base-url '
                 + 'for more information and details of how to resolve this '
                 + 'warning.');
             window.whmcsBaseUrl = this.autoDetermineBaseUrl();

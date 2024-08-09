@@ -33,12 +33,12 @@
                             {if $captcha->isEnabled() && $captcha->isEnabledForForm($captchaForm) && !$captcha->recaptcha->isInvisible()}
                                 <div class="col-md-8 col-md-offset-2 offset-md-2 col-xs-10 col-xs-offset-1 col-10 offset-1">
                                     <div class="captcha-container" id="captchaContainer">
-                                        {if $captcha == "recaptcha"}
+                                        {if $captcha->recaptcha->isEnabled()}
                                             <br>
                                             <div class="text-center">
                                                 <div class="form-group recaptcha-container"></div>
                                             </div>
-                                        {elseif $captcha != "recaptcha"}
+                                        {else}
                                             <div class="default-captcha default-captcha-register-margin">
                                                 <p>{lang key="cartSimpleCaptcha"}</p>
                                                 <div>

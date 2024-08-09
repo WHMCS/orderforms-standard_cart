@@ -21,7 +21,7 @@
 
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 offset-sm-2 text-center">
-                    {if !$userValidation.submittedAt && $userValidation.token eq true}
+                    {if $userValidation && !$userValidation.submittedAt && $userValidation.token eq true}
                         <p class="margin-bottom">{lang key='fraud.furtherVal'}</p>
                         <p>
                             <a href="#" class="btn btn-default" data-url="{$userValidationUrl}" onclick="openValidationSubmitModal(this);return false;">
