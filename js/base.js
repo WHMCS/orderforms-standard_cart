@@ -2070,7 +2070,7 @@ function loadMoreSuggestions()
 
 function validate_captcha(form)
 {
-    var reCaptcha = jQuery('#g-recaptcha-response'),
+    let reCaptcha = jQuery('#g-recaptcha-response'),
         reCaptchaContainer = jQuery('#divDynamicRecaptcha'),
         captcha = jQuery('#inputCaptcha');
 
@@ -2093,7 +2093,7 @@ function validate_captcha(form)
 
     validate.done(function(data) {
         if (data.error) {
-            jQuery('#inputCaptcha').attr('data-original-title', data.error).tooltip('show');
+            jQuery('#inputCaptcha, .recaptcha-container').attr('data-original-title', data.error).tooltip('show');
             if (captcha.length) {
                 jQuery('#inputCaptchaImage').replaceWith(
                     '<img id="inputCaptchaImage" src="' + whmcsBaseUrl + '/includes/verifyimage.php?nocache=' + new Date().getTime() + '" align="middle" />'
