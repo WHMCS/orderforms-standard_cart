@@ -75,7 +75,7 @@
                                             <span class="setup-fee"><small>{$price->setup()->toFull()}&nbsp;{lang key="ordersetupfee"}</small></span>
                                         {/if}
                                     </div>
-                                    <a type="button" class="btn btn-sm btn-add" href="{$recommendation->getRoutePath()}" role="button" style="background-color:{$recommendation->color};">
+                                    <a type="button" class="btn btn-sm btn-add" href="{$recommendation->getRecommendationRoutePath($categoryRecommendation.id)}" role="button" style="background-color:{$recommendation->color};">
                                         <span class="text">
                                             {lang key="addtocart"}
                                         </span>
