@@ -3588,6 +3588,7 @@ jQuery(document).ready(function(){
     jQuery('.checkout .mc-promo .btn-add').click(function(e) {
         var self = jQuery(this),
             productKey = self.data('product-key'),
+            upsellFrom = self.data('upsell-from'),
             upSellBox = jQuery('#promo_' + productKey);
 
         self.attr('disabled', 'disabled')
@@ -3597,6 +3598,7 @@ jQuery(document).ready(function(){
             {
                 'a': 'addUpSell',
                 'product_key': productKey,
+                'upsell_from': upsellFrom,
                 'checkoutModal': true,
                 'token': csrfToken
             },
@@ -3616,6 +3618,7 @@ jQuery(document).ready(function(){
                 if (data.done) {
                     jQuery('#totalCartPrice').text(data.newTotal);
                     upSellBox.fadeOut();
+                    updateAjaxModal(data)
                 }
             },
             'json'
@@ -3631,6 +3634,7 @@ jQuery(document).ready(function(){
             {
                 'a': 'addUpSell',
                 'product_key': self.data('product-key'),
+                'upsell_from': self.data('upsell-from'),
                 'token': csrfToken
             },
             function (data) {

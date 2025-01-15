@@ -8,7 +8,7 @@
                     {$product->pricing()->setQuantity($cartItem.qty)->first()->breakdownPrice()}
                 {/if}
             </div>
-            <button type="button" class="btn btn-sm btn-add" data-product-key="{$product->productKey}">
+            <button type="button" class="btn btn-sm btn-add" data-product-key="{$product->productKey}" data-upsell-from="{$cartItem.productKey}">
                 <span class="text">
                     {lang key="addtocart"}
                 </span>
