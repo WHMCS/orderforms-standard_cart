@@ -141,8 +141,19 @@
 
                     {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-existing"}
                 </div>
-
-                <div id="containerNewUserSignup"{if $custtype === 'existing' || (is_numeric($selectedAccountId) && $selectedAccountId > 0) || ($loggedin && $accounts->count() > 0 && $selectedAccountId !== 'new')} class="w-hidden"{/if}>
+                <div id="containerNewUserSignup"
+                    {if
+                        $custtype === 'existing'
+                        || (is_numeric($selectedAccountId) && $selectedAccountId > 0)
+                        || (
+                            $loggedin
+                            && $selectedAccountId !== 'new'
+                            && $custtype !== 'add'
+                        )
+                    }
+                        class="w-hidden"
+                    {/if}
+                >
 
                     <div{if $loggedin} class="w-hidden"{/if}>
                         {include file="orderforms/standard_cart/linkedaccounts.tpl" linkContext="checkout-new"}
@@ -501,6 +512,19 @@
                     </div>
                 {/foreach}
 
+                {if $captcha && $captcha->isEnabled() && $captcha->isEnabledForForm($captchaForm)}
+                    {if !$captcha->isInvisible()}
+                        <div class="sub-heading">
+                            <span class="primary-bg-color">{$LANG.captchatitle}</span>
+                        </div>
+                    {/if}
+                    <div class="text-center">
+                        <div class="text-center margin-bottom">
+                            {include file="$template/includes/captcha.tpl"}
+                        </div>
+                    </div>
+                {/if}
+
                 <div class="sub-heading">
                     <span class="primary-bg-color">{$LANG.orderForm.paymentDetails}</span>
                 </div>
@@ -711,11 +735,6 @@
                                 <a href="{$tosurl}" target="_blank">{$LANG.ordertos}</a>
                             </label>
                         </p>
-                    {/if}
-                    {if $captcha}
-                        <div class="text-center margin-bottom">
-                            {include file="$template/includes/captcha.tpl"}
-                        </div>
                     {/if}
 
                     <button type="submit"

@@ -673,42 +673,61 @@ jQuery(document).ready(function(){
         }
     });
 
-    jQuery("#btnExistingLogin").click(function() {
-        var inputLoginEmail = jQuery('#inputLoginEmail').val(),
-            inputLoginPassword = jQuery('#inputLoginPassword').val(),
-            existingLoginMessage = jQuery('#existingLoginMessage'),
-            btnExistingLogin = jQuery('#btnExistingLogin');
+    jQuery("#btnExistingLogin").click(() => {
+        const inputLoginEmail = jQuery('#inputLoginEmail').val().trim();
+        const inputLoginPassword = jQuery('#inputLoginPassword').val().trim();
+        const btnExistingLogin = jQuery('#btnExistingLogin');
+
+        jQuery('.checkout-error-feedback').hide();
+
+        const loginPayload = {
+            username: inputLoginEmail,
+            password: inputLoginPassword,
+            token: csrfToken
+        };
 
         btnExistingLogin.prop('disabled', true)
             .addClass('disabled')
             .find('span').toggle();
 
-        WHMCS.http.jqClient.jsonPost({
-            url: WHMCS.utils.getRouteUrl('/login/cart'),
-            data: {
-                username: inputLoginEmail,
-                password: inputLoginPassword,
-                token: csrfToken
-            },
-            success: function (data) {
-                if (!data.redirectUrl) {
-                    location.reload(true);
-                } else {
-                    window.location.href = data.redirectUrl;
+        retrieveCaptchaInput()
+            .then(captchaData => {
+                if (!captchaData) {
+                    return Promise.reject();
                 }
-            },
-            error: function (error) {
+
+                Object.assign(loginPayload, captchaData);
+
+                return new Promise((resolve, reject) => {
+                    WHMCS.http.jqClient.jsonPost({
+                        url: WHMCS.utils.getRouteUrl('/login/cart'),
+                        data: loginPayload,
+                        success: (data) => {
+                            if (data.redirectUrl) {
+                                window.location.href = data.redirectUrl;
+                            } else {
+                                location.reload(true);
+                            }
+                            resolve();
+                        },
+                        error: (error) => {
+                            reject(error);
+                        }
+                    });
+                });
+            })
+            .catch((error) => {
                 if (error) {
-                    existingLoginMessage.slideUp('fast')
-                        .toggle()
-                        .html(error)
-                        .slideDown('fast');
-                    btnExistingLogin.prop('disabled', false)
-                        .removeClass('disabled')
-                        .find('span').toggle();
+                    showCheckoutError(error, jQuery('#existingLoginMessage'));
                 }
-            }
-        });
+            })
+            .finally(() => {
+                btnExistingLogin.prop('disabled', false)
+                    .removeClass('disabled')
+                    .find('span').toggle();
+
+                WHMCS.form.reloadCaptcha();
+            });
     });
 
     jQuery('.account-select').on('ifChecked', function(event) {
@@ -2070,6 +2089,71 @@ function loadMoreSuggestions()
             return;
         }
     }
+}
+
+function retrieveCaptchaInput() {
+    return new Promise((resolve, reject) => {
+        const captcha = jQuery('#inputCaptcha');
+        const reCaptchaContainer = jQuery('.g-recaptcha');
+
+        if (captcha.length) {
+            const captchaValue = captcha.val().trim();
+            if (!captchaValue) {
+                captcha.tooltip('show').focus();
+                reject('');
+                return;
+            }
+
+            captcha.tooltip('hide');
+            resolve({code: captchaValue});
+            return;
+        }
+
+        if (
+            (recaptchaType === 'invisible' || recaptchaType === 'v3')
+            && typeof recaptchaValidationComplete !== 'undefined'
+            && !recaptchaValidationComplete
+        ) {
+            if (typeof grecaptcha !== 'undefined' && grecaptcha.execute) {
+                WHMCS.recaptcha.setupCallback((token) => {
+                    if (!token) {
+                        reject('');
+                        return;
+                    }
+
+                    recaptchaValidationComplete = true;
+                    resolve({'g-recaptcha-response': token});
+                });
+
+                grecaptcha.execute()?.catch((error) => {
+                    reject(error);
+                });
+
+                if (grecaptcha.getResponse()) {
+                    resolve({'g-recaptcha-response': grecaptcha.getResponse()});
+                }
+            } else {
+                reject('');
+            }
+
+            return;
+        }
+
+        if (typeof grecaptcha !== 'undefined') {
+            const reCaptchaValue = grecaptcha.getResponse();
+
+            if (!reCaptchaValue) {
+                reCaptchaContainer[0]?.scrollIntoView({block: 'center'});
+                reject('');
+                return;
+            }
+
+            resolve({'g-recaptcha-response': reCaptchaValue});
+            return;
+        }
+
+        resolve({});
+    });
 }
 
 function validate_captcha(form)
