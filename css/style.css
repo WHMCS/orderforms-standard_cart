@@ -178,6 +178,45 @@
     color: #058;
 }
 
+#order-standard_cart .domain-checker-advanced textarea {
+    width: 100%;
+    height: 120px;
+    resize: none;
+}
+
+#order-standard_cart .domain-checker-advanced .multiselect {
+    font-size: 12px;
+    padding: 0 3px;
+    margin: 5px;
+    border: 0;
+    background-color: inherit;
+    color: #111827;
+}
+
+#order-standard_cart .domain-checker-advanced .multiselect-container label {
+    padding: 0 0 0 5px;
+}
+
+#order-standard_cart .domain-checker-advanced .multiselect-item.filter {
+    width: 80%;
+}
+
+#order-standard_cart .domain-checker-advanced label {
+    font-size: 12px;
+    font-weight: normal;
+    margin: 5px 5px;
+    color: #333;
+}
+
+#order-standard_cart .domain-checker-advanced .multiselect-container li.active a {
+    background-color: unset;
+}
+
+#order-standard_cart .domain-checker-advanced input[type="checkbox"] {
+    margin-right: 5px;
+    background: white;
+}
+
 /**
  * Products
  */
@@ -361,11 +400,11 @@
     word-wrap: break-word;
 }
 #order-standard_cart .domain-checker-available {
-    color: #5cb85c;
+    color: #367C36;
 }
 #order-standard_cart .domain-checker-unavailable,
 #order-standard_cart .domain-checker-invalid {
-    color: #d9534f;
+    color: #CD322D;
 }
 #order-standard_cart .transfer-eligible,
 #order-standard_cart .transfer-not-eligible {
@@ -955,6 +994,32 @@ div.domainresults table tr td {
     }
 }
 
+.domain-checker-container.domain-checker-advanced textarea {
+    width: 592px;
+    height: 120px;
+    resize: none;
+}
+
+.domain-checker-container.domain-checker-advanced #btnCheckAvailability {
+    position: absolute;
+    right: 20px;
+    top: 74px;
+}
+
+.domain-checker-container.domain-checker-advanced .multiselect {
+    font-size: 12px;
+    padding: 0 3px;
+    margin: 5px;
+    border: 0;
+}
+
+.domain-checker-container.domain-checker-advanced .multiselect-item.filter {
+    width: 80%;
+}
+.domain-checker-container.domain-checker-advanced .multiselect-container label {
+    padding: 0 0 0 5px;
+}
+
 .domain-check-availability {
     width: 100px;
     height: 46px;
@@ -1184,7 +1249,7 @@ a.domain-tld-pricing-category {
     color: #fff;
     top: 3px;
     right: -18px;
-    background-color: #2ad588;
+    background-color: #1A8454;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
@@ -1199,7 +1264,7 @@ a.domain-tld-pricing-category {
     color: #fff;
     top: 3px;
     right: -18px;
-    background-color: #f7d458;
+    background-color: #8E7106;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
@@ -1214,7 +1279,7 @@ a.domain-tld-pricing-category {
     color: #fff;
     top: 3px;
     right: -18px;
-    background-color: #f9615a;
+    background-color: #E71408;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
@@ -1223,6 +1288,13 @@ a.domain-tld-pricing-category {
 .suggested-domains .card-header {
     border-bottom: 2px solid #62cb31;
 }
+
+#DomainSearchResults .primary-domain-header{
+    padding: 0.75rem 1.25rem;
+    border-bottom: 2px solid #62cb31;
+}
+
+.suggested-domains .domain-lookup-suggestions-message,
 .suggested-domains .domain-lookup-suggestions-loader {
     padding: 30px 20px;
     background-color: #f8f8f8;
@@ -1240,19 +1312,19 @@ a.domain-tld-pricing-category {
 }
 .suggested-domains .promo.hot {
     padding: 2px 8px;
-    background-color: #f9615a;
+    background-color: #E71408;
     color: #fff;
     text-transform: uppercase;
 }
 .suggested-domains .promo.sale {
     padding: 2px 8px;
-    background-color: #f7d458;
+    background-color: #8E7106;
     color: #fff;
     text-transform: uppercase;
 }
 .suggested-domains .promo.new {
     padding: 2px 8px;
-    background-color: #2ad588;
+    background-color: #1A8454;
     color: #fff;
     text-transform: uppercase;
 }

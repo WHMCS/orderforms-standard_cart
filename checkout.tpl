@@ -7,11 +7,13 @@
 {include file="orderforms/standard_cart/common.tpl"}
 <script type="text/javascript" src="{$BASE_PATH_JS}/StatesDropdown.js"></script>
 <script type="text/javascript" src="{$BASE_PATH_JS}/PasswordStrength.js"></script>
+<script type="text/javascript" src="{$BASE_PATH_JS}/VatValidator.js"></script>
 <script>
     window.langPasswordStrength = "{$LANG.pwstrength}";
     window.langPasswordWeak = "{$LANG.pwstrengthweak}";
     window.langPasswordModerate = "{$LANG.pwstrengthmoderate}";
     window.langPasswordStrong = "{$LANG.pwstrengthstrong}";
+    window.langVatErrorInvalidFormat = "{$LANG.tax.errorVatInvalidFormat}";
 </script>
 <div id="order-standard_cart">
 
@@ -38,19 +40,34 @@
                 <p class="text-sm-left overflow-hidden">{lang key='orderForm.enterPersonalDetails'}</p>
             </div>
 
-            {if $errormessage}
-                <div class="alert alert-danger checkout-error-feedback" role="alert">
-                    <p>{$LANG.orderForm.correctErrors}:</p>
-                    <ul>
+            <div class="alert alert-danger checkout-error-feedback {if !$errormessage}d-none{/if}" role="alert">
+                <p>{$LANG.orderForm.correctErrors}:</p>
+                <ul>
+                    {if $errormessage}
                         {$errormessage}
-                    </ul>
-                </div>
-                <div class="clearfix"></div>
-            {/if}
+                    {/if}
+                    <li class="vat-error d-none"></li>
+                </ul>
+            </div>
 
             <form method="post" action="{$smarty.server.PHP_SELF}?a=checkout" name="orderfrm" id="frmCheckout">
                 <input type="hidden" name="checkout" value="true" />
                 <input type="hidden" name="custtype" id="inputCustType" value="{$custtype}" />
+                {if $taxIdValidationEnabled}
+                    <input type="hidden" id="validation_tax_id" value="true">
+                {/if}
+
+                {if $isTaxEUTaxExempt}
+                    <input type="hidden" id="isTaxEUTaxExempt" value="true">
+                {/if}
+
+                {if $taxType !== ''}
+                    <input type="hidden" id="taxType" value="{$taxType}">
+                {/if}
+
+                {if $isTaxInclusiveDeduct}
+                    <input type="hidden" id="isTaxInclusiveDeduct" value="true">
+                {/if}
 
                 {if $custtype neq "new" && $loggedin}
                     <div class="sub-heading">
@@ -274,7 +291,7 @@
                                     <label for="inputTaxId" class="field-icon">
                                         <i class="fas fa-building"></i>
                                     </label>
-                                    <input type="text" name="tax_id" id="inputTaxId" class="field form-control" placeholder="{$taxLabel} ({$LANG.orderForm.optional})" value="{$clientsdetails.tax_id}">
+                                    <input type="text" name="tax_id" id="inputTaxId" class="field form-control" placeholder="{$taxLabel}" value="{$clientsdetails.tax_id}" autocomplete="off">
                                 </div>
                             </div>
                         {/if}
@@ -304,6 +321,28 @@
                     {/if}
 
                 </div>
+
+                {if isset($checkoutExtraFields) && !empty($checkoutExtraFields)}
+                    <div class="sub-heading">
+                        <span class="primary-bg-color">{lang key='orderForm.additionalInformation'}</span>
+                    </div>
+                    <div class="row">
+                        {foreach $checkoutExtraFields as $field}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="{$field.name}">
+                                        {$field.label|escape}
+                                        {if $field.required}<span class="text-danger">*</span>{/if}
+                                    </label>
+                                    {$field.input}
+                                    {if $field.description}
+                                        <span class="field-help-text">{$field.description}</span>
+                                    {/if}
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+                {/if}
 
                 {if $domainsinorder}
 
@@ -430,7 +469,7 @@
                                     <label for="inputDCTaxId" class="field-icon">
                                         <i class="fas fa-building"></i>
                                     </label>
-                                    <input type="text" name="domaincontacttax_id" id="inputDCTaxId" class="field form-control" placeholder="{$taxLabel} ({$LANG.orderForm.optional})" value="{$domaincontact.tax_id}">
+                                    <input type="text" name="domaincontacttax_id" id="inputDCTaxId" class="field form-control" placeholder="{$taxLabel}" value="{$domaincontact.tax_id}" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -763,4 +802,5 @@
 <script>
     var hideCvcOnCheckoutForExistingCard = '{if $canUseCreditOnCheckout && $applyCredit && ($creditBalance->toNumeric() >= $total->toNumeric())}1{else}0{/if}';
 </script>
+<script type="text/javascript" src="{$BASE_PATH_JS}/CartTotalUpdater.js"></script>
 {include file="orderforms/standard_cart/recommendations-modal.tpl"}

@@ -14,19 +14,46 @@
             </div>
             {include file="orderforms/standard_cart/sidebar-categories-collapsed.tpl"}
 
-            <p>{$LANG.orderForm.findNewDomain}</p>
+            <p>{if $showAdvancedSearchOptions}{$LANG.orderForm.findNewDomainAi}{else}{$LANG.orderForm.findNewDomain}{/if}</p>
 
-            <div class="domain-checker-container">
+            <div class="domain-checker-container{if $showAdvancedSearchOptions} domain-checker-advanced{/if}">
                 <div class="domain-checker-bg clearfix">
                     <form method="post" action="{$WEB_ROOT}/cart.php" id="frmDomainChecker">
                         <input type="hidden" name="a" value="checkDomain">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 offset-md-2 col-xs-10 col-xs-offset-1 col-10 offset-1">
                                 <div class="input-group input-group-lg input-group-box">
-                                    <input type="text" name="domain" class="form-control" placeholder="{$LANG.findyourdomain}" value="{$lookupTerm}" id="inputDomain" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.domainOrKeyword'}" />
-                                    <span class="input-group-btn input-group-append">
-                                        <button type="submit" id="btnCheckAvailability" class="btn btn-primary domain-check-availability{$captcha->getButtonClass($captchaForm)}">{$LANG.search}</button>
-                                    </span>
+                                    {if $showAdvancedSearchOptions}
+                                        <textarea name="message"
+                                              id="message"
+                                              title="{lang key='domainSearch.domainOrAiPrompt'}"
+                                              data-placement="left"
+                                              data-trigger="manual"
+                                              placeholder="{lang key='domainSearch.domainOrAiInstruction'}">{$message}</textarea>
+                                        <button type="submit"
+                                                id="btnCheckAvailability"
+                                                class="btn btn-primary domain-check-availability{$captcha->getButtonClass($captchaForm)}">
+                                            {lang key='search'} <i class="fa-regular fa-sparkles"></i>
+                                        </button>
+                                        <select name="tlds[]" class="multiselect multiselect-filter" multiple="multiple" data-placeholder="{lang key='domainSearch.tlds'}" data-min-selection="1">
+                                            {foreach $tlds as $tld}
+                                                <option{if in_array($tld, $selectedTlds)} selected {if count($selectedTlds) <= 1}disabled="disabled"{/if}{/if} value="{$tld}">{$tld}</option>
+                                            {/foreach}
+                                        </select>
+                                        <select name="maxLength" class="multiselect" data-placeholder="{lang key='domainSearch.maxLength'}">
+                                            {foreach $searchLengths as $len}
+                                                <option value="{$len}" {if $maxLength === $len}selected{/if}>{$len}</option>
+                                            {/foreach}
+                                        </select>
+                                        <label>
+                                            <input type="checkbox" class="no-icheck" name="filter" {if $safeSearchSelected}checked{/if}>{lang key="domainSearch.safeSearch"}
+                                        </label>
+                                    {else}
+                                        <input type="text" name="domain" class="form-control" placeholder="{$LANG.findyourdomain}" value="{$lookupTerm}" id="inputDomain" data-toggle="tooltip" data-placement="left" data-trigger="manual" title="{lang key='orderForm.domainOrKeyword'}" />
+                                        <span class="input-group-btn input-group-append">
+                                            <button type="submit" id="btnCheckAvailability" class="btn btn-primary domain-check-availability{$captcha->getButtonClass($captchaForm)}">{$LANG.search}</button>
+                                        </span>
+                                    {/if}
                                 </div>
                             </div>
 
@@ -56,6 +83,8 @@
             </div>
 
             <div id="DomainSearchResults" class="w-hidden">
+                <div id="primarySuggestionHeading" class="primary-domain-header"><i class="fa-regular fa-sparkles"></i> {$LANG.domainSearch.topSuggestion}</div>
+                <div id="primaryExactHeading" class="primary-domain-header">{$LANG.domainSearch.exactMatch}</div>
                 <div id="searchDomainInfo" class="domain-checker-result-headline">
                     <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching"><i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.searching'}...</p>
                     <div id="primaryLookupResult" class="domain-lookup-result w-hidden">
@@ -148,6 +177,9 @@
                     <div id="suggestionsLoader" class="panel-body card-body domain-lookup-loader domain-lookup-suggestions-loader">
                         <i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
                     </div>
+                    <div class="panel-body card-body domain-lookup-message domain-lookup-suggestions-message">
+                        {lang key='domainSearch.errors.noSuggestions'}
+                    </div>
                     <div id="domainSuggestions" class="domain-lookup-result list-group w-hidden">
                         <div class="domain-suggestion list-group-item w-hidden">
                             <span class="domain"></span><span class="extension"></span>
@@ -176,7 +208,7 @@
                         <a id="moreSuggestions" href="#" onclick="loadMoreSuggestions();return false;">{lang key='domainsmoresuggestions'}</a>
                         <span id="noMoreSuggestions" class="no-more small w-hidden">{lang key='domaincheckernomoresuggestions'}</span>
                     </div>
-                    <div class="text-center text-muted domain-suggestions-warning">
+                    <div class="text-center domain-suggestions-warning">
                         <p>{lang key='domainssuggestionswarnings'}</p>
                     </div>
                 </div>
@@ -199,7 +231,7 @@
                                 <div class="col-lg-4 col-sm-6">
                                     <div class="featured-tld">
                                         <div class="img-container">
-                                            <img src="{$BASE_PATH_IMG}/tld_logos/{$tldinfo.tldNoDots}.png">
+                                            <img src="{$BASE_PATH_IMG}/tld_logos/{$tldinfo.tldNoDots}.png" alt="{$tldinfo.tld}">
                                         </div>
                                         <div class="price {$tldinfo.tldNoDots}">
                                             {if is_object($tldinfo.register)}
@@ -345,4 +377,36 @@ jQuery(document).ready(function() {
     jQuery('.domain-invalid').toggle();
 {/if}
 });
+
+{if $showAdvancedSearchOptions}
+    $(document).ready(function() {
+        jQuery('#frmDomainChecker .multiselect').each(function () {
+            const enableFiltering = $(this).hasClass('multiselect-filter');
+            const minSelection = jQuery(this).data('min-selection');
+            $(this).multiselect({
+                onChange: function (element) {
+                    const closestSelect = element.closest('select');
+                    const selectedOptions = closestSelect.find('option:selected');
+                    if (minSelection === undefined) {
+                        return;
+                    }
+                    const atMinOptions = selectedOptions.length <= minSelection;
+                    const targetOptions = atMinOptions ? selectedOptions : closestSelect.find('option');
+                    targetOptions.each(function () {
+                        const inputElement = jQuery('input[value="' + jQuery(this).val() + '"]');
+                        inputElement.prop('disabled', atMinOptions ? 'disabled' : false);
+                    });
+                },
+                buttonText: function(options, select) {
+                    return select.data('placeholder');
+                },
+                maxHeight: 200,
+                includeFilterClearBtn: false,
+                enableCaseInsensitiveFiltering: enableFiltering,
+            });
+        })
+    });
+{/if}
+
 </script>
+

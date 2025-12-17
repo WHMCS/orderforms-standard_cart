@@ -2017,6 +2017,8 @@ var recaptchaLoadComplete = false,
     recaptchaType = 'recaptcha',
     recaptchaValidationComplete = false;
 
+var PASSWORD_RESET_BUTTON_ID = 'resetPasswordButton';
+
 (function(module) {
     if (!WHMCS.hasModule('recaptcha')) {
         WHMCS.loadModule('recaptcha', module);
@@ -2044,10 +2046,14 @@ var recaptchaLoadComplete = false,
                     console.error('Recaptcha client js api object name not defined');
                     return;
                 }
-                recaptchaCount += 1;
                 var frm = jQuery(el),
-                    btnRecaptcha = frm.find(".btn-recaptcha"),
-                    required = (typeof recaptcha.requiredText !== 'undefined')
+                    btnRecaptcha = frm.find(".btn-recaptcha");
+
+                if (btnRecaptcha.attr('id') === PASSWORD_RESET_BUTTON_ID && !btnRecaptcha.data('captcha-required')) {
+                    return;
+                }
+
+                var required = (typeof recaptcha.requiredText !== 'undefined')
                         ? recaptcha.requiredText
                         : 'Required',
                     recaptchaId = 'divDynamicRecaptcha' + recaptchaCount;
@@ -2660,29 +2666,7 @@ jQuery(document).ready(function(){
         recalctotals();
     });
 
-    jQuery(".addon-products").on('click', '.panel-addon', function(e) {
-        e.preventDefault();
-        var $activeAddon = jQuery(this);
-        if ($activeAddon.hasClass('panel-addon-selected')) {
-            $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
-        } else {
-            $activeAddon.find('input[type="checkbox"]').iCheck('check');
-        }
-    });
-    jQuery(".addon-products").on('ifChecked', '.panel-addon input', function(event) {
-        var $activeAddon = jQuery(this).parents('.panel-addon');
-        $activeAddon.addClass('panel-addon-selected');
-        $activeAddon.find('input[type="checkbox"]').iCheck('check');
-        $activeAddon.find('.panel-add').html('<i class="fas fa-shopping-cart"></i> '+localTrans('addedToCartRemove', 'Added to Cart (Remove)'));
-        recalctotals();
-    });
-    jQuery(".addon-products").on('ifUnchecked', '.panel-addon input', function(event) {
-        var $activeAddon = jQuery(this).parents('.panel-addon');
-        $activeAddon.removeClass('panel-addon-selected');
-        $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
-        $activeAddon.find('.panel-add').html('<i class="fas fa-plus"></i> '+localTrans('addToCart', 'Add to Cart'));
-        recalctotals();
-    });
+    registerAddonEvents();
 
     jQuery("#frmConfigureProduct").on('ifChecked', '.addon-selector', function(event) {
         recalctotals();
@@ -2710,15 +2694,20 @@ jQuery(document).ready(function(){
             spotlightTlds = jQuery('#spotlightTlds'),
             suggestions = jQuery('#domainSuggestions'),
             btnDomainContinue = jQuery('#btnDomainContinue'),
-            domainoption = jQuery(".domain-selection-options input:checked").val(),
+            domainoption = jQuery(".domain-selection-options input[name='domainoption']:checked").val(),
             sldInput = jQuery("#" + domainoption + "sld"),
+            messageInput = jQuery('#message'),
             sld = sldInput.val(),
             tld = '',
             pid = jQuery('#frmProductDomainPid').val(),
             tldInput = '',
-            idnLanguage = jQuery('#idnLanguageSelector');
+            idnLanguage = jQuery('#idnLanguageSelector'),
+            message = jQuery('#message').val();
 
         jQuery('.field-error-msg').hide();
+        jQuery('.domain-checker-result-headline').show();
+        jQuery('.spotlight-tlds').show();
+        jQuery('.suggested-domains').show();
 
         if (idnLanguage.is(':visible')) {
             idnLanguage.slideUp();
@@ -2739,16 +2728,19 @@ jQuery(document).ready(function(){
                 tldInput.focus();
                 return false;
             }
-            if (tld.substr(0, 1) != '.') {
+            if (tld?.substr(0, 1) != '.') {
                 tld = '.' + tld;
             }
         }
-        if (!sld) {
-            sldInput.tooltip('show');
-            sldInput.focus();
+        if (!sld?.trim() && !message?.trim()) {
+            let input = (messageInput.length > 0)
+                ? messageInput
+                : sldInput;
+            input.tooltip('show').focus();
             return false;
         }
 
+        messageInput.tooltip('hide');
         sldInput.tooltip('hide');
         if (tldInput.length) {
             tldInput.tooltip('hide');
@@ -2758,6 +2750,7 @@ jQuery(document).ready(function(){
         domainLookupCallCount = 0;
         btnSearchObj.attr('disabled', 'disabled').addClass('disabled');
 
+        jQuery('#DomainSearchResults .primary-domain-header').hide();
         jQuery('.domain-lookup-result').hide();
         jQuery('#primaryLookupResult div').filter(function() {
             return $(this).closest('#idnLanguageSelector').length === 0;
@@ -2776,6 +2769,7 @@ jQuery(document).ready(function(){
             jQuery('.domain-lookup-other-loader').show();
         }
 
+        jQuery('.domain-lookup-message').hide();
         jQuery('.domain-lookup-loader').show();
         suggestions.find('div:not(.actions)').hide().end()
             .find('.clone').remove();
@@ -2799,45 +2793,32 @@ jQuery(document).ready(function(){
         if (domainoption == 'register') {
             spotlightTlds.fadeIn('fast');
             jQuery('#resultDomainOption').val(domainoption);
-            var lookup = WHMCS.http.jqClient.post(
-                    WHMCS.utils.getRouteUrl('/domain/check'),
-                    {
-                        token: csrfToken,
-                        type: 'domain',
-                        domain: sld + tld,
-                        sld: sld,
-                        tld: tld,
-                        source: 'cartAddDomain'
-                    },
-                    'json'
-                ),
-                spotlight = WHMCS.http.jqClient.post(
-                    WHMCS.utils.getRouteUrl('/domain/check'),
-                    {
-                        token: csrfToken,
-                        type: 'spotlight',
-                        domain: sld + tld,
-                        sld: sld,
-                        tld: tld,
-                        source: 'cartAddDomain'
-                    },
-                    'json'
-                ),
-                suggestion = WHMCS.http.jqClient.post(
-                    WHMCS.utils.getRouteUrl('/domain/check'),
-                    {
-                        token: csrfToken,
-                        type: 'suggestions',
-                        domain: sld + tld,
-                        sld: sld,
-                        tld: tld,
-                        source: 'cartAddDomain'
-                    },
-                    'json'
-                );
+
+            let queryParams = {};
+            if (message) {
+                queryParams = {
+                    message: message,
+                    tlds: jQuery('#frmProductDomain select[name="tlds[]"]').val(),
+                    maxLength: jQuery('#frmProductDomain select[name="maxLength"]').val(),
+                    filter: jQuery('#frmProductDomain input[name="filter"]').prop('checked'),
+                };
+            } else{
+                queryParams = {
+                    domain: sld + tld,
+                    sld: sld,
+                    tld: tld,
+                };
+            }
 
             // primary lookup handler
-            lookup.done(function (data) {
+            const lookupDisplay = function (data) {
+                if (data.result.error && jQuery('.domain-checker-advanced:visible').length) {
+                    jQuery('.domain-checker-result-headline').fadeOut('fast', function() {
+                        jQuery(this).hide();
+                    });
+                    jQuery('#primaryExactHeading').hide();
+                    return;
+                }
                 jQuery.each(data.result, function(index, domain) {
                     var pricing = null,
                         result = jQuery('#primaryLookupResult'),
@@ -2913,12 +2894,16 @@ jQuery(document).ready(function(){
                         }
                     }
                 });
-            }).always(function() {
-                hasProductDomainLookupEnded(3, btnSearchObj);
-            });
+            };
 
             // spotlight lookup handler
-            spotlight.done(function(data) {
+            const spotlightDisplay = function(data) {
+                if (data.result.error && jQuery('.domain-checker-advanced:visible').length) {
+                    jQuery('.spotlight-tlds').fadeOut('fast', function() {
+                        jQuery(this).hide();
+                    });
+                    return;
+                }
                 if (typeof data != 'object' || data.result.length == 0 || data.result.error) {
                     jQuery('.domain-lookup-spotlight-loader').hide();
                     return;
@@ -2961,16 +2946,13 @@ jQuery(document).ready(function(){
                     }
                     result.show();
                 });
-            }).always(function() {
-                hasProductDomainLookupEnded(3, btnSearchObj);
-            });
+            }
 
             // suggestions lookup handler
-            suggestion.done(function (data) {
+            suggestionDisplay = function (data) {
                 if (typeof data != 'object' || data.result.length == 0 || data.result.error) {
-                    jQuery('.suggested-domains').fadeOut('fast', function() {
-                        jQuery(this).hide();
-                    });
+                    jQuery('.domain-lookup-loader').hide();
+                    jQuery('.domain-lookup-message').show();
                     return;
                 } else {
                     jQuery('.suggested-domains').show();
@@ -3017,9 +2999,118 @@ jQuery(document).ready(function(){
                 });
                 jQuery('.domain-lookup-suggestions-loader').hide();
                 jQuery('#domainSuggestions').show();
-            }).always(function() {
-                hasProductDomainLookupEnded(3, btnSearchObj);
-            });
+            }
+
+            // AI Prompt
+            if(message && message.trim().search(/\s/) !== -1){
+
+                let suggestion = WHMCS.http.jqClient.post(
+                    WHMCS.utils.getRouteUrl('/domain/check'),
+                    {
+                        ...queryParams,
+                        token: csrfToken,
+                        type: 'suggestions',
+                        source: 'cartAddDomain'
+                    },
+                    'json'
+                );
+
+                suggestion.done(function (data) {
+
+                    let topResult = (data.result.length) ? data.result.shift() : null;
+                    suggestionDisplay(data);
+
+                    if (!topResult) {
+                        jQuery(
+                            '.spotlight-tlds, .domain-lookup-primary-loader'
+                        ).fadeOut('fast', function () {
+                            jQuery(this).hide();
+                        });
+                        hasProductDomainLookupEnded(1, btnSearchObj);
+                        return;
+                    }
+
+                    jQuery('#primarySuggestionHeading').show();
+                    lookupDisplay( {
+                        result: [topResult]
+                    });
+
+                    queryParams.message = topResult.domainName;
+
+                    let spotlight = WHMCS.http.jqClient.post(
+                        WHMCS.utils.getRouteUrl('/domain/check'),
+                        {
+                            ...queryParams,
+                            token: csrfToken,
+                            type: 'spotlight',
+                            source: 'cartAddDomain'
+                        },
+                        'json'
+                    );
+
+                    spotlight.done(function (data) {
+                        spotlightDisplay(data);
+                    }).always(function () {
+                        hasProductDomainLookupEnded(2, btnSearchObj);
+                    });
+
+                }).always(function () {
+                    hasProductDomainLookupEnded(1, btnSearchObj);
+                });
+
+            } else {
+
+                let lookup = WHMCS.http.jqClient.post(
+                        WHMCS.utils.getRouteUrl('/domain/check'),
+                        {
+                            ...queryParams,
+                            token: csrfToken,
+                            type: 'domain',
+                            source: 'cartAddDomain'
+                        },
+                        'json'
+                    ),
+                    spotlight = WHMCS.http.jqClient.post(
+                        WHMCS.utils.getRouteUrl('/domain/check'),
+                        {
+                            ...queryParams,
+                            token: csrfToken,
+                            type: 'spotlight',
+                            source: 'cartAddDomain'
+                        },
+                        'json'
+                    ),
+                    suggestion = WHMCS.http.jqClient.post(
+                        WHMCS.utils.getRouteUrl('/domain/check'),
+                        {
+                            ...queryParams,
+                            token: csrfToken,
+                            type: 'suggestions',
+                            source: 'cartAddDomain'
+                        },
+                        'json'
+                    );
+
+                lookup.done(function (data) {
+                    jQuery('#primaryExactHeading').show();
+                    lookupDisplay(data);
+                }).always(function() {
+                    hasProductDomainLookupEnded(3, btnSearchObj);
+                });
+
+                spotlight.done(function(data) {
+                    spotlightDisplay(data);
+                }).always(function() {
+                    hasProductDomainLookupEnded(3, btnSearchObj);
+                });
+
+                suggestion.done(function (data) {
+                    suggestionDisplay(data);
+                }).always(function() {
+                    hasProductDomainLookupEnded(3, btnSearchObj);
+                });
+            }
+
         } else if (domainoption == 'transfer') {
             jQuery('#resultDomainOption').val(domainoption);
             var transfer = WHMCS.http.jqClient.post(
@@ -3549,13 +3640,17 @@ jQuery(document).ready(function(){
         });
     }
 
-    jQuery('#inputDomain').on('shown.bs.tooltip', function () {
+    jQuery('#inputDomain, #message').on('shown.bs.tooltip', function () {
         setTimeout(function(input) {
             input.tooltip('hide');
         },
             5000,
             jQuery(this)
         );
+    });
+
+    jQuery('#inputDomain, #message').on('input', function () {
+        $(this).tooltip('hide');
     });
 
     jQuery('#frmDomainChecker').submit(function (e) {
@@ -3570,14 +3665,21 @@ jQuery(document).ready(function(){
             return;
         }
 
-        var frmDomain = jQuery('#frmDomainChecker'),
-            inputDomain = jQuery('#inputDomain'),
+
+        let frmChecker = jQuery('#frmDomainChecker'),
+            isAdvancedSearch = !!jQuery('#message').length,
+            inputQuery = isAdvancedSearch
+                ? jQuery('#message')
+                : jQuery('#inputDomain'),
             suggestions = jQuery('#domainSuggestions'),
             reCaptchaContainer = jQuery('#divDynamicRecaptcha'),
             captcha = jQuery('#inputCaptcha'),
             idnLanguage = jQuery('#idnLanguageSelector');
 
         jQuery('.field-error-msg').hide();
+        jQuery('.domain-checker-result-headline').show();
+        jQuery('.spotlight-tlds').show();
+        jQuery('.suggested-domains').show();
 
         if (idnLanguage.is(':visible')) {
             idnLanguage.slideUp();
@@ -3586,17 +3688,16 @@ jQuery(document).ready(function(){
 
         domainLookupCallCount = 0;
 
-        // check a domain has been entered
-        if (!inputDomain.val()) {
-            inputDomain.tooltip('show');
-            inputDomain.focus();
+        if (!inputQuery.val().trim()) {
+            inputQuery.tooltip('show');
+            inputQuery.focus();
             return;
         }
 
-        inputDomain.tooltip('hide');
+        inputQuery.tooltip('hide');
 
         if (jQuery('#captchaContainer').length) {
-            validate_captcha(frmDomain);
+            validate_captcha(frmChecker);
             return;
         }
 
@@ -3606,6 +3707,7 @@ jQuery(document).ready(function(){
         // disable repeat submit and show loader
         jQuery('#btnCheckAvailability').attr('disabled', 'disabled').addClass('disabled');
         jQuery('.domain-lookup-result').hide();
+        jQuery('.domain-lookup-message').hide();
         jQuery('.domain-lookup-loader').show();
 
         // reset elements
@@ -3618,6 +3720,8 @@ jQuery(document).ready(function(){
             .find('span').hide().end()
             .find('span.to-add').show();
 
+        jQuery('#DomainSearchResults .primary-domain-header').hide();
+
         // fade in results
         if (jQuery('#DomainSearchResults').not(":visible")) {
             jQuery('.domain-pricing').fadeOut('fast', function() {
@@ -3626,29 +3730,21 @@ jQuery(document).ready(function(){
 
         }
 
-        var lookup = WHMCS.http.jqClient.post(
-                WHMCS.utils.getRouteUrl('/domain/check'),
-                frmDomain.serialize() + '&type=domain',
-                'json'
-            ),
-            spotlight = WHMCS.http.jqClient.post(
-                WHMCS.utils.getRouteUrl('/domain/check'),
-                frmDomain.serialize() + '&type=spotlight',
-                'json'
-            ),
-            suggestion = WHMCS.http.jqClient.post(
-                WHMCS.utils.getRouteUrl('/domain/check'),
-                frmDomain.serialize() + '&type=suggestions',
-                'json'
-            );
-
         // primary lookup handler
-        lookup.done(function (data) {
-            if (typeof data != 'object' || data.result.length == 0) {
-                jQuery('.domain-lookup-primary-loader').hide();
+        const lookupDisplay = function (data) {
+            if (data.result.error && jQuery('.domain-checker-advanced:visible').length) {
+                jQuery('.domain-checker-result-headline').fadeOut('fast', function () {
+                    jQuery(this).hide();
+                });
+                jQuery('#primaryExactHeading').hide();
                 return;
             }
-            jQuery.each(data.result, function(index, domain) {
+            if (typeof data != 'object' || data.result.length == 0) {
+                jQuery('.domain-lookup-primary-loader').hide();
+                jQuery('#primaryExactHeading').hide();
+                return;
+            }
+            jQuery.each(data.result, function (index, domain) {
                 var pricing = null,
                     result = jQuery('#primaryLookupResult'),
                     available = result.find('.domain-available'),
@@ -3712,7 +3808,7 @@ jQuery(document).ready(function(){
                         } else {
                             error.text('');
                             errors = domain.error.split(reg);
-                            for(var i=0; i < errors.length; i++) {
+                            for (var i = 0; i < errors.length; i++) {
                                 var errorMsg = errors[i];
                                 if (errorMsg.length) {
                                     if (error.text()) {
@@ -3733,17 +3829,21 @@ jQuery(document).ready(function(){
                 }
 
             });
-        }).always(function() {
-            hasDomainLookupEnded();
-        });
+        };
 
         // spotlight lookup handler
-        spotlight.done(function(data) {
+        const spotlightDisplay = function (data) {
+            if (data.result.error && jQuery('.domain-checker-advanced:visible').length) {
+                jQuery('.spotlight-tlds').fadeOut('fast', function () {
+                    jQuery(this).hide();
+                });
+                return;
+            }
             if (typeof data != 'object' || data.result.length == 0 || data.result.error) {
                 jQuery('.domain-lookup-spotlight-loader').hide();
                 return;
             }
-            jQuery.each(data.result, function(index, domain) {
+            jQuery.each(data.result, function (index, domain) {
                 var tld = domain.tldNoDots,
                     pricing = domain.pricing,
                     result = jQuery('#spotlight' + tld + ' .domain-lookup-result');
@@ -3756,7 +3856,7 @@ jQuery(document).ready(function(){
                         }
                         result.find('button.unavailable').hide().end()
                             .find('button.invalid').hide().end()
-                            .find('span.available').html(pricing[Object.keys(pricing)[0]].register).show().end()
+                            .find('span.available').html(pricing[Object.keys(pricing)[0]]?.register).show().end()
                             .find('button').not('button.unavailable').not('button.invalid')
                             .attr('data-domain', domain.domainName)
                             .show();
@@ -3784,22 +3884,19 @@ jQuery(document).ready(function(){
                 }
                 result.show();
             });
-        }).always(function() {
-            hasDomainLookupEnded();
-        });
+        };
 
         // suggestions lookup handler
-        suggestion.done(function (data) {
+        const suggestionDisplay = function(data) {
             if (typeof data != 'object' || data.result.length == 0 || data.result.error) {
-                jQuery('.suggested-domains').fadeOut('fast', function() {
-                    jQuery(this).hide();
-                });
+                jQuery('.domain-lookup-loader').hide();
+                jQuery('.domain-lookup-message').show();
                 return;
             } else {
                 jQuery('.suggested-domains').show();
             }
             var suggestionCount = 1;
-            jQuery.each(data.result, function(index, domain) {
+            jQuery.each(data.result, function (index, domain) {
                 var tld = domain.tld,
                     pricing = domain.pricing;
                 suggestions.find('div:first').clone(true, true).appendTo(suggestions);
@@ -3821,7 +3918,7 @@ jQuery(document).ready(function(){
                         idnLanguage.slideDown();
                     }
                     newSuggestion.find('button.btn-add-to-cart').attr('data-domain', domain.domainName).end()
-                        .find('span.price').html(pricing[Object.keys(pricing)[0]].register);
+                        .find('span.price').html(pricing[Object.keys(pricing)[0]]?.register);
                 }
                 if (suggestionCount <= 10) {
                     newSuggestion.show();
@@ -3841,9 +3938,91 @@ jQuery(document).ready(function(){
             });
             jQuery('.domain-lookup-suggestions-loader').hide();
             jQuery('#domainSuggestions').show();
-        }).always(function() {
-            hasDomainLookupEnded();
-        });
+        };
+
+        // AI Prompt
+        if(isAdvancedSearch && inputQuery.val().trim().search(/\s/) !== -1){
+
+            let suggestion = WHMCS.http.jqClient.post(
+                WHMCS.utils.getRouteUrl('/domain/check'),
+                frmChecker.serialize() + '&type=suggestions',
+                'json'
+            );
+
+            suggestion.done(function (data) {
+                let topResult = (data.result.length) ? data.result.shift() : null;
+                suggestionDisplay(data);
+
+                if (!topResult) {
+                    jQuery(
+                        '.spotlight-tlds, .domain-lookup-primary-loader'
+                    ).fadeOut('fast', function () {
+                        jQuery(this).hide();
+                    });
+                    hasDomainLookupEnded(1);
+                    return;
+                }
+
+                jQuery('#primarySuggestionHeading').show();
+                lookupDisplay( {
+                    result: [topResult]
+                });
+
+                let query = frmChecker.serializeArray();
+                query.find(item => item.name === 'message').value = topResult.domainName;
+
+                let spotlight = WHMCS.http.jqClient.post(
+                    WHMCS.utils.getRouteUrl('/domain/check'),
+                    $.param(query) + '&type=spotlight',
+                    'json'
+                );
+
+                spotlight.done(function (data) {
+                    spotlightDisplay(data);
+                }).always(function () {
+                    hasDomainLookupEnded(2);
+                });
+
+            }).always(function () {
+                hasDomainLookupEnded(2);
+            });
+
+        } else {
+            let lookup = WHMCS.http.jqClient.post(
+                    WHMCS.utils.getRouteUrl('/domain/check'),
+                    frmChecker.serialize() + '&type=domain',
+                    'json'
+                ),
+                spotlight = WHMCS.http.jqClient.post(
+                    WHMCS.utils.getRouteUrl('/domain/check'),
+                    frmChecker.serialize() + '&type=spotlight',
+                    'json'
+                ),
+                suggestion = WHMCS.http.jqClient.post(
+                    WHMCS.utils.getRouteUrl('/domain/check'),
+                    frmChecker.serialize() + '&type=suggestions',
+                    'json'
+                );
+            lookup.done(function (data) {
+                jQuery('#primaryExactHeading').show();
+                lookupDisplay(data);
+            }).always(function () {
+                hasDomainLookupEnded();
+            });
+
+            spotlight.done(function (data) {
+                spotlightDisplay(data)
+            }).always(function () {
+                hasDomainLookupEnded();
+            });
+
+            suggestion.done(function (data) {
+                suggestionDisplay(data);
+            }).always(function () {
+                hasDomainLookupEnded();
+            });
+
+        }
     });
 
     jQuery('.btn-add-to-cart').on('click', function() {
@@ -4397,9 +4576,9 @@ function validateCheckoutCreditCardInput(e)
     }
 }
 
-function hasDomainLookupEnded() {
+function hasDomainLookupEnded(queryCnt = 3) {
     domainLookupCallCount++;
-    if (domainLookupCallCount == 3) {
+    if (domainLookupCallCount == queryCnt) {
         jQuery('#btnCheckAvailability').removeAttr('disabled').removeClass('disabled');
     }
 }
@@ -4437,6 +4616,9 @@ function updateConfigurableOptions(i, billingCycle) {
             if (add.length) {
                 add.html(jQuery(data).find('#productAddonsContainer').html());
             }
+
+            registerAddonEvents();
+
             jQuery('input').iCheck({
                 inheritID: true,
                 checkboxClass: 'icheckbox_square-blue',
@@ -4589,7 +4771,12 @@ function loadMoreSuggestions()
             suggestions.find('div.domain-suggestion.clone:hidden:first').slideDown();
             furtherSuggestions = suggestions.find('div.domain-suggestion.clone:hidden').length;
         } else {
-            jQuery('div.more-suggestions').find('a').addClass('hidden').end().find('span.no-more').removeClass('hidden');
+            jQuery('div.more-suggestions')
+                .find('a')
+                .hide()
+                .end()
+                .find('span.no-more')
+                .show();
             return;
         }
     }
@@ -4743,4 +4930,30 @@ function hasRenewableServiceAddon(data)
         }
     });
     return hasService;
+}
+
+function registerAddonEvents() {
+    jQuery(".addon-products").on('click', '.panel-addon', function (e) {
+        e.preventDefault();
+        var $activeAddon = jQuery(this);
+        if ($activeAddon.hasClass('panel-addon-selected')) {
+            $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
+        } else {
+            $activeAddon.find('input[type="checkbox"]').iCheck('check');
+        }
+    });
+    jQuery(".addon-products").on('ifChecked', '.panel-addon input', function (event) {
+        var $activeAddon = jQuery(this).parents('.panel-addon');
+        $activeAddon.addClass('panel-addon-selected');
+        $activeAddon.find('input[type="checkbox"]').iCheck('check');
+        $activeAddon.find('.panel-add').html('<i class="fas fa-shopping-cart"></i> ' + localTrans('addedToCartRemove', 'Added to Cart (Remove)'));
+        recalctotals();
+    });
+    jQuery(".addon-products").on('ifUnchecked', '.panel-addon input', function (event) {
+        var $activeAddon = jQuery(this).parents('.panel-addon');
+        $activeAddon.removeClass('panel-addon-selected');
+        $activeAddon.find('input[type="checkbox"]').iCheck('uncheck');
+        $activeAddon.find('.panel-add').html('<i class="fas fa-plus"></i> ' + localTrans('addToCart', 'Add to Cart'));
+        recalctotals();
+    });
 }

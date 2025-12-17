@@ -45,10 +45,18 @@
                             <label>
                                 <input type="radio" name="domainoption" value="register" id="selregister"{if $domainoption eq "register"} checked{/if} />{$LANG.cartregisterdomainchoice|sprintf2:$companyname}
                             </label>
-                            <div class="domain-input-group clearfix" id="domainregister">
+                            <div class="domain-input-group clearfix{if $showAdvancedSearchOptions} domain-checker-advanced{/if}" id="domainregister">
                                 <div class="row">
                                     <div class="col-sm-8 col-sm-offset-1 offset-sm-1">
                                         <div class="row domains-row">
+                                            {if $showAdvancedSearchOptions}
+                                                <textarea name="message"
+                                                          id="message"
+                                                          title="{lang key='domainSearch.domainOrAiPrompt'}"
+                                                          data-placement="left"
+                                                          data-trigger="manual"
+                                                          placeholder="{lang key='domainSearch.domainOrAiInstruction'}">{$message}</textarea>
+                                            {else}
                                             <div class="col-xs-9 col-9">
                                                 <div class="input-group">
                                                     <div class="input-group-addon input-group-prepend">
@@ -64,14 +72,36 @@
                                                     {/foreach}
                                                 </select>
                                             </div>
+                                            {/if}
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="submit" class="btn btn-primary btn-block">
-                                            {$LANG.orderForm.check}
+                                        <button id="btnCheckAvailability" type="submit" class="btn btn-primary btn-block">
+                                            {$LANG.orderForm.check}{if $showAdvancedSearchOptions}  <i class="fa-regular fa-sparkles"></i>{/if}
                                         </button>
                                     </div>
                                 </div>
+                                {if $showAdvancedSearchOptions}
+                                <div class="row">
+                                    <div class="col-sm-8 col-sm-offset-1 offset-sm-1">
+                                        <div class="row domains-row">
+                                            <select name="tlds[]" class="multiselect multiselect-filter" multiple="multiple" data-placeholder="{lang key='domainSearch.tlds'}" data-min-selection="1">
+                                                {foreach $tlds as $tld}
+                                                    <option{if in_array($tld, $selectedTlds)} selected {if count($selectedTlds) <= 1}disabled="disabled"{/if}{/if} value="{$tld}">{$tld}</option>
+                                                {/foreach}
+                                            </select>
+                                            <select name="maxLength" class="multiselect" data-placeholder="{lang key='domainSearch.maxLength'}">
+                                                {foreach $searchLengths as $len}
+                                                    <option value="{$len}" {if $maxLength === $len}selected{/if}>{$len}</option>
+                                                {/foreach}
+                                            </select>
+                                            <label>
+                                                <input type="checkbox" name="filter" class="no-icheck" {if $safeSearchSelected}checked{/if}>{lang key="domainSearch.safeSearch"}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/if}
                             </div>
                         </div>
                     {/if}
@@ -186,7 +216,8 @@
             <form method="post" action="{$WEB_ROOT}/cart.php?a=add&pid={$pid}&domainselect=1" id="frmProductDomainSelections">
 
                 <div id="DomainSearchResults" class="w-hidden">
-
+                    <div id="primarySuggestionHeading" class="primary-domain-header"><i class="fa-regular fa-sparkles"></i> {$LANG.domainSearch.topSuggestion}</div>
+                    <div id="primaryExactHeading" class="primary-domain-header">{$LANG.domainSearch.exactMatch}</div>
                     <div id="searchDomainInfo">
                         <p id="primaryLookupSearching" class="domain-lookup-loader domain-lookup-primary-loader domain-searching domain-checker-result-headline">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -299,6 +330,9 @@
                             <div id="suggestionsLoader" class="card-body panel-body domain-lookup-loader domain-lookup-suggestions-loader">
                                 <i class="fas fa-spinner fa-spin"></i> {lang key='orderForm.generatingSuggestions'}
                             </div>
+                            <div class="panel-body card-body domain-lookup-message domain-lookup-suggestions-message">
+                                {lang key='domainSearch.errors.noSuggestions'}
+                            </div>
                             <div id="domainSuggestions" class="domain-lookup-result list-group w-hidden">
                                 <div class="domain-suggestion list-group-item w-hidden">
                                     <span class="domain"></span><span class="extension"></span>
@@ -321,7 +355,7 @@
                                 <a id="moreSuggestions" href="#" onclick="loadMoreSuggestions();return false;">{lang key='domainsmoresuggestions'}</a>
                                 <span id="noMoreSuggestions" class="no-more small w-hidden">{lang key='domaincheckernomoresuggestions'}</span>
                             </div>
-                            <div class="text-center text-muted domain-suggestions-warning">
+                            <div class="text-center domain-suggestions-warning">
                                 <p>{lang key='domainssuggestionswarnings'}</p>
                             </div>
                         </div>
@@ -340,3 +374,35 @@
 </div>
 
 {include file="orderforms/standard_cart/recommendations-modal.tpl"}
+
+{if $showAdvancedSearchOptions}
+    <script>
+        $(document).ready(function() {
+            jQuery('#frmProductDomain .multiselect').each(function () {
+                let enableFiltering = $(this).hasClass('multiselect-filter');
+                const minSelection = jQuery(this).data('min-selection');
+                $(this).multiselect({
+                    onChange: function (element) {
+                        const closestSelect = element.closest('select');
+                        const selectedOptions = closestSelect.find('option:selected');
+                        if (minSelection === undefined) {
+                            return;
+                        }
+                        const atMinOptions = selectedOptions.length <= minSelection;
+                        const targetOptions = atMinOptions ? selectedOptions : closestSelect.find('option');
+                        targetOptions.each(function () {
+                            const inputElement = jQuery('input[value="' + jQuery(this).val() + '"]');
+                            inputElement.prop('disabled', atMinOptions ? 'disabled' : false);
+                        });
+                    },
+                    buttonText: function(options, select) {
+                        return select.data('placeholder');
+                    },
+                    maxHeight: 200,
+                    includeFilterClearBtn: false,
+                    enableCaseInsensitiveFiltering: enableFiltering,
+                });
+            })
+        });
+    </script>
+{/if}
