@@ -2152,6 +2152,13 @@ var PASSWORD_RESET_BUTTON_ID = 'resetPasswordButton';
                         recaptchaContent.find(':first').addClass('center-block');
                     });
                 }
+
+                // Increment so that each captcha form on the page receives a
+                // unique element id and callback name. Without this, multiple
+                // captcha forms (e.g. the login and register forms on the user
+                // invite acceptance page) share a single callback, causing an
+                // invisible captcha to submit the wrong form.
+                recaptchaCount++;
             });
 
             window.recaptchaLoadCallback = function() {
