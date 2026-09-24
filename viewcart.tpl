@@ -499,6 +499,7 @@
                                 <div role="tabpanel" class="tab-pane" id="calcTaxes">
 
                                     <form method="post" action="{$WEB_ROOT}/cart.php?a=setstateandcountry">
+                                        <input type="hidden" name="token" value="{$token}" />
                                         <div class="form-group row">
                                             <label for="inputState" class="pt-sm-2 col-sm-4 control-label text-sm-right">{$LANG.orderForm.state}</label>
                                             <div class="col-sm-7">
