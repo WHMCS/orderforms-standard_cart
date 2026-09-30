@@ -835,9 +835,9 @@ jQuery(document).ready(function(){
             .removeClass('active');
         jQuery(this).closest('div.account').addClass('active');
         if (thisValue === 'new') {
+            jQuery("#inputCustType").val('add');
             if (userSignupContainer.not(':visible')) {
                 userSignupContainer.slideDown('', function () {
-                    jQuery("#inputCustType").val('add');
                     jQuery('.marketing-email-optin').slideDown();
                 });
                 if (stateSelect.hasClass('requiredAttributeRemoved')) {
@@ -914,6 +914,7 @@ jQuery(document).ready(function(){
                     jQuery(".payment-methods:checked").trigger('ifChecked');
                     selectPreferredCard();
                 }
+                jQuery(document).trigger('cart:accountSelected', [data]);
             },
             always: function() {
                 btnCompleteOrder.removeClass('disabled');
