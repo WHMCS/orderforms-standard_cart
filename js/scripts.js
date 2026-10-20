@@ -2387,6 +2387,39 @@ function () {
         return status ? status.toLowerCase().replace(/\s/g, '-') : '';
     };
 
+    /**
+     * The length bounds the password generator's length field carries.
+     *
+     * Read off the field rather than held here so that the floor is whatever minimum password
+     * length the server rendered into the markup. A pair of constants in this file would be a
+     * second, independent copy of the policy's numbers and would go stale the moment an
+     * administrator raised the configured minimum, which is exactly how this check came to reject
+     * only what an obsolete floor rejected.
+     *
+     * A bound the field does not carry at all, or carries with no leading digits, comes back null;
+     * a caller treats that as unbounded rather than substituting a number of its own, because a
+     * guessed bound is what this reads the markup to avoid.
+     *
+     * That is parseInt's numeric-prefix parsing and not validation: "16.5" and "16junk" both read
+     * as 16, and only a value with nothing numeric at the front - "", "abc", an absent attribute -
+     * is rejected. Nothing checks these attributes for well-formedness, so the guarantee is the
+     * server's: it writes an integer taken from the password policy, which is why parsing loosely
+     * is enough here rather than something to be tightened.
+     *
+     * @param field The length input, as a selector or element jQuery accepts
+     *
+     * @return {{minimum: ?number, maximum: ?number}}
+     */
+    this.getPasswordLengthBounds = function(field) {
+        var read = function(attribute) {
+            var bound = parseInt(jQuery(field).attr(attribute), 10);
+
+            return isNaN(bound) ? null : bound;
+        };
+
+        return {minimum: read('min'), maximum: read('max')};
+    };
+
     this.generatePassword = function(len) {
         var self = this;
         var charset = this.getPasswordCharacterSet();
